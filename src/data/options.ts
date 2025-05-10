@@ -1,3 +1,5 @@
+import type { SkillType } from '../features/DamageCalculator/types'
+
 export const servantClasses: { value: string; label: string }[] = [
 	{ value: 'saber', label: '剣' },
 	{ value: 'archer', label: '弓' },
@@ -46,7 +48,7 @@ export const cardTypeOptions: { value: string; label: string }[] = [
 	{ value: 'quick', label: 'Q' },
 ]
 
-export const skillTypes: { value: string; label: string }[] = [
+export const skillTypes: { value: SkillType; label: string }[] = [
 	{ value: 'atkBuff', label: '攻撃バフ' },
 	{ value: 'busterBuff', label: 'Bバフ' },
 	{ value: 'busterPowerBuff', label: 'B威力バフ' },

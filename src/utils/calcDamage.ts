@@ -1,19 +1,28 @@
-const cardCorrectionValues = {
-	n: 1,
-	b: 1.5,
-	a: 1,
-	q: 0.8,
-	ex: 0.625,
-}
+import type {
+	CardColor,
+	CardType,
+	CommandCard,
+	DamageCalculatorInputValue,
+	SkillData,
+	SkillType,
+} from '../features/DamageCalculator/types'
 
-function getCardCorrectionValue(color, type, nth) {
+const cardCorrectionValues = {
+	noblePhantasm: 1,
+	buster: 1.5,
+	arts: 1,
+	quick: 0.8,
+	extra: 0.625,
+} as const
+
+function getCardCorrectionValue(type: CardType, color: CardColor, nth: number) {
 	return (
 		cardCorrectionValues[color] *
 		(type === 'noblePhantasm' ? 1 : 1 + (nth - 1) * 0.2)
 	)
 }
 
-function getFirstBonusValues(selectedCardColors) {
+function getFirstBonusValues(selectedCardColors: CardColor[]) {
 	if (
 		selectedCardColors[0] !== selectedCardColors[1] &&
 		selectedCardColors[1] !== selectedCardColors[2] &&
@@ -26,483 +35,596 @@ function getFirstBonusValues(selectedCardColors) {
 		}
 	}
 	return {
-		buster: selectedCardColors[0] === 'b' ? 0.5 : 0,
-		arts: selectedCardColors[0] === 'a' ? 1 : 0,
-		quick: selectedCardColors[0] === 'q' ? 0.2 : 0,
+		buster: selectedCardColors[0] === 'buster' ? 0.5 : 0,
+		arts: selectedCardColors[0] === 'arts' ? 1 : 0,
+		quick: selectedCardColors[0] === 'quick' ? 0.2 : 0,
 	}
 }
 
-function getStarCorrectionValue(type, color, nth) {
+function getStarCorrectionValue(
+	type: CardType,
+	color: CommandCard,
+	nth: number,
+) {
 	if (type === 'extra') {
 		return 1
 	}
 	if (type === 'noblePhantasm') {
-		if (color === 'b') {
+		if (color === 'buster') {
 			return 0.1
 		}
-		if (color === 'q') {
+		if (color === 'quick') {
 			return 0.8
 		}
 	}
-	if (color == 'b') {
+	if (color === 'buster') {
 		return 0.05 + nth * 0.05
 	}
-	if (color == 'q') {
+	if (color === 'quick') {
 		return 0.3 + nth * 0.5
 	}
 	return 0
 }
 
-function getNpCorrectionValue(type, color, nth) {
+function getNpCorrectionValue(type: CardType, color: CardColor, nth: number) {
 	if (type === 'extra') {
 		return 1
 	}
 	if (type === 'noblePhantasm') {
-		if (color == 'a') {
+		if (color === 'arts') {
 			return 3
 		}
-		if (color == 'q') {
+		if (color === 'quick') {
 			return 1
 		}
 	}
-	if (color == 'a') {
+	if (color === 'arts') {
 		return 1.5 + nth * 1.5
 	}
-	if (color == 'q') {
+	if (color === 'quick') {
 		return 0.5 + nth * 0.5
 	}
 	return 0
 }
 
-function calculate() {
-	// 基本情報を取得
-	const servantClass = document.getElementById('servant-class').value
-	const servantAttr = document.getElementById('servant-attr').value
-	const servantAtk = Number(document.getElementById('servant-atk').value)
-	const craftEssenceAtk = Number(
-		document.getElementById('craft-essence-atk').value,
-	)
-	const atk = servantAtk + craftEssenceAtk
-	const npColor = document.getElementById('np-color').value
-	const npMag = Number(document.getElementById('np-mag').value)
-	const footprints = {
-		b: Number(document.getElementById('b-footprint').value),
-		a: Number(document.getElementById('a-footprint').value),
-		q: Number(document.getElementById('q-footprint').value),
+export type TurnResult = {
+	baseDamages: number[]
+	constantDamages: number[]
+	nps: number[]
+	minStars: number[]
+	maxStars: number[]
+	minStarRates: number[]
+	maxStarRates: number[]
+	passRate: number
+	atkBuffs: number[]
+	cardBuffs: number[]
+	npOrCrBuffs: number[]
+	spBuffs: number[]
+}
+
+const cardNames = {
+	buster: 'B',
+	arts: 'A',
+	quick: 'Q',
+	noblePhantasm: 'N',
+	extra: 'EX',
+} as const
+
+export type ProcessedTurnResult = TurnResult & {
+	damage90: number[]
+	damage100: number[]
+	damage110: number[]
+	selectedCards: ('B' | 'A' | 'Q' | 'N' | 'EX')[]
+	targetDamage: number
+}
+
+function processArgs(args: DamageCalculatorInputValue) {
+	function processSkillData(skillData: SkillData): Required<SkillData> {
+		const { skillType, skillName, amount, turns, times } = skillData
+		return {
+			skillType: skillType ?? 'atkBuff',
+			skillName: skillName ?? '',
+			amount: amount ?? 0,
+			turns: turns ?? -1,
+			times: times ?? -1,
+		}
 	}
-	const npCalcRequired = document.getElementById('np-calc-check').checked
-	const npRate = Number(document.getElementById('np-rate').value)
-	const starRate = Number(document.getElementById('star-rate').value) / 100
+	const {
+		servantClass,
+		servantAtk,
+		craftEssenceAtk,
+		npColor,
+		npValue,
+		footprintB,
+		footprintA,
+		footprintQ,
+		npGain,
+		starRate,
+		hitCountN,
+		hitCountB,
+		hitCountA,
+		hitCountQ,
+		hitCountEX,
+		passiveEffects,
+		turns,
+	} = args
+	const nonNullTurns = turns?.map((turn) => {
+		const {
+			classAffinity,
+			attributeAffinity,
+			targetDamage,
+			dtdr,
+			dsr,
+			turnEffects,
+			card1Effects,
+			card2Effects,
+			card3Effects,
+			card4Effects,
+			card1Type,
+			card2Type,
+			card3Type,
+			card1IsCritical,
+			card2IsCritical,
+			card3IsCritical,
+			card1DamageJudgement,
+			card2DamageJudgement,
+			card3DamageJudgement,
+			card4DamageJudgement,
+			card1OverKillCount,
+			card2OverKillCount,
+			card3OverKillCount,
+			card4OverKillCount,
+		} = turn
+		return {
+			classAffinity: classAffinity ?? 1,
+			attributeAffinity: attributeAffinity ?? 1,
+			targetDamage: targetDamage ?? 0,
+			dtdr: dtdr ?? 1,
+			dsr: dsr ?? 0,
+			turnEffects: turnEffects ? turnEffects.map(processSkillData) : [],
+			card1Effects: card1Effects ? card1Effects.map(processSkillData) : [],
+			card2Effects: card2Effects ? card2Effects.map(processSkillData) : [],
+			card3Effects: card3Effects ? card3Effects.map(processSkillData) : [],
+			card4Effects: card4Effects ? card4Effects.map(processSkillData) : [],
+			card1Type: card1Type ?? 'buster',
+			card2Type: card2Type ?? 'arts',
+			card3Type: card3Type ?? 'quick',
+			card1IsCritical: card1IsCritical ?? false,
+			card2IsCritical: card2IsCritical ?? false,
+			card3IsCritical: card3IsCritical ?? false,
+			card1DamageJudgement: card1DamageJudgement ?? 'normal',
+			card2DamageJudgement: card2DamageJudgement ?? 'normal',
+			card3DamageJudgement: card3DamageJudgement ?? 'normal',
+			card4DamageJudgement: card4DamageJudgement ?? 'normal',
+			card1OverKillCount: card1OverKillCount ?? 0,
+			card2OverKillCount: card2OverKillCount ?? 0,
+			card3OverKillCount: card3OverKillCount ?? 0,
+			card4OverKillCount: card4OverKillCount ?? 0,
+		}
+	})
+	return {
+		servantClass: servantClass ?? 'saber',
+		servantAtk: servantAtk ?? 0,
+		craftEssenceAtk: craftEssenceAtk ?? 0,
+		npColor: npColor ?? 'buster',
+		npValue: npValue ?? 0,
+		footprintB: footprintB ?? 0,
+		footprintA: footprintA ?? 0,
+		footprintQ: footprintQ ?? 0,
+		npGain: npGain ?? 0,
+		starRate: starRate ?? 0,
+		hitCountN: hitCountN ?? 0,
+		hitCountB: hitCountB ?? 0,
+		hitCountA: hitCountA ?? 0,
+		hitCountQ: hitCountQ ?? 0,
+		hitCountEX: hitCountEX ?? 0,
+		passiveEffects: passiveEffects ? passiveEffects.map(processSkillData) : [],
+		turns: nonNullTurns ?? [],
+	}
+}
+
+export function calculateDamages(
+	args: DamageCalculatorInputValue,
+): ProcessedTurnResult[] {
+	const {
+		servantClass,
+		servantAtk,
+		craftEssenceAtk,
+		npColor,
+		npValue,
+		footprintB,
+		footprintA,
+		footprintQ,
+		npGain,
+		starRate,
+		hitCountN,
+		hitCountB,
+		hitCountA,
+		hitCountQ,
+		hitCountEX,
+		passiveEffects,
+		turns,
+	} = processArgs(args)
+
+	const atk = servantAtk + craftEssenceAtk
+	const footprints = {
+		noblePhantasm: 0,
+		buster: footprintB,
+		arts: footprintA,
+		quick: footprintQ,
+		extra: 0,
+	}
 	const hitCounts = {
-		n: Number(document.getElementById('n-hit-count').value),
-		b: Number(document.getElementById('b-hit-count').value),
-		a: Number(document.getElementById('a-hit-count').value),
-		q: Number(document.getElementById('q-hit-count').value),
-		ex: Number(document.getElementById('ex-hit-count').value),
+		noblePhantasm: hitCountN,
+		buster: hitCountB,
+		arts: hitCountA,
+		quick: hitCountQ,
+		extra: hitCountEX,
 	}
 	const classCorrectionValue = getClassCorrectionValue(servantClass)
-	const turnLength = document.getElementsByClassName('turn-form').length
-	const totalResult = []
-	const npResult = []
-	const starResult = []
-	const buffCount = []
-	const buffs = {
-		atk_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		b_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		b_power_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		a_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		a_power_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		q_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		q_power_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		ex_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		ex_power_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		np_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		cr_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		b_cr_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		a_cr_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		q_cr_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		sp_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		npget_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		starget_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		sp_np: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		sp_def: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		damage_plus: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		np_mag_up: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
-		cr_card_buff: [[0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]],
+	const initialBuff = [0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]
+	const simulatedBuffs: Record<SkillType, number[][]> = {
+		atkBuff: [[...initialBuff]],
+		busterBuff: [[...initialBuff]],
+		busterPowerBuff: [[...initialBuff]],
+		artsBuff: [[...initialBuff]],
+		artsPowerBuff: [[...initialBuff]],
+		quickBuff: [[...initialBuff]],
+		quickPowerBuff: [[...initialBuff]],
+		extraBuff: [[...initialBuff]],
+		extraPowerBuff: [[...initialBuff]],
+		noblePhantasmBuff: [[...initialBuff]],
+		criticalBuff: [[...initialBuff]],
+		busterCriticalBuff: [[...initialBuff]],
+		artsCriticalBuff: [[...initialBuff]],
+		quickCriticalBuff: [[...initialBuff]],
+		spBuff: [[...initialBuff]],
+		npGetBuff: [[...initialBuff]],
+		starGetBuff: [[...initialBuff]],
+		npSuperEffectiveCorrection: [[...initialBuff]],
+		spDef: [[...initialBuff]],
+		damagePlus: [[...initialBuff]],
+		npValueUp: [[...initialBuff]],
+		cardCriticalBuff: [[...initialBuff]],
 	}
 
-	//パッシブスキル取得
-	pushBuffs(buffs, 0, 0)
+	pushBuffs(simulatedBuffs, passiveEffects)
 
-	//ターン数ループ
-	for (let i = 1; i <= turnLength; i++) {
-		const turnResult = []
-		const turnForm = document.getElementById('turn' + i)
-		//エネミー情報を取得
-		const vsClassValue = Number(
-			turnForm.getElementsByClassName('enemy-class')[0].value,
-		)
-		const vsAttrValue = Number(
-			turnForm.getElementsByClassName('enemy-attr')[0].value,
-		)
-		const targetHp = Number(
-			turnForm.getElementsByClassName('enemy-hp')[0].value,
-		)
-		const dtdr = Number(turnForm.getElementsByClassName('dtdr')[0].value) / 100
-		const dsr = Number(turnForm.getElementsByClassName('dsr')[0].value) / 100
+	const result: TurnResult[] = []
 
-		// スキルのバフを計算
-		pushBuffs(buffs, i, 0)
+	for (const turnData of turns) {
+		const turnResult: TurnResult = {
+			baseDamages: [0, 0, 0, 0],
+			constantDamages: [0, 0, 0, 0],
+			nps: [0, 0, 0, 0],
+			minStars: [0, 0, 0, 0],
+			maxStars: [0, 0, 0, 0],
+			minStarRates: [0, 0, 0, 0],
+			maxStarRates: [0, 0, 0, 0],
+			passRate: 0,
+			atkBuffs: [0, 0, 0, 0],
+			cardBuffs: [0, 0, 0, 0],
+			npOrCrBuffs: [0, 0, 0, 0],
+			spBuffs: [0, 0, 0, 0],
+		}
+		const {
+			classAffinity,
+			attributeAffinity,
+			targetDamage,
+			dtdr,
+			dsr,
+			turnEffects,
+			card1Effects,
+			card2Effects,
+			card3Effects,
+			card4Effects,
+			card1Type,
+			card2Type,
+			card3Type,
+			card1IsCritical,
+			card2IsCritical,
+			card3IsCritical,
+			card1DamageJudgement,
+			card2DamageJudgement,
+			card3DamageJudgement,
+			card4DamageJudgement,
+			card1OverKillCount,
+			card2OverKillCount,
+			card3OverKillCount,
+			card4OverKillCount,
+		} = turnData
 
-		// カード選択を取得
-		const selectedCards = [
-			turnForm.getElementsByClassName('card1-color')[0].value,
-			turnForm.getElementsByClassName('card2-color')[0].value,
-			turnForm.getElementsByClassName('card3-color')[0].value,
-			'ex',
+		pushBuffs(simulatedBuffs, turnEffects)
+
+		const selectedCards: CommandCard[] = [
+			card1Type,
+			card2Type,
+			card3Type,
+			'extra',
 		]
 
-		const selectedCardColors = selectedCards.map((v) =>
-			v === 'n' ? npColor : v,
+		const selectedCardColors: CardColor[] = selectedCards.map((v) =>
+			v === 'noblePhantasm' ? npColor : v,
 		)
 
-		//1stボーナス
+		const cardEffects = [card1Effects, card2Effects, card3Effects, card4Effects]
+
+		const cardIsCriticals = [
+			card1IsCritical,
+			card2IsCritical,
+			card3IsCritical,
+			false,
+		]
+
+		const cardDamageJudgements = [
+			card1DamageJudgement,
+			card2DamageJudgement,
+			card3DamageJudgement,
+			card4DamageJudgement,
+		]
+
+		const cardOverKillCounts = [
+			card1OverKillCount,
+			card2OverKillCount,
+			card3OverKillCount,
+			card4OverKillCount,
+		]
+
 		const {
-			buster: bFirstBonus,
-			arts: aFirstBonus,
-			quick: qFirstBonus,
+			buster: firstBonusB,
+			arts: firstBonusA,
+			quick: firstBonusQ,
 		} = getFirstBonusValues(selectedCardColors)
 
 		//Bチェインボーナス
 		const isBusterChain = selectedCardColors
 			.slice(0, 3)
-			.every((v) => v == 'b' || (v == 'n' && npColor == 'b'))
+			.every((v) => v === 'buster')
 
-		for (let j = 1; j <= 4; j++) {
-			// カードのバフを追加
-			pushBuffs(buffs, i, j)
-			//判定
-			const status =
-				j == 4 && turnForm.getElementsByClassName('card4-color')[0].value == -1
-					? 'notJudged'
-					: ['default', 'noDamage', 'notJudged'][
-							Number(
-								turnForm.getElementsByClassName('card' + j + '-bool')[0].value,
-							)
-						]
-			//オバキル
-			const overKillCount = Number(
-				turnForm.getElementsByClassName('card' + j + '-ovk')[0].value,
-			)
-			// クリティカル判定
-			const isCritical =
-				j != 4 &&
-				Number(turnForm.getElementsByClassName('card' + j + '-cri')[0].value) ==
-					2
+		for (let cardIndex = 0; cardIndex <= 3; cardIndex++) {
+			pushBuffs(simulatedBuffs, cardEffects[cardIndex])
+			const damageJudgement = cardDamageJudgements[cardIndex]
+			const isCritical = cardIsCriticals[cardIndex]
+			const overKillCount = cardOverKillCounts[cardIndex]
 
-			if (status == 'notJudged') {
-				turnResult.push([0, 0])
-				npResult.push(0)
-				starResult.push([0, 0])
-				buffCount.push([0, 0, 0, 0])
+			if (damageJudgement === 'nothing') {
 				continue
 			}
 
 			//カード色の取得
-			const selectedCard = selectedCards[j - 1]
-			const selectedCardColor = selectedCardColors[j - 1]
+			const selectedCard = selectedCards[cardIndex]
+			const selectedCardColor = selectedCardColors[cardIndex]
 
-			const selectedCardType =
-				selectedCard == 'n'
+			const selectedCardType: CardType =
+				selectedCard === 'noblePhantasm'
 					? 'noblePhantasm'
-					: selectedCard === 'ex'
+					: selectedCard === 'extra'
 						? 'extra'
 						: 'normal'
 			const hitCount = hitCounts[selectedCard]
 			const cardNpCorrectionValue = getNpCorrectionValue(
 				selectedCardType,
 				selectedCardColor,
-				j,
+				cardIndex + 1,
 			)
 			const cardStarCorrectionValue = getStarCorrectionValue(
 				selectedCardType,
 				selectedCardColor,
-				j,
+				cardIndex + 1,
 			)
-			const footprint =
-				selectedCardType === 'normal' ? footprints[selectedCard] : 0
-			// atk計算
+			const footprint = footprints[selectedCard]
 			const correctedAtk = (atk + footprint) * classCorrectionValue
-			//固定ダメージ
+
 			const constantDamage =
-				consumeBuff(buffs, 'damage_plus') +
+				consumeBuff(simulatedBuffs, 'damagePlus') +
 				(isBusterChain ? 0 : 0.2 * correctedAtk)
 
 			let damageMultiplier = 1
-			if (selectedCardType == 'noblePhantasm') {
-				//宝具倍率
-				damageMultiplier = (npMag + consumeBuff(buffs, 'np_mag_up')) / 100
-				//特攻宝具処理
-				const spnp = consumeBuff(buffs, 'sp_np')
-				if (spnp != 0) {
-					damageMultiplier = damageMultiplier * (spnp / 100)
+			if (selectedCardType === 'noblePhantasm') {
+				damageMultiplier =
+					(npValue + consumeBuff(simulatedBuffs, 'npValueUp')) / 100
+				const spnp = consumeBuff(simulatedBuffs, 'npSuperEffectiveCorrection')
+				if (spnp !== 0) {
+					damageMultiplier *= spnp / 100
 				}
 			} else if (isCritical) {
 				damageMultiplier = 2
-			} else if (selectedCard == 'ex') {
+			} else if (selectedCard === 'extra') {
 				damageMultiplier = 2
 				//同色チェインの場合
 				if (
-					selectedCardColors[0] == selectedCardColors[1] &&
-					selectedCardColors[1] == selectedCardColors
+					selectedCardColors[0] === selectedCardColors[1] &&
+					selectedCardColors[1] === selectedCardColors[2]
 				) {
 					damageMultiplier = 3.5
 				}
 			}
 
 			//各種バフ計算
-			const atkBuff = Math.max(consumeBuff(buffs, 'atk_buff') / 100, -1)
-			const cardBuff = consumeBuff(buffs, selectedCardColor + '_buff') / 100
+			const atkBuff = Math.max(consumeBuff(simulatedBuffs, 'atkBuff') / 100, -1)
+			const cardBuff =
+				consumeBuff(simulatedBuffs, `${selectedCardColor}Buff`) / 100
 			const cardPowerBuff =
-				consumeBuff(buffs, selectedCardColor + '_power_buff') / 100
+				consumeBuff(
+					simulatedBuffs,
+					`${selectedCardColor}PowerBuff` as
+						| 'busterPowerBuff'
+						| 'artsPowerBuff'
+						| 'quickPowerBuff',
+				) / 100
 			const totalCardBuff = Math.max(
 				cardBuff +
 					cardPowerBuff +
-					(isCritical ? consumeBuff(buffs, 'cr_card_buff') / 100 : 0),
+					(isCritical
+						? consumeBuff(simulatedBuffs, 'cardCriticalBuff') / 100
+						: 0),
 				-1,
 			)
-			const spBuff = Math.max(consumeBuff(buffs, 'sp_buff') / 100, -1)
-			const spDefense = Math.min(consumeBuff(buffs, 'sp_def') / 100, 1)
-			const npGetBuff = Math.max(consumeBuff(buffs, 'npget_buff') / 100, -1)
-			const starGetBuff = consumeBuff(buffs, 'starget_buff') / 100
-			const cardCorrectionValue = getCardCorrectionValue(
-				selectedCardColor,
-				selectedCardType,
-				j,
+			const spBuff = Math.max(consumeBuff(simulatedBuffs, 'spBuff') / 100, -1)
+			const spDef = Math.min(consumeBuff(simulatedBuffs, 'spDef') / 100, 1)
+			const npGetBuff = Math.max(
+				consumeBuff(simulatedBuffs, 'npGetBuff') / 100,
+				-1,
 			)
-			const nporcrbuff =
+			const starGetBuff = consumeBuff(simulatedBuffs, 'starGetBuff') / 100
+			const cardCorrectionValue = getCardCorrectionValue(
+				selectedCardType,
+				selectedCardColor,
+				cardIndex + 1,
+			)
+			const npOrCrBuff =
 				selectedCardType === 'noblePhantasm'
-					? Math.max(consumeBuff(buffs, 'np_buff') / 100, -1)
+					? Math.max(consumeBuff(simulatedBuffs, 'noblePhantasmBuff') / 100, -1)
 					: isCritical
 						? Math.max(
-								(consumeBuff(buffs, 'cr_buff') +
-									consumeBuff(buffs, selectedCardColor + '_cr_buff')) /
+								(consumeBuff(simulatedBuffs, 'criticalBuff') +
+									consumeBuff(
+										simulatedBuffs,
+										`${selectedCardColor}CriticalBuff` as
+											| 'busterCriticalBuff'
+											| 'artsCriticalBuff'
+											| 'quickCriticalBuff',
+									)) /
 									100,
 								-1,
 							)
 						: 0
 
-			if (status == 'noDamage') {
-				turnResult.push([0, 0])
-			} else {
-				turnResult.push([
-					calcDamage(
-						correctedAtk,
-						damageMultiplier,
-						cardCorrectionValue,
-						totalCardBuff,
-						selectedCardType === 'noblePhantasm' ? 0 : bFirstBonus,
-						vsClassValue,
-						vsAttrValue,
-						atkBuff,
-						nporcrbuff,
-						spBuff,
-						spDefense,
-					),
-					constantDamage,
-				])
+			if (damageJudgement !== 'noDamage') {
+				turnResult.baseDamages[cardIndex] = calcBase(
+					correctedAtk,
+					damageMultiplier,
+					cardCorrectionValue,
+					totalCardBuff,
+					selectedCardType === 'noblePhantasm' ? 0 : firstBonusB,
+					classAffinity,
+					attributeAffinity,
+					atkBuff,
+					npOrCrBuff,
+					spBuff,
+					spDef,
+				)
+				turnResult.constantDamages[cardIndex] = constantDamage
 			}
-			npResult.push(
-				npGetCalc(
-					npRate,
-					cardNpCorrectionValue,
-					Math.max(cardBuff, -1),
-					selectedCardType === 'noblePhantasm' ? 0 : aFirstBonus,
-					dtdr,
-					npGetBuff,
-					isCritical,
-					hitCount,
-					overKillCount,
-				),
+			turnResult.nps[cardIndex] = npGetCalc(
+				npGain,
+				cardNpCorrectionValue,
+				Math.max(cardBuff, -1),
+				selectedCardType === 'noblePhantasm' ? 0 : firstBonusA,
+				dtdr,
+				npGetBuff,
+				isCritical,
+				hitCount,
+				overKillCount,
 			)
-			starResult.push(
-				starGetCalc(
-					starRate,
-					cardStarCorrectionValue,
-					cardBuff,
-					selectedCardType === 'noblePhantasm' ? 0 : qFirstBonus,
-					dsr,
-					starGetBuff,
-					isCritical,
-					hitCount,
-					overKillCount,
-				),
+			const [minStar, maxStar, minStarRate, maxStarRate] = starGetCalc(
+				starRate,
+				cardStarCorrectionValue,
+				cardBuff,
+				selectedCardType === 'noblePhantasm' ? 0 : firstBonusQ,
+				dsr,
+				starGetBuff,
+				isCritical,
+				hitCount,
+				overKillCount,
 			)
-			buffCount.push([
-				Math.round(10000 * atkBuff) / 100,
-				Math.round(10000 * totalCardBuff) / 100,
-				Math.round(10000 * nporcrbuff) / 100,
-				Math.round(10000 * spBuff) / 100,
-			])
+			turnResult.minStars[cardIndex] = minStar
+			turnResult.maxStars[cardIndex] = maxStar
+			turnResult.minStarRates[cardIndex] = minStarRate
+			turnResult.maxStarRates[cardIndex] = maxStarRate
+
+			turnResult.atkBuffs[cardIndex] = Math.round(10000 * atkBuff) / 100
+			turnResult.cardBuffs[cardIndex] = Math.round(10000 * totalCardBuff) / 100
+			turnResult.npOrCrBuffs[cardIndex] = Math.round(10000 * npOrCrBuff) / 100
+			turnResult.spBuffs[cardIndex] = Math.round(10000 * spBuff) / 100
 		}
 
-		//表出力用の配列を生成
-		totalResult.push(selectedCards[0].toUpperCase())
-		totalResult.push(selectedCards[1].toUpperCase())
-		totalResult.push(selectedCards[2].toUpperCase())
-
-		let sum = 0
-		for (let l = 0; l < 4; l++) {
-			const x = Math.floor(turnResult[l][0] * 0.9 + turnResult[l][1])
-			totalResult.push(x)
-			sum += x
-		}
-		totalResult.push(sum)
-		totalResult.push(targetHp)
-		totalResult.push(
-			calcPassRate(
-				turnResult[0][0],
-				turnResult[1][0],
-				turnResult[2][0],
-				turnResult[3][0],
-				targetHp -
-					(turnResult[0][1] +
-						turnResult[1][1] +
-						turnResult[2][1] +
-						turnResult[3][1]),
-			),
+		turnResult.passRate = calcPassRate(
+			turnResult.baseDamages[0],
+			turnResult.baseDamages[1],
+			turnResult.baseDamages[2],
+			turnResult.baseDamages[3],
+			targetDamage -
+				(turnResult.constantDamages[0] +
+					turnResult.constantDamages[1] +
+					turnResult.constantDamages[2] +
+					turnResult.constantDamages[3]),
 		)
 
-		sum = 0
-		for (let l = 0; l < 4; l++) {
-			const x = Math.floor(turnResult[l][0] * 1.0 + turnResult[l][1])
-			totalResult.push(x)
-			sum += x
-		}
-		totalResult.push(sum)
-		sum = 0
-
-		for (let l = 0; l < 4; l++) {
-			const x = Math.floor(turnResult[l][0] * 1.099 + turnResult[l][1])
-			totalResult.push(x)
-			sum += x
-		}
-		totalResult.push(sum)
+		result.push(turnResult)
 
 		//ターン経過処理
-		Object.keys(buffs).forEach((element) => {
-			for (let k = 0; k < buffs[element].length; k++) {
-				if (buffs[element][k][1] != Number.POSITIVE_INFINITY) {
-					buffs[element][k][1] -= 1
+		for (const key in simulatedBuffs) {
+			for (let k = 0; k < simulatedBuffs[key as SkillType].length; k++) {
+				if (
+					simulatedBuffs[key as SkillType][k][1] !== Number.POSITIVE_INFINITY
+				) {
+					simulatedBuffs[key as SkillType][k][1] -= 1
 				}
 			}
-			buffs[element] = buffs[element].filter((elem) => elem[1] > 0)
-		})
-	}
-
-	//出力
-	if (turnLength != 0) {
-		refResult(window)
-		if (win1 && !win1.closed) {
-			refResult(win1)
+			simulatedBuffs[key as SkillType] = simulatedBuffs[
+				key as SkillType
+			].filter((ele) => ele[1] > 0)
 		}
 	}
 
-	//リザルトフォームを生成
-	function refResult(target_window) {
-		addResultForm(target_window, turnLength, npCalcRequired)
-		const op = target_window.document.getElementsByName('result')
-		const npr = target_window.document.getElementsByName('npresult')
-		const starr = target_window.document.getElementsByName('starresult')
-		const bufff = target_window.document.getElementById('hidden-result')
-		bufff.innerHTML = ''
-		//ターン数ループ
-		for (let i = 0; i < turnLength; i++) {
-			//カード色部分
-			for (let j = 0; j < 3; j++) {
-				const k = i * 20 + j
-				op[k].textContent = totalResult[k].toLocaleString()
-				if (document.getElementById('colorcheck').children[0].checked) {
-					let cardcolor = totalResult[k]
-					if (totalResult[k] == 'N') {
-						cardcolor = npColor.toUpperCase()
-					}
-					if (cardcolor == 'B') {
-						op[k].parentElement.style.backgroundColor = 'tomato'
-					} else if (cardcolor == 'A') {
-						op[k].parentElement.style.backgroundColor = 'cornflowerblue'
-					} else if (cardcolor == 'Q') {
-						op[k].parentElement.style.backgroundColor = 'lightgreen'
-					}
-				} else {
-					op[k].parentElement.style.backgroundColor = 'white'
-				}
-			}
-			//数値部分
-			for (let j = 3; j < 20; j++) {
-				const k = i * 20 + j
-				op[k].textContent = totalResult[k].toLocaleString()
-			}
-			//NP部分
-			if (npCalcRequired) {
-				let npsum = 0
-				const starsum = [0, 0]
-				for (let j = 0; j <= 3; j++) {
-					npr[i * 5 + j].textContent = npResult[i * 4 + j] / 100 + '%'
-					npsum += npResult[i * 4 + j]
-					starr[i * 5 + j].textContent =
-						starResult[i * 4 + j][0] +
-						'(+' +
-						starResult[i * 4 + j][1] +
-						')' +
-						Math.floor(Math.max(starResult[i * 4 + j][2], 0) * 1000) / 10 +
-						'～' +
-						Math.floor(Math.max(starResult[i * 4 + j][3], 0) * 1000) / 10 +
-						'%'
-					starsum[0] += starResult[i * 4 + j][0]
-					starsum[1] += starResult[i * 4 + j][1]
-				}
-				npr[i * 5 + 4].textContent = Math.floor(npsum) / 100 + '%'
-				starr[i * 5 + 4].textContent = starsum[0] + '(+' + starsum[1] + ')'
-			}
-
-			//バフ情報
-			for (let j = 0; j < 4; j++) {
-				const new_element = document.createElement('li')
-				new_element.textContent =
-					i +
-					1 +
-					'T-' +
-					(j + 1) +
-					' 攻撃バフ:' +
-					buffCount[4 * i + j][0] +
-					'% 色バフ:' +
-					buffCount[4 * i + j][1] +
-					'% 宝具/クリバフ:' +
-					buffCount[4 * i + j][2] +
-					'% 特攻バフ:' +
-					buffCount[4 * i + j][3] +
-					'%'
-				bufff.appendChild(new_element)
-			}
-			bufff.appendChild(document.createElement('br'))
+	// 表用のデータに加工
+	const processedResult = result.map((turnResult, turnIndex) => {
+		const damage90 = turnResult.baseDamages.map((baseDamage, index) =>
+			Math.floor(baseDamage * 0.9 + turnResult.constantDamages[index]),
+		)
+		const damage100 = turnResult.baseDamages.map((baseDamage, index) =>
+			Math.floor(baseDamage * 1 + turnResult.constantDamages[index]),
+		)
+		const damage110 = turnResult.baseDamages.map((baseDamage, index) =>
+			Math.floor(baseDamage * 1.1 + turnResult.constantDamages[index]),
+		)
+		return {
+			...turnResult,
+			damage90: [...damage90, damage90.reduce((a, b) => a + b, 0)],
+			damage100: [...damage100, damage100.reduce((a, b) => a + b, 0)],
+			damage110: [...damage110, damage110.reduce((a, b) => a + b, 0)],
+			baseDamages: [
+				...turnResult.baseDamages,
+				turnResult.baseDamages.reduce((a, b) => a + b, 0),
+			],
+			constantDamages: [
+				...turnResult.constantDamages,
+				turnResult.constantDamages.reduce((a, b) => a + b, 0),
+			],
+			nps: [...turnResult.nps, turnResult.nps.reduce((a, b) => a + b, 0)],
+			minStars: [
+				...turnResult.minStars,
+				turnResult.minStars.reduce((a, b) => a + b, 0),
+			],
+			maxStars: [
+				...turnResult.maxStars,
+				turnResult.maxStars.reduce((a, b) => a + b, 0),
+			],
+			selectedCards: [
+				cardNames[turns[turnIndex].card1Type],
+				cardNames[turns[turnIndex].card2Type],
+				cardNames[turns[turnIndex].card3Type],
+			],
+			targetDamage: turns[turnIndex].targetDamage,
 		}
-	}
+	})
+	return processedResult
 }
 
 // magは宝具なら倍率(特攻込み)、通常攻撃なら1、クリティカルなら2、EXなら2or3.5
-function calcDamage(
-	atk,
-	mag,
-	cardCorr,
-	cardbuff,
-	fb,
-	vsclass,
-	vsattr,
-	atkbuff,
-	nporcrbuff,
-	spbuff,
-	spdef,
+function calcBase(
+	atk: number,
+	mag: number,
+	cardCorr: number,
+	cardbuff: number,
+	fb: number,
+	vsclass: number,
+	vsattr: number,
+	atkbuff: number,
+	nporcrbuff: number,
+	spbuff: number,
+	spdef: number,
 ) {
 	const result =
 		atk *
@@ -518,70 +640,73 @@ function calcDamage(
 }
 
 //クラス補正
-function getClassCorrectionValue(servantClass) {
-	if (['berserker', 'ruler', 'avenger'].includes(servantClass)) {
-		return 1.1
-	} else if (servantClass == 'lancer') {
-		return 1.05
-	} else if (servantClass == 'archer') {
-		return 0.95
-	} else if (['caster', 'assassin'].includes(servantClass)) {
-		return 0.9
-	} else {
-		return 1
+function getClassCorrectionValue(servantClass: string) {
+	switch (servantClass) {
+		case 'berserker':
+		case 'ruler':
+		case 'avenger':
+			return 1.1
+		case 'lancer':
+			return 1.05
+		case 'archer':
+			return 0.95
+		case 'caster':
+		case 'assassin':
+			return 0.9
+		default:
+			return 1
 	}
 }
 
 //バフ取得
-function pushBuffs(buffs, turn, card) {
-	const ele = document
-		.getElementById('turn' + turn)
-		.getElementsByClassName('card' + card + '-skill')[0]
-	const buffForms = ele.getElementsByClassName('buff-form') ?? []
-	for (let i = 0; i < buffForms.length; i++) {
-		const skillType = buffForms[i].getElementsByClassName('skill-type')[0].value
-		const amount = Number(
-			buffForms[i].getElementsByClassName('amount')[0].value,
-		)
-		const turn = Number(buffForms[i].getElementsByClassName('turn')[0].value)
-		const time = Number(buffForms[i].getElementsByClassName('time')[0].value)
-		if (amount === 0) {
-			continue
-		}
-		// 永続スキル
-		if (turn == 0 && time == 0) {
-			buffs[skillType][0][0] += amount
-			// ターン制スキル
-		} else if (time == 0) {
-			buffs[skillType].push([amount, turn, Number.POSITIVE_INFINITY])
-			// 回数制スキル
+function pushBuffs(
+	simulatedBuffs: Record<SkillType, number[][]>,
+	newBuffs: Required<SkillData>[],
+) {
+	for (const buff of newBuffs) {
+		const { skillType, amount, turns, times } = buff
+		if (turns === -1 && times === -1) {
+			simulatedBuffs[skillType][0][0] += amount
+		} else if (times === -1) {
+			simulatedBuffs[skillType].push([amount, turns, Number.POSITIVE_INFINITY])
 		} else {
-			buffs[skillType].push([amount, turn, time])
+			simulatedBuffs[skillType].push([amount, turns, times])
 		}
 	}
 }
 
 //バフ処理
-function consumeBuff(buffs, buffName) {
-	let buff = 0
-	for (let i = 0; i < buffs[buffName].length; i++) {
-		buff += Number(buffs[buffName][i][0])
+function consumeBuff(
+	simulatedBuffs: Record<SkillType, number[][]>,
+	skillType: SkillType,
+) {
+	let res = 0
+	for (let i = 0; i < simulatedBuffs[skillType].length; i++) {
+		res += simulatedBuffs[skillType][i][0]
 		//回数制バフの回数を減らす
-		if (buffs[buffName][i][2] != Number.POSITIVE_INFINITY) {
-			buffs[buffName][i][2] -= 1
+		if (simulatedBuffs[skillType][i][2] !== Number.POSITIVE_INFINITY) {
+			simulatedBuffs[skillType][i][2] -= 1
 		}
 	}
-
 	//回数が切れたバフを消す
-	buffs[buffName] = buffs[buffName].filter((element) => element[2] > 0)
-	return buff
+	simulatedBuffs[skillType] = simulatedBuffs[skillType].filter(
+		(ele) => ele[2] > 0,
+	)
+	return res
 }
 
 //撃破率計算
-function calcPassRate(d1, d2, d3, d4, target) {
+function calcPassRate(
+	d1: number,
+	d2: number,
+	d3: number,
+	d4: number,
+	target: number,
+) {
 	if ((d1 + d2 + d3 + d4) * 1.099 < target) {
 		return 0
-	} else if ((d1 + d2 + d3 + d4) * 0.9 >= target) {
+	}
+	if ((d1 + d2 + d3 + d4) * 0.9 >= target) {
 		return 100
 	}
 	const first = []
@@ -608,118 +733,62 @@ function calcPassRate(d1, d2, d3, d4, target) {
 	return Math.round((1600000000 - cnt) / 160000) / 100
 }
 
-//二分探索
-function binarySearch(target, arr) {
-	let left = 0
-	let right = 39999
-	if (target <= arr[left]) {
-		return 0
-	} else if (target > arr[right]) {
-		return 40000
-	}
-
-	while (right - left > 1) {
-		const mid = Math.floor((left + right) / 2)
-		if (target > arr[mid]) {
-			left = mid
-		} else {
-			right = mid
-		}
-	}
-	return left + 1
-}
-
-//表を増やす
-function addResultForm(target_window, i, np) {
-	const parent = target_window.document.getElementById('result-form')
-	//初期化
-	const t = target_window.document.getElementsByClassName('result-content')
-	for (let k = 0; k < t.length; ) {
-		t[0].remove()
-	}
-	//ターンの数ループ
-	for (let j = 1; j <= i; j++) {
-		//1行ごとに処理
-		let template = document.getElementById('result-template1').content
-		let newresult = template.cloneNode(true)
-		newresult.children[0].children[0].textContent = j + 'T'
-		parent.appendChild(newresult)
-		if (np) {
-			template = document.getElementById('result-template2').content
-			newresult = template.cloneNode(true)
-			parent.appendChild(newresult)
-		}
-	}
-}
-
 //NP計算
 function npGetCalc(
-	npRate,
-	cardNpCorr,
-	cardbuff,
-	fb,
-	dtdr,
-	npgetbuff,
-	cr,
-	hit,
-	ovk,
+	npRate: number,
+	cardNpCorr: number,
+	cardBuff: number,
+	fb: number,
+	dtdr: number,
+	npGetBuff: number,
+	isCr: boolean,
+	hit: number,
+	ovk: number,
 ) {
-	if (ovk > hit) {
-		ovk = hit
-	}
-	let result
-	result =
+	const fixedOvk = ovk > hit ? hit : ovk
+	let result =
 		npRate *
-		(cardNpCorr * (1 + cardbuff) + fb) *
+		(cardNpCorr * (1 + cardBuff) + fb) *
 		dtdr *
-		(1 + npgetbuff) *
-		cr *
+		(1 + npGetBuff) *
+		(isCr ? 2 : 1) *
 		100
 	//hit数をかける前に小数点第3位切り捨て
 	result = Math.floor(result)
-	result = Math.floor(result * 1.5) * ovk + result * (hit - ovk)
+	result = Math.floor(result * 1.5) * fixedOvk + result * (hit - fixedOvk)
 	return result
 }
 
 //スター計算
 function starGetCalc(
-	starRate,
-	cardStarCorr,
-	cardbuff,
-	fb,
-	dsr,
-	stargetbuff,
-	cr,
-	hit,
-	ovk,
+	starRate: number,
+	cardStarCorr: number,
+	cardbuff: number,
+	fb: number,
+	dsr: number,
+	stargetbuff: number,
+	isCr: boolean,
+	hit: number,
+	ovk: number,
 ) {
-	if (cr == 2) {
-		cr = 0.2
-	} else {
-		cr = 0
-	}
-	if (ovk > hit) {
-		ovk = hit
-	}
-	let sr
-	sr = starRate + cardStarCorr * (1 + cardbuff) + fb + dsr + stargetbuff + cr
+	const fixedOvk = ovk > hit ? hit : ovk
+	let sr =
+		starRate +
+		cardStarCorr * (1 + cardbuff) +
+		fb +
+		dsr +
+		stargetbuff +
+		(isCr ? 0.2 : 0)
 	const result = [0, 0, 0, 0]
-	//発生率格納
+	//発生率
 	// オバキル0
 	result[2] = Math.min(sr, 3)
 	// オバキル全部
 	result[3] = Math.min(sr + 0.3, 3)
-	// if (ovk==0) {
-	//オバキル0なら下限に統一
-	//result[3] = result[2];
-	//} else if (ovk==hit) {
-	//オバキル全部なら上限に統一
-	//result[2] = result[3];
-	//}
 
 	sr = result[3]
 	for (let i = 1; i <= hit; i++) {
-		if (i == ovk + 1) {
+		if (i === fixedOvk + 1) {
 			sr = result[2]
 		}
 		sr = Math.max(sr, 0)
@@ -727,10 +796,11 @@ function starGetCalc(
 			result[0] += 3
 		} else {
 			result[0] += Math.floor(sr)
-			if (sr % 1 != 0) {
+			if (sr % 1 !== 0) {
 				result[1] += 1
 			}
 		}
 	}
+	result[1] += result[0]
 	return result
 }

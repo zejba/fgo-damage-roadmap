@@ -15,11 +15,13 @@
     "antd": "^5.24.4",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "jotai": "^2.12.4",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.7",
     "react-dom": "^18.3.1",
     "react-papaparse": "^4.4.0",
-    "react-use": "^17.6.0"
+    "react-use": "^17.6.0",
+    "styled-components": "^6.1.18"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
