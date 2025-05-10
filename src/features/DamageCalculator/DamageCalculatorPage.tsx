@@ -5,7 +5,7 @@ import ResultTable from './ResultTable'
 function DamageCalculatorPage() {
 	return (
 		<>
-			<Typography.Title>ダメージ計算</Typography.Title>
+			<Typography.Title level={3}>ダメージ計算</Typography.Title>
 			<CalcInputSection />
 			<ResultTable />
 		</>

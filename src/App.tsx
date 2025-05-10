@@ -1,5 +1,6 @@
 import { ConfigProvider, type ThemeConfig } from 'antd'
 import DamageCalculatorPage from './features/DamageCalculator/DamageCalculatorPage'
+import Layout from './features/Layout'
 
 const theme: ThemeConfig = {
 	components: {
@@ -19,6 +20,9 @@ const theme: ThemeConfig = {
 		InputNumber: {
 			paddingInline: 8,
 		},
+		Table: {
+			borderColor: '#BFBFBF',
+		},
 	},
 	token: {
 		colorBorder: '#BFBFBF',
@@ -28,7 +32,9 @@ const theme: ThemeConfig = {
 function App() {
 	return (
 		<ConfigProvider theme={theme}>
-			<DamageCalculatorPage />
+			<Layout>
+				<DamageCalculatorPage />
+			</Layout>
 		</ConfigProvider>
 	)
 }

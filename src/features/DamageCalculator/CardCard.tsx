@@ -13,7 +13,11 @@ import {
 import { useAtomValue } from 'jotai'
 import { useCallback, useEffect, useState } from 'react'
 import SpaceCompactHeader from '../../components/SpaceCompactHeader'
-import { cardTypeOptions, damageJudgmentOptions } from '../../data/options'
+import {
+	cardColorStyles,
+	cardTypeOptions,
+	damageJudgmentOptions,
+} from '../../data/options'
 import BuffForm from './BuffForm'
 import { isColoredAtom } from './jotai'
 import type { DamageCalculatorInputValue } from './types'
@@ -24,13 +28,6 @@ interface CardCardProps {
 	index: number
 	title: string
 }
-
-const colors = {
-	buster: 'tomato',
-	arts: 'cornflowerblue',
-	quick: 'lightgreen',
-	extra: '#F0F0F0',
-} as const
 
 function CardCard(props: CardCardProps) {
 	const { turnIndex, title, index, form } = props
@@ -53,9 +50,9 @@ function CardCard(props: CardCardProps) {
 				setTitleBgColor('#F0F0F0')
 				return
 			}
-			setTitleBgColor(colors[npColor])
+			setTitleBgColor(cardColorStyles[npColor])
 		} else {
-			setTitleBgColor(colors[cardType])
+			setTitleBgColor(cardColorStyles[cardType])
 		}
 	}, [form, turnIndex, index])
 	useEffect(() => {

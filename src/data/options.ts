@@ -105,3 +105,10 @@ export const damageJudgmentOptions: { value: string; label: string }[] = [
 	{ value: 'noDamage', label: '0(回数消費有)' },
 	{ value: 'nothing', label: '0(回数消費無)' },
 ]
+
+export const cardColorStyles = {
+	buster: 'tomato',
+	arts: 'cornflowerblue',
+	quick: 'lightgreen',
+	extra: '#F0F0F0',
+} as const

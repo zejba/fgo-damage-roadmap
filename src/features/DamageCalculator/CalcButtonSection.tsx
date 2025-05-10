@@ -22,7 +22,7 @@ function CalcButtonSection(props: CalcButtonSectionProps) {
 		setResult(calculateDamages(values))
 	}, [form, setResult])
 	return (
-		<Space>
+		<Space style={{ marginBottom: 12 }}>
 			<Button
 				style={{ width: 'fit-content' }}
 				type="primary"

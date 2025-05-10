@@ -32,16 +32,43 @@ const columns: ColumnsType<RecordType> = [
 		title: '1st',
 		dataIndex: 'first',
 		key: 'first',
+		onCell: (record) => {
+			return record.turn
+				? {
+						style: {
+							backgroundColor: '#F0F0F0',
+						},
+					}
+				: {}
+		},
 	},
 	{
 		title: '2nd',
 		dataIndex: 'second',
 		key: 'second',
+		onCell: (record) => {
+			return record.turn
+				? {
+						style: {
+							backgroundColor: '#F0F0F0',
+						},
+					}
+				: {}
+		},
 	},
 	{
 		title: '3rd',
 		dataIndex: 'third',
 		key: 'third',
+		onCell: (record) => {
+			return record.turn
+				? {
+						style: {
+							backgroundColor: '#F0F0F0',
+						},
+					}
+				: {}
+		},
 	},
 	{
 		title: 'EX',
@@ -59,7 +86,7 @@ const columns: ColumnsType<RecordType> = [
 		key: 'targetDamage',
 		onCell: (record) => {
 			return {
-				rowSpan: record.turn ? 4 : 0,
+				rowSpan: record.targetDamage === '-' ? 1 : record.targetDamage ? 3 : 0,
 			}
 		},
 	},
@@ -69,7 +96,7 @@ const columns: ColumnsType<RecordType> = [
 		key: 'passRate',
 		onCell: (record) => {
 			return {
-				rowSpan: record.turn ? 4 : 0,
+				rowSpan: record.passRate === '-' ? 1 : record.passRate ? 3 : 0,
 			}
 		},
 	},
@@ -145,6 +172,7 @@ function ResultTable() {
 				pagination={false}
 				rowHoverable={false}
 				bordered
+				style={{ maxWidth: 1500 }}
 			/>
 		</>
 	)
