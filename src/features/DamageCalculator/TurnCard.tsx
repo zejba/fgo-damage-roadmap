@@ -10,36 +10,43 @@ import {
 	Space,
 } from 'antd'
 import { useAtomValue } from 'jotai'
-import { memo, useMemo } from 'react'
+import { memo, useContext } from 'react'
+import CollapseWithOutHeader from '../../components/CollapseWithOutHeader'
 import SpaceCompactHeader from '../../components/SpaceCompactHeader'
 import { enemyClassOptions } from '../../data/options'
 import BuffForm from './BuffForm'
 import CardCard from './CardCard'
+import {
+	MoveBuffFormFnContext,
+	RemoveBuffFormFnContext,
+	RemoveTurnCardFnContext,
+} from './context'
 import { isRequiredNpStarCalcAtom } from './jotai'
 import type { DamageCalculatorInputValue } from './types'
 
 interface TurnCardProps {
 	form: FormInstance<DamageCalculatorInputValue>
 	fieldName: number
-	remove: (index: number | number[]) => void
+}
+
+function CloseButton({ fieldName }: { fieldName: number }) {
+	const remove = useContext(RemoveTurnCardFnContext)
+	return (
+		<Button
+			onClick={() => remove(fieldName)}
+			type="text"
+			icon={<CloseOutlined />}
+		/>
+	)
 }
 
 const TurnCard = memo((props: TurnCardProps) => {
-	const { form, fieldName, remove } = props
+	const { form, fieldName } = props
 	const isRequiredNpStarCalc = useAtomValue(isRequiredNpStarCalcAtom)
-	const CloseButton = useMemo(() => {
-		return (
-			<Button
-				onClick={() => remove(fieldName)}
-				type="text"
-				icon={<CloseOutlined />}
-			/>
-		)
-	}, [remove, fieldName])
 	return (
 		<Card
 			title={`${fieldName + 1}T目`}
-			extra={CloseButton}
+			extra={<CloseButton fieldName={fieldName} />}
 			style={{ width: '100%' }}
 		>
 			<Flex vertical gap={12} align="flex-start">
@@ -60,7 +67,7 @@ const TurnCard = memo((props: TurnCardProps) => {
 						/>
 					</Form.Item>
 				</Space.Compact>
-				{isRequiredNpStarCalc && (
+				<CollapseWithOutHeader isActive={isRequiredNpStarCalc}>
 					<Space.Compact>
 						<Form.Item name={[fieldName, 'dtdr']} initialValue={100}>
 							<InputNumber
@@ -79,22 +86,21 @@ const TurnCard = memo((props: TurnCardProps) => {
 							/>
 						</Form.Item>
 					</Space.Compact>
-				)}
+				</CollapseWithOutHeader>
 				<Form.List name={[fieldName, 'turnEffects']}>
 					{(fields, { add, remove, move }) => (
-						<Flex vertical gap={4} align="flex-start">
-							<Button onClick={() => add()} icon={<PlusOutlined />}>
-								追加
-							</Button>
-							{fields.map((field) => (
-								<BuffForm
-									key={field.key}
-									fieldName={field.name}
-									remove={remove}
-									move={move}
-								/>
-							))}
-						</Flex>
+						<RemoveBuffFormFnContext.Provider value={remove}>
+							<MoveBuffFormFnContext.Provider value={move}>
+								<Flex vertical gap={4} align="flex-start">
+									<Button onClick={() => add()} icon={<PlusOutlined />}>
+										追加
+									</Button>
+									{fields.map((field) => (
+										<BuffForm key={field.key} fieldName={field.name} />
+									))}
+								</Flex>
+							</MoveBuffFormFnContext.Provider>
+						</RemoveBuffFormFnContext.Provider>
 					)}
 				</Form.List>
 				<CardCard form={form} turnIndex={fieldName} title="1st" index={0} />

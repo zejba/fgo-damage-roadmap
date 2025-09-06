@@ -1,13 +1,18 @@
 import { PlusOutlined } from '@ant-design/icons'
-import { Button, Flex, Form } from 'antd'
+import { Button, Flex, Form, type FormInstance } from 'antd'
 import BaseInfoCard from './BaseInfoCard'
 import CalcButtonSection from './CalcButtonSection'
 import PassiveEffectCard from './PassiveEffectCard'
 import TurnCard from './TurnCard'
+import { RemoveTurnCardFnContext } from './context'
 import type { DamageCalculatorInputValue } from './types'
 
-function CalcInputSection() {
-	const [form] = Form.useForm<DamageCalculatorInputValue>()
+interface Props {
+	form: FormInstance<DamageCalculatorInputValue>
+}
+
+function CalcInputSection(props: Props) {
+	const { form } = props
 	return (
 		<>
 			<Form form={form}>
@@ -21,7 +26,7 @@ function CalcInputSection() {
 					<PassiveEffectCard form={form} />
 					<Form.List name="turns">
 						{(fields, { add, remove }) => (
-							<>
+							<RemoveTurnCardFnContext.Provider value={remove}>
 								<Flex
 									vertical
 									gap={12}
@@ -33,14 +38,13 @@ function CalcInputSection() {
 											form={form}
 											key={field.key}
 											fieldName={field.name}
-											remove={remove}
 										/>
 									))}
 								</Flex>
 								<Button onClick={() => add()} icon={<PlusOutlined />}>
 									ターン追加
 								</Button>
-							</>
+							</RemoveTurnCardFnContext.Provider>
 						)}
 					</Form.List>
 				</Flex>

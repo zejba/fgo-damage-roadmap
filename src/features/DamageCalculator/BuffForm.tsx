@@ -1,17 +1,39 @@
 import { ArrowUpOutlined, CloseOutlined } from '@ant-design/icons'
 import { Button, Form, Input, InputNumber, Select, Space } from 'antd'
-import { memo } from 'react'
+import { memo, useContext } from 'react'
 import SpaceCompactHeader from '../../components/SpaceCompactHeader'
 import { skillTypes, turnOptions } from '../../data/options'
+import { MoveBuffFormFnContext, RemoveBuffFormFnContext } from './context'
 
 interface BuffFormProps {
 	fieldName: number
-	remove: (index: number | number[]) => void
-	move: (from: number, to: number) => void
+}
+
+function RemoveButton(props: BuffFormProps) {
+	const { fieldName } = props
+	const remove = useContext(RemoveBuffFormFnContext)
+	return (
+		<Button onClick={() => remove(fieldName)} style={{ padding: 8 }}>
+			<CloseOutlined />
+		</Button>
+	)
+}
+
+function MoveButton(props: BuffFormProps) {
+	const { fieldName } = props
+	const move = useContext(MoveBuffFormFnContext)
+	return (
+		<Button
+			onClick={() => move(fieldName, Math.max(fieldName - 1, 0))}
+			style={{ padding: 8 }}
+		>
+			<ArrowUpOutlined />
+		</Button>
+	)
 }
 
 const BuffForm = memo((props: BuffFormProps) => {
-	const { fieldName, remove, move } = props
+	const { fieldName } = props
 	return (
 		<Space.Compact>
 			<Form.Item name={[fieldName, 'skillName']}>
@@ -28,23 +50,16 @@ const BuffForm = memo((props: BuffFormProps) => {
 					style={{ width: 112 }}
 				/>
 			</Form.Item>
-			<Form.Item name={[fieldName, 'turn']}>
+			<Form.Item name={[fieldName, 'turns']}>
 				<Select options={turnOptions} style={{ width: 60 }} />
 			</Form.Item>
 			<SpaceCompactHeader>T</SpaceCompactHeader>
-			<Form.Item name={[fieldName, 'count']}>
+			<Form.Item name={[fieldName, 'times']}>
 				<Select options={turnOptions} style={{ width: 60 }} />
 			</Form.Item>
 			<SpaceCompactHeader>回</SpaceCompactHeader>
-			<Button onClick={() => remove(fieldName)} style={{ padding: 8 }}>
-				<CloseOutlined />
-			</Button>
-			<Button
-				onClick={() => move(fieldName, Math.max(fieldName - 1, 0))}
-				style={{ padding: 8 }}
-			>
-				<ArrowUpOutlined />
-			</Button>
+			<RemoveButton fieldName={fieldName} />
+			<MoveButton fieldName={fieldName} />
 		</Space.Compact>
 	)
 })

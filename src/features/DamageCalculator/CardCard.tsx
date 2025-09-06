@@ -19,6 +19,7 @@ import {
 	damageJudgmentOptions,
 } from '../../data/options'
 import BuffForm from './BuffForm'
+import { MoveBuffFormFnContext, RemoveBuffFormFnContext } from './context'
 import { isColoredAtom } from './jotai'
 import type { DamageCalculatorInputValue } from './types'
 
@@ -118,19 +119,18 @@ function CardCard(props: CardCardProps) {
 				</Space.Compact>
 				<Form.List name={[turnIndex, `card${index + 1}Effects`]}>
 					{(fields, { add, remove, move }) => (
-						<Flex vertical gap={4} align="flex-start">
-							<Button onClick={() => add()} icon={<PlusOutlined />}>
-								追加
-							</Button>
-							{fields.map((field) => (
-								<BuffForm
-									key={field.key}
-									fieldName={field.name}
-									remove={remove}
-									move={move}
-								/>
-							))}
-						</Flex>
+						<RemoveBuffFormFnContext.Provider value={remove}>
+							<MoveBuffFormFnContext.Provider value={move}>
+								<Flex vertical gap={4} align="flex-start">
+									<Button onClick={() => add()} icon={<PlusOutlined />}>
+										追加
+									</Button>
+									{fields.map((field) => (
+										<BuffForm key={field.key} fieldName={field.name} />
+									))}
+								</Flex>
+							</MoveBuffFormFnContext.Provider>
+						</RemoveBuffFormFnContext.Provider>
 					)}
 				</Form.List>
 			</Flex>
