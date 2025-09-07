@@ -37,28 +37,6 @@ export interface TurnFormValue {
 	card4: CardFormValue
 }
 
-export interface DamageCalculatorInputValue {
-	title?: string
-	servantClass?: string
-	servantAttribute?: string
-	servantAtk?: number
-	craftEssenceAtk?: number
-	npColor?: CardColor
-	npValue?: number
-	footprintB?: number
-	footprintA?: number
-	footprintQ?: number
-	npGain?: number
-	starRate?: number
-	hitCountN?: number
-	hitCountB?: number
-	hitCountA?: number
-	hitCountQ?: number
-	hitCountEX?: number
-	passiveEffects?: Buff[]
-	turns?: TurnFormValue[]
-}
-
 export type DamageJudgement = 'default' | 'noDamage' | 'nothing'
 
 export type ServantClass =
@@ -107,5 +85,7 @@ export type BuffType =
 export type CardColor = 'buster' | 'arts' | 'quick'
 
 export type CardType = 'buster' | 'arts' | 'quick' | 'noblePhantasm' | 'extra'
+
+export type SelectbleCardType = 'buster' | 'arts' | 'quick' | 'noblePhantasm'
 
 export type CardCategory = 'normal' | 'noblePhantasm' | 'extra'

@@ -15,10 +15,10 @@ export const addTurnAtom = atom(
 
 export const defaultTurn: Omit<TurnFormValue, 'id'> = {
 	params: {
-		classAffinity: 1,
+		classAffinity: 2,
 		attributeAffinity: 1,
 		targetDamage: null,
-		dtdr: null,
+		dtdr: 100,
 		dsr: null,
 	},
 	buffs: [],

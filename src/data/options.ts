@@ -70,7 +70,7 @@ export const skillTypes: { value: BuffType; label: string }[] = [
 	{ value: 'artsCriticalBuff', label: 'Aクリバフ' },
 	{ value: 'quickCriticalBuff', label: 'Qクリバフ' },
 	{ value: 'spBuff', label: '特攻バフ' },
-	{ value: 'cardCriticalBuff', label: 'クリ耐性ダウン' },
+	{ value: 'cardCriticalBuff', label: 'クリ限色バフ' },
 	{ value: 'npSuperEffectiveCorrection', label: '特攻宝具' },
 	{ value: 'npValueUp', label: '宝具倍率増加' },
 	{ value: 'spDef', label: '特殊耐性' },
@@ -99,6 +99,7 @@ export const enemyClassOptions: { value: number; label: string }[] = [
 	{ value: 1.2, label: '1.2' },
 	{ value: 1.5, label: '1.5' },
 	{ value: 2.0, label: '2.0' },
+	{ value: 5.0, label: '5.0' },
 ]
 
 export const enemyAttrOptions: { value: number; label: string }[] = [

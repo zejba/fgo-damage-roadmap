@@ -61,7 +61,7 @@ function ServantAtkRow() {
 			style={{ width: 140 }}
 			type="number"
 			value={servantAtk}
-			onChange={(value) => value != null && setServantAtk(value)}
+			onChange={setServantAtk}
 		/>
 	)
 }
@@ -76,7 +76,7 @@ function CraftEssenceAtkRow() {
 				style={{ width: 160 }}
 				type="number"
 				value={craftEssenceAtk}
-				onChange={(value) => value != null && setCraftEssenceAtk(value)}
+				onChange={setCraftEssenceAtk}
 			/>
 			<Button onClick={() => setCraftEssenceAtk(2000)}>2000</Button>
 			<Button onClick={() => setCraftEssenceAtk(2400)}>2400</Button>
@@ -103,7 +103,7 @@ function NoblePhantasmRow() {
 				addonAfter="%"
 				style={{ width: 120 }}
 				value={npValue}
-				onChange={(value) => value != null && setNpValue(value)}
+				onChange={setNpValue}
 			/>
 		</Space.Compact>
 	)
@@ -124,7 +124,7 @@ function FootprintRow() {
 				max={500}
 				min={0}
 				value={footprintB}
-				onChange={(value) => value != null && setFootprintB(value)}
+				onChange={setFootprintB}
 			/>
 			<InputNumber
 				addonBefore="A"
@@ -133,7 +133,7 @@ function FootprintRow() {
 				max={500}
 				min={0}
 				value={footprintA}
-				onChange={(value) => value != null && setFootprintA(value)}
+				onChange={setFootprintA}
 			/>
 			<InputNumber
 				addonBefore="Q"
@@ -142,7 +142,7 @@ function FootprintRow() {
 				max={500}
 				min={0}
 				value={footprintQ}
-				onChange={(value) => value != null && setFootprintQ(value)}
+				onChange={setFootprintQ}
 			/>
 		</Space.Compact>
 	)

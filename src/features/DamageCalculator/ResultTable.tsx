@@ -2,7 +2,7 @@ import { Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
-import { calcResultAtom } from '../../store/jotai'
+import { damageCalcResultAtom } from '../../store/damageCalcResult'
 import type { ProcessedTurnResult } from '../../utils/calcDamage'
 
 type RecordType = {
@@ -162,7 +162,7 @@ function buildDataSource(result: ProcessedTurnResult[]): RecordType[] {
 }
 
 function ResultTable() {
-	const result = useAtomValue(calcResultAtom)
+	const result = useAtomValue(damageCalcResultAtom)
 	const dataSource = useMemo(() => buildDataSource(result), [result])
 	return (
 		<>

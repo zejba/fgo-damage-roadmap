@@ -1,24 +1,132 @@
+import {
+	BUSTER_CHAIN_CONSTANT_DAMAGE_COEFFICIENT,
+	CARD_CORRECTION_VALUES,
+	CRITICAL_DAMAGE_COEFFICIENT,
+	EXTRA_DAMAGE_COEFFICIENT,
+	SELECT_ORDER_COEFFICIENT,
+} from '../data/constants'
 import type {
 	Buff,
 	BuffType,
+	CardCategory,
 	CardColor,
 	CardType,
-	CommandCard,
-	DamageCalculatorInputValue,
+	DamageJudgement,
+	TurnFormValue,
 } from '../data/types'
+import { getClassAtkCorrectionValue } from './getClassAtkCorrectionValue'
 
-const cardCorrectionValues = {
-	noblePhantasm: 1,
-	buster: 1.5,
-	arts: 1,
-	quick: 0.8,
-	extra: 0.625,
-} as const
+interface BuffForCalc {
+	type: BuffType
+	amount: number
+	turn: number
+	count: number
+}
 
-function getCardCorrectionValue(type: CardType, color: CardColor, nth: number) {
+interface CardForCalc {
+	params: {
+		type: CardType
+		isCritical: boolean
+		damageJudgement: DamageJudgement
+		overKillCount: number
+	}
+	buffs: BuffForCalc[]
+}
+
+interface TurnForCalc {
+	params: {
+		classAffinity: number
+		attributeAffinity: number
+		targetDamage: number
+		dtdr: number
+		dsr: number
+	}
+	buffs: BuffForCalc[]
+	card1: CardForCalc
+	card2: CardForCalc
+	card3: CardForCalc
+	card4: CardForCalc
+}
+
+export interface DamageCalculatorInputValue {
+	servantClass: string
+	servantAttribute: string
+	atk: number
+	npColor: CardColor
+	npValue: number
+	footprintB: number
+	footprintA: number
+	footprintQ: number
+	npGain: number
+	starRate: number
+	hitCountN: number
+	hitCountB: number
+	hitCountA: number
+	hitCountQ: number
+	hitCountEX: number
+	startingBuffs: BuffForCalc[]
+	turns: TurnForCalc[]
+}
+
+interface BuffValue {
+	amount: number
+	turn: number | 'NO_LIMIT'
+	count: number | 'NO_LIMIT'
+}
+
+export function convertBuffForCalc(buff: Buff): BuffForCalc {
+	return {
+		...buff,
+		amount: buff.amount ?? 0,
+		turn: buff.turn ?? 0,
+		count: buff.count ?? 0,
+	}
+}
+
+export function convertTurnForCalc(turn: TurnFormValue): TurnForCalc {
+	return {
+		params: {
+			...turn.params,
+			targetDamage: turn.params.targetDamage ?? 0,
+			dtdr: turn.params.dtdr ?? 0,
+			dsr: turn.params.dsr ?? 0,
+		},
+		buffs: turn.buffs.map(convertBuffForCalc),
+		card1: {
+			params: {
+				...turn.card1.params,
+				overKillCount: turn.card1.params.overKillCount ?? 0,
+			},
+			buffs: turn.card1.buffs.map(convertBuffForCalc),
+		},
+		card2: {
+			params: {
+				...turn.card2.params,
+				overKillCount: turn.card2.params.overKillCount ?? 0,
+			},
+			buffs: turn.card2.buffs.map(convertBuffForCalc),
+		},
+		card3: {
+			params: {
+				...turn.card3.params,
+				overKillCount: turn.card3.params.overKillCount ?? 0,
+			},
+			buffs: turn.card3.buffs.map(convertBuffForCalc),
+		},
+		card4: {
+			params: {
+				...turn.card4.params,
+				overKillCount: turn.card4.params.overKillCount ?? 0,
+			},
+			buffs: turn.card4.buffs.map(convertBuffForCalc),
+		},
+	}
+}
+
+function getCardCorrectionValue(type: CardType, nth: number) {
 	return (
-		cardCorrectionValues[color] *
-		(type === 'noblePhantasm' ? 1 : 1 + (nth - 1) * 0.2)
+		CARD_CORRECTION_VALUES[type] *
+		(type === 'noblePhantasm' ? 1 : 1 + (nth - 1) * SELECT_ORDER_COEFFICIENT)
 	)
 }
 
@@ -28,6 +136,7 @@ function getFirstBonusValues(selectedCardColors: CardColor[]) {
 		selectedCardColors[1] !== selectedCardColors[2] &&
 		selectedCardColors[0] !== selectedCardColors[2]
 	) {
+		// マイティチェイン
 		return {
 			buster: 0.5,
 			arts: 1,
@@ -43,45 +152,45 @@ function getFirstBonusValues(selectedCardColors: CardColor[]) {
 
 function getStarCorrectionValue(
 	type: CardType,
-	color: CommandCard,
+	npColor: CardColor,
 	nth: number,
 ) {
 	if (type === 'extra') {
 		return 1
 	}
 	if (type === 'noblePhantasm') {
-		if (color === 'buster') {
+		if (npColor === 'buster') {
 			return 0.1
 		}
-		if (color === 'quick') {
+		if (npColor === 'quick') {
 			return 0.8
 		}
 	}
-	if (color === 'buster') {
+	if (type === 'buster') {
 		return 0.05 + nth * 0.05
 	}
-	if (color === 'quick') {
+	if (type === 'quick') {
 		return 0.3 + nth * 0.5
 	}
 	return 0
 }
 
-function getNpCorrectionValue(type: CardType, color: CardColor, nth: number) {
+function getNpCorrectionValue(type: CardType, npColor: CardColor, nth: number) {
 	if (type === 'extra') {
 		return 1
 	}
 	if (type === 'noblePhantasm') {
-		if (color === 'arts') {
+		if (npColor === 'arts') {
 			return 3
 		}
-		if (color === 'quick') {
+		if (npColor === 'quick') {
 			return 1
 		}
 	}
-	if (color === 'arts') {
+	if (type === 'arts') {
 		return 1.5 + nth * 1.5
 	}
-	if (color === 'quick') {
+	if (type === 'quick') {
 		return 0.5 + nth * 0.5
 	}
 	return 0
@@ -102,7 +211,7 @@ export type TurnResult = {
 	spBuffs: number[]
 }
 
-const cardNames = {
+const cardLabels = {
 	buster: 'B',
 	arts: 'A',
 	quick: 'Q',
@@ -118,118 +227,12 @@ export type ProcessedTurnResult = TurnResult & {
 	targetDamage: number
 }
 
-function processArgs(args: DamageCalculatorInputValue) {
-	function processSkillData(skillData: Buff): Required<Buff> {
-		const { skillType, skillName, amount, turns, times } = skillData
-		return {
-			skillType: skillType ?? 'atkBuff',
-			skillName: skillName ?? '',
-			amount: amount ?? 0,
-			turns: turns ?? -1,
-			times: times ?? -1,
-		}
-	}
-	const {
-		servantClass,
-		servantAtk,
-		craftEssenceAtk,
-		npColor,
-		npValue,
-		footprintB,
-		footprintA,
-		footprintQ,
-		npGain,
-		starRate,
-		hitCountN,
-		hitCountB,
-		hitCountA,
-		hitCountQ,
-		hitCountEX,
-		passiveEffects,
-		turns,
-	} = args
-	const nonNullTurns = turns?.map((turn) => {
-		const {
-			classAffinity,
-			attributeAffinity,
-			targetDamage,
-			dtdr,
-			dsr,
-			buffs: turnEffects,
-			card1Effects,
-			card2Effects,
-			card3Effects,
-			card4Effects,
-			card1Type,
-			card2Type,
-			card3Type,
-			card1IsCritical,
-			card2IsCritical,
-			card3IsCritical,
-			card1DamageJudgement,
-			card2DamageJudgement,
-			card3DamageJudgement,
-			card4DamageJudgement,
-			card1OverKillCount,
-			card2OverKillCount,
-			card3OverKillCount,
-			card4OverKillCount,
-		} = turn
-		return {
-			classAffinity: classAffinity ?? 1,
-			attributeAffinity: attributeAffinity ?? 1,
-			targetDamage: targetDamage ?? 0,
-			dtdr: dtdr ?? 1,
-			dsr: dsr ?? 0,
-			turnEffects: turnEffects ? turnEffects.map(processSkillData) : [],
-			card1Effects: card1Effects ? card1Effects.map(processSkillData) : [],
-			card2Effects: card2Effects ? card2Effects.map(processSkillData) : [],
-			card3Effects: card3Effects ? card3Effects.map(processSkillData) : [],
-			card4Effects: card4Effects ? card4Effects.map(processSkillData) : [],
-			card1Type: card1Type ?? 'buster',
-			card2Type: card2Type ?? 'arts',
-			card3Type: card3Type ?? 'quick',
-			card1IsCritical: card1IsCritical ?? false,
-			card2IsCritical: card2IsCritical ?? false,
-			card3IsCritical: card3IsCritical ?? false,
-			card1DamageJudgement: card1DamageJudgement ?? 'normal',
-			card2DamageJudgement: card2DamageJudgement ?? 'normal',
-			card3DamageJudgement: card3DamageJudgement ?? 'normal',
-			card4DamageJudgement: card4DamageJudgement ?? 'normal',
-			card1OverKillCount: card1OverKillCount ?? 0,
-			card2OverKillCount: card2OverKillCount ?? 0,
-			card3OverKillCount: card3OverKillCount ?? 0,
-			card4OverKillCount: card4OverKillCount ?? 0,
-		}
-	})
-	return {
-		servantClass: servantClass ?? 'saber',
-		servantAtk: servantAtk ?? 0,
-		craftEssenceAtk: craftEssenceAtk ?? 0,
-		npColor: npColor ?? 'buster',
-		npValue: npValue ?? 0,
-		footprintB: footprintB ?? 0,
-		footprintA: footprintA ?? 0,
-		footprintQ: footprintQ ?? 0,
-		npGain: npGain ?? 0,
-		starRate: starRate ?? 0,
-		hitCountN: hitCountN ?? 0,
-		hitCountB: hitCountB ?? 0,
-		hitCountA: hitCountA ?? 0,
-		hitCountQ: hitCountQ ?? 0,
-		hitCountEX: hitCountEX ?? 0,
-		passiveEffects: passiveEffects ? passiveEffects.map(processSkillData) : [],
-		turns: nonNullTurns ?? [],
-	}
-}
-
 export function calculateDamages(
 	args: DamageCalculatorInputValue,
 ): ProcessedTurnResult[] {
 	const {
 		servantClass,
-		servantAtk,
-		craftEssenceAtk,
+		atk,
 		npColor,
 		npValue,
 		footprintB,
@@ -242,11 +245,10 @@ export function calculateDamages(
 		hitCountA,
 		hitCountQ,
 		hitCountEX,
-		passiveEffects,
+		startingBuffs: passiveEffects,
 		turns,
-	} = processArgs(args)
+	} = args
 
-	const atk = servantAtk + craftEssenceAtk
 	const footprints = {
 		noblePhantasm: 0,
 		buster: footprintB,
@@ -261,38 +263,41 @@ export function calculateDamages(
 		quick: hitCountQ,
 		extra: hitCountEX,
 	}
-	const classCorrectionValue = getClassCorrectionValue(servantClass)
-	const initialBuff = [0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]
-	const simulatedBuffs: Record<BuffType, number[][]> = {
-		atkBuff: [[...initialBuff]],
-		busterBuff: [[...initialBuff]],
-		busterPowerBuff: [[...initialBuff]],
-		artsBuff: [[...initialBuff]],
-		artsPowerBuff: [[...initialBuff]],
-		quickBuff: [[...initialBuff]],
-		quickPowerBuff: [[...initialBuff]],
-		extraBuff: [[...initialBuff]],
-		extraPowerBuff: [[...initialBuff]],
-		noblePhantasmBuff: [[...initialBuff]],
-		criticalBuff: [[...initialBuff]],
-		busterCriticalBuff: [[...initialBuff]],
-		artsCriticalBuff: [[...initialBuff]],
-		quickCriticalBuff: [[...initialBuff]],
-		spBuff: [[...initialBuff]],
-		npGetBuff: [[...initialBuff]],
-		starGetBuff: [[...initialBuff]],
-		npSuperEffectiveCorrection: [[...initialBuff]],
-		spDef: [[...initialBuff]],
-		damagePlus: [[...initialBuff]],
-		npValueUp: [[...initialBuff]],
-		cardCriticalBuff: [[...initialBuff]],
+	const classCorrectionValue = getClassAtkCorrectionValue(servantClass)
+	const initialBuff = {
+		amount: 0,
+		turn: 'NO_LIMIT',
+		count: 'NO_LIMIT',
+	} as const
+	const simulatedBuffs: Record<BuffType, BuffValue[]> = {
+		atkBuff: [{ ...initialBuff }],
+		busterBuff: [{ ...initialBuff }],
+		busterPowerBuff: [{ ...initialBuff }],
+		artsBuff: [{ ...initialBuff }],
+		artsPowerBuff: [{ ...initialBuff }],
+		quickBuff: [{ ...initialBuff }],
+		quickPowerBuff: [{ ...initialBuff }],
+		extraBuff: [{ ...initialBuff }],
+		extraPowerBuff: [{ ...initialBuff }],
+		noblePhantasmBuff: [{ ...initialBuff }],
+		criticalBuff: [{ ...initialBuff }],
+		busterCriticalBuff: [{ ...initialBuff }],
+		artsCriticalBuff: [{ ...initialBuff }],
+		quickCriticalBuff: [{ ...initialBuff }],
+		spBuff: [{ ...initialBuff }],
+		npGetBuff: [{ ...initialBuff }],
+		starGetBuff: [{ ...initialBuff }],
+		npSuperEffectiveCorrection: [{ ...initialBuff }],
+		spDef: [{ ...initialBuff }],
+		damagePlus: [{ ...initialBuff }],
+		npValueUp: [{ ...initialBuff }],
+		cardCriticalBuff: [{ ...initialBuff }],
 	}
-
 	pushBuffs(simulatedBuffs, passiveEffects)
 
 	const result: TurnResult[] = []
 
-	for (const turnData of turns) {
+	for (const turnInput of turns) {
 		const turnResult: TurnResult = {
 			baseDamages: [0, 0, 0, 0],
 			constantDamages: [0, 0, 0, 0],
@@ -307,67 +312,19 @@ export function calculateDamages(
 			npOrCrBuffs: [0, 0, 0, 0],
 			spBuffs: [0, 0, 0, 0],
 		}
-		const {
-			classAffinity,
-			attributeAffinity,
-			targetDamage,
-			dtdr,
-			dsr,
-			turnEffects,
-			card1Effects,
-			card2Effects,
-			card3Effects,
-			card4Effects,
-			card1Type,
-			card2Type,
-			card3Type,
-			card1IsCritical,
-			card2IsCritical,
-			card3IsCritical,
-			card1DamageJudgement,
-			card2DamageJudgement,
-			card3DamageJudgement,
-			card4DamageJudgement,
-			card1OverKillCount,
-			card2OverKillCount,
-			card3OverKillCount,
-			card4OverKillCount,
-		} = turnData
 
-		pushBuffs(simulatedBuffs, turnEffects)
+		pushBuffs(simulatedBuffs, turnInput.buffs)
 
-		const selectedCards: CommandCard[] = [
-			card1Type,
-			card2Type,
-			card3Type,
-			'extra',
-		]
-
-		const selectedCardColors: CardColor[] = selectedCards.map((v) =>
-			v === 'noblePhantasm' ? npColor : v,
-		)
-
-		const cardEffects = [card1Effects, card2Effects, card3Effects, card4Effects]
-
-		const cardIsCriticals = [
-			card1IsCritical,
-			card2IsCritical,
-			card3IsCritical,
-			false,
-		]
-
-		const cardDamageJudgements = [
-			card1DamageJudgement,
-			card2DamageJudgement,
-			card3DamageJudgement,
-			card4DamageJudgement,
-		]
-
-		const cardOverKillCounts = [
-			card1OverKillCount,
-			card2OverKillCount,
-			card3OverKillCount,
-			card4OverKillCount,
+		function getCardColor(card: CardType) {
+			if (card === 'extra') {
+				throw new Error('invalid card type')
+			}
+			return card === 'noblePhantasm' ? npColor : card
+		}
+		const selectedCardColors: CardColor[] = [
+			getCardColor(turnInput.card1.params.type),
+			getCardColor(turnInput.card2.params.type),
+			getCardColor(turnInput.card3.params.type),
 		]
 
 		const {
@@ -376,82 +333,76 @@ export function calculateDamages(
 			quick: firstBonusQ,
 		} = getFirstBonusValues(selectedCardColors)
 
-		//Bチェインボーナス
-		const isBusterChain = selectedCardColors
-			.slice(0, 3)
-			.every((v) => v === 'buster')
+		const isBusterChain = selectedCardColors.every((v) => v === 'buster')
+		const isArtsChain = selectedCardColors.every((v) => v === 'arts')
+		const isQuickChain = selectedCardColors.every((v) => v === 'quick')
+		const isChain = isBusterChain || isArtsChain || isQuickChain
 
-		for (let cardIndex = 0; cardIndex <= 3; cardIndex++) {
-			pushBuffs(simulatedBuffs, cardEffects[cardIndex])
-			const damageJudgement = cardDamageJudgements[cardIndex]
-			const isCritical = cardIsCriticals[cardIndex]
-			const overKillCount = cardOverKillCounts[cardIndex]
-
+		for (const [cardIndex, cardInput] of [
+			turnInput.card1,
+			turnInput.card2,
+			turnInput.card3,
+			turnInput.card4,
+		].entries()) {
+			pushBuffs(simulatedBuffs, cardInput.buffs)
+			const {
+				damageJudgement,
+				isCritical,
+				overKillCount,
+				type: cardType,
+			} = cardInput.params
 			if (damageJudgement === 'nothing') {
 				continue
 			}
-
-			//カード色の取得
-			const selectedCard = selectedCards[cardIndex]
-			const selectedCardColor = selectedCardColors[cardIndex]
-
-			const selectedCardType: CardType =
-				selectedCard === 'noblePhantasm'
+			const cardCategory: CardCategory =
+				cardType === 'noblePhantasm'
 					? 'noblePhantasm'
-					: selectedCard === 'extra'
+					: cardType === 'extra'
 						? 'extra'
 						: 'normal'
-			const hitCount = hitCounts[selectedCard]
+			const cardColor = cardType === 'noblePhantasm' ? npColor : cardType
+			const hitCount = hitCounts[cardType]
 			const cardNpCorrectionValue = getNpCorrectionValue(
-				selectedCardType,
-				selectedCardColor,
+				cardType,
+				npColor,
 				cardIndex + 1,
 			)
 			const cardStarCorrectionValue = getStarCorrectionValue(
-				selectedCardType,
-				selectedCardColor,
+				cardType,
+				npColor,
 				cardIndex + 1,
 			)
-			const footprint = footprints[selectedCard]
+			const footprint = footprints[cardType]
 			const correctedAtk = (atk + footprint) * classCorrectionValue
 
 			const constantDamage =
 				consumeBuff(simulatedBuffs, 'damagePlus') +
-				(isBusterChain ? 0 : 0.2 * correctedAtk)
+				(isBusterChain
+					? BUSTER_CHAIN_CONSTANT_DAMAGE_COEFFICIENT * correctedAtk
+					: 0)
 
-			let damageMultiplier = 1
-			if (selectedCardType === 'noblePhantasm') {
-				damageMultiplier =
+			// ダメージ係数
+			let damageCoefficient = 1
+			if (cardCategory === 'noblePhantasm') {
+				damageCoefficient =
 					(npValue + consumeBuff(simulatedBuffs, 'npValueUp')) / 100
 				const spnp = consumeBuff(simulatedBuffs, 'npSuperEffectiveCorrection')
 				if (spnp !== 0) {
-					damageMultiplier *= spnp / 100
+					damageCoefficient *= spnp / 100
 				}
+			} else if (cardCategory === 'extra') {
+				damageCoefficient = isChain
+					? EXTRA_DAMAGE_COEFFICIENT.chain
+					: EXTRA_DAMAGE_COEFFICIENT.default
 			} else if (isCritical) {
-				damageMultiplier = 2
-			} else if (selectedCard === 'extra') {
-				damageMultiplier = 2
-				//同色チェインの場合
-				if (
-					selectedCardColors[0] === selectedCardColors[1] &&
-					selectedCardColors[1] === selectedCardColors[2]
-				) {
-					damageMultiplier = 3.5
-				}
+				damageCoefficient = CRITICAL_DAMAGE_COEFFICIENT
 			}
 
 			//各種バフ計算
 			const atkBuff = Math.max(consumeBuff(simulatedBuffs, 'atkBuff') / 100, -1)
-			const cardBuff =
-				consumeBuff(simulatedBuffs, `${selectedCardColor}Buff`) / 100
+			const cardBuff = consumeBuff(simulatedBuffs, `${cardColor}Buff`) / 100
 			const cardPowerBuff =
-				consumeBuff(
-					simulatedBuffs,
-					`${selectedCardColor}PowerBuff` as
-						| 'busterPowerBuff'
-						| 'artsPowerBuff'
-						| 'quickPowerBuff',
-				) / 100
+				consumeBuff(simulatedBuffs, `${cardColor}PowerBuff`) / 100
 			const totalCardBuff = Math.max(
 				cardBuff +
 					cardPowerBuff +
@@ -468,23 +419,16 @@ export function calculateDamages(
 			)
 			const starGetBuff = consumeBuff(simulatedBuffs, 'starGetBuff') / 100
 			const cardCorrectionValue = getCardCorrectionValue(
-				selectedCardType,
-				selectedCardColor,
+				cardType,
 				cardIndex + 1,
 			)
 			const npOrCrBuff =
-				selectedCardType === 'noblePhantasm'
+				cardType === 'noblePhantasm'
 					? Math.max(consumeBuff(simulatedBuffs, 'noblePhantasmBuff') / 100, -1)
-					: isCritical
+					: isCritical && cardColor !== 'extra'
 						? Math.max(
 								(consumeBuff(simulatedBuffs, 'criticalBuff') +
-									consumeBuff(
-										simulatedBuffs,
-										`${selectedCardColor}CriticalBuff` as
-											| 'busterCriticalBuff'
-											| 'artsCriticalBuff'
-											| 'quickCriticalBuff',
-									)) /
+									consumeBuff(simulatedBuffs, `${cardColor}CriticalBuff`)) /
 									100,
 								-1,
 							)
@@ -493,12 +437,12 @@ export function calculateDamages(
 			if (damageJudgement !== 'noDamage') {
 				turnResult.baseDamages[cardIndex] = calcBase(
 					correctedAtk,
-					damageMultiplier,
+					damageCoefficient,
 					cardCorrectionValue,
 					totalCardBuff,
-					selectedCardType === 'noblePhantasm' ? 0 : firstBonusB,
-					classAffinity,
-					attributeAffinity,
+					cardType === 'noblePhantasm' ? 0 : firstBonusB,
+					turnInput.params.classAffinity,
+					turnInput.params.attributeAffinity,
 					atkBuff,
 					npOrCrBuff,
 					spBuff,
@@ -510,8 +454,8 @@ export function calculateDamages(
 				npGain,
 				cardNpCorrectionValue,
 				Math.max(cardBuff, -1),
-				selectedCardType === 'noblePhantasm' ? 0 : firstBonusA,
-				dtdr,
+				cardType === 'noblePhantasm' ? 0 : firstBonusA,
+				turnInput.params.dtdr,
 				npGetBuff,
 				isCritical,
 				hitCount,
@@ -521,8 +465,8 @@ export function calculateDamages(
 				starRate,
 				cardStarCorrectionValue,
 				cardBuff,
-				selectedCardType === 'noblePhantasm' ? 0 : firstBonusQ,
-				dsr,
+				cardType === 'noblePhantasm' ? 0 : firstBonusQ,
+				turnInput.params.dsr,
 				starGetBuff,
 				isCritical,
 				hitCount,
@@ -544,7 +488,7 @@ export function calculateDamages(
 			turnResult.baseDamages[1],
 			turnResult.baseDamages[2],
 			turnResult.baseDamages[3],
-			targetDamage -
+			turnInput.params.targetDamage -
 				(turnResult.constantDamages[0] +
 					turnResult.constantDamages[1] +
 					turnResult.constantDamages[2] +
@@ -553,17 +497,16 @@ export function calculateDamages(
 
 		result.push(turnResult)
 
-		//ターン経過処理
-		for (const key in simulatedBuffs) {
-			for (let k = 0; k < simulatedBuffs[key as BuffType].length; k++) {
-				if (
-					simulatedBuffs[key as BuffType][k][1] !== Number.POSITIVE_INFINITY
-				) {
-					simulatedBuffs[key as BuffType][k][1] -= 1
+		// ターン経過処理
+		for (const [key, simulatedBuffArray] of Object.entries(simulatedBuffs)) {
+			for (const simulatedBuff of simulatedBuffArray) {
+				if (simulatedBuff.turn !== 'NO_LIMIT') {
+					simulatedBuff.turn -= 1
 				}
 			}
-			simulatedBuffs[key as BuffType] = simulatedBuffs[key as BuffType].filter(
-				(ele) => ele[1] > 0,
+			simulatedBuffs[key as BuffType] = simulatedBuffArray.filter(
+				(simulatedBuff) =>
+					simulatedBuff.turn === 'NO_LIMIT' || simulatedBuff.turn > 0,
 			)
 		}
 	}
@@ -602,100 +545,59 @@ export function calculateDamages(
 				turnResult.maxStars.reduce((a, b) => a + b, 0),
 			],
 			selectedCards: [
-				cardNames[turns[turnIndex].card1Type],
-				cardNames[turns[turnIndex].card2Type],
-				cardNames[turns[turnIndex].card3Type],
+				cardLabels[turns[turnIndex].card1.params.type],
+				cardLabels[turns[turnIndex].card2.params.type],
+				cardLabels[turns[turnIndex].card3.params.type],
 			],
-			targetDamage: turns[turnIndex].targetDamage,
+			targetDamage: turns[turnIndex].params.targetDamage,
 		}
 	})
 	return processedResult
 }
 
-// magは宝具なら倍率(特攻込み)、通常攻撃なら1、クリティカルなら2、EXなら2or3.5
-function calcBase(
-	atk: number,
-	mag: number,
-	cardCorr: number,
-	cardbuff: number,
-	fb: number,
-	vsclass: number,
-	vsattr: number,
-	atkbuff: number,
-	nporcrbuff: number,
-	spbuff: number,
-	spdef: number,
-) {
-	const result =
-		atk *
-		0.23 *
-		mag *
-		(cardCorr * (1 + cardbuff) + fb) *
-		vsclass *
-		vsattr *
-		(1 + atkbuff) *
-		(1 + nporcrbuff + spbuff) *
-		(1 - spdef)
-	return result
-}
-
-//クラス補正
-function getClassCorrectionValue(servantClass: string) {
-	switch (servantClass) {
-		case 'berserker':
-		case 'ruler':
-		case 'avenger':
-			return 1.1
-		case 'lancer':
-			return 1.05
-		case 'archer':
-			return 0.95
-		case 'caster':
-		case 'assassin':
-			return 0.9
-		default:
-			return 1
-	}
-}
-
-//バフ取得
+// バフ追加
 function pushBuffs(
-	simulatedBuffs: Record<BuffType, number[][]>,
-	newBuffs: Required<Buff>[],
+	simulatedBuffs: Record<BuffType, BuffValue[]>,
+	newBuffs: BuffForCalc[],
 ) {
 	for (const buff of newBuffs) {
-		const { skillType, amount, turns, times } = buff
-		if (turns === -1 && times === -1) {
-			simulatedBuffs[skillType][0][0] += amount
-		} else if (times === -1) {
-			simulatedBuffs[skillType].push([amount, turns, Number.POSITIVE_INFINITY])
+		const { type, amount, turn, count } = buff
+		if (turn === -1 && count === -1) {
+			simulatedBuffs[type][0].amount += amount
 		} else {
-			simulatedBuffs[skillType].push([amount, turns, times])
+			simulatedBuffs[type].push({
+				amount,
+				turn: turn === -1 ? 'NO_LIMIT' : turn,
+				count: count === -1 ? 'NO_LIMIT' : count,
+			})
 		}
 	}
 }
 
 //バフ処理
 function consumeBuff(
-	simulatedBuffs: Record<BuffType, number[][]>,
+	simulatedBuffs: Record<BuffType, BuffValue[]>,
 	skillType: BuffType,
 ) {
-	let res = 0
-	for (let i = 0; i < simulatedBuffs[skillType].length; i++) {
-		res += simulatedBuffs[skillType][i][0]
+	let ret = 0
+	for (const simulatedBuff of simulatedBuffs[skillType]) {
+		ret += simulatedBuff.amount
 		//回数制バフの回数を減らす
-		if (simulatedBuffs[skillType][i][2] !== Number.POSITIVE_INFINITY) {
-			simulatedBuffs[skillType][i][2] -= 1
+		if (simulatedBuff.count !== 'NO_LIMIT') {
+			simulatedBuff.count -= 1
 		}
 	}
 	//回数が切れたバフを消す
 	simulatedBuffs[skillType] = simulatedBuffs[skillType].filter(
-		(ele) => ele[2] > 0,
+		(simulatedBuff) =>
+			simulatedBuff.count === 'NO_LIMIT' || simulatedBuff.count > 0,
 	)
-	return res
+	return ret
 }
 
-//撃破率計算
+// TODO: 以降リファクタリング
+
+// 撃破率計算
 function calcPassRate(
 	d1: number,
 	d2: number,
@@ -731,6 +633,33 @@ function calcPassRate(
 		cnt += right + 1
 	}
 	return Math.round((1600000000 - cnt) / 160000) / 100
+}
+
+// magは宝具なら倍率(特攻込み)、通常攻撃なら1、クリティカルなら2、EXなら2or3.5
+function calcBase(
+	atk: number,
+	mag: number,
+	cardCorr: number,
+	cardbuff: number,
+	fb: number,
+	vsclass: number,
+	vsattr: number,
+	atkbuff: number,
+	nporcrbuff: number,
+	spbuff: number,
+	spdef: number,
+) {
+	const result =
+		atk *
+		0.23 *
+		mag *
+		(cardCorr * (1 + cardbuff) + fb) *
+		vsclass *
+		vsattr *
+		(1 + atkbuff) *
+		(1 + nporcrbuff + spbuff) *
+		(1 - spdef)
+	return result
 }
 
 //NP計算
