@@ -2,25 +2,19 @@ import { CalculatorFilled } from '@ant-design/icons'
 import { Button, type FormInstance, Space, Switch, Typography } from 'antd'
 import { useAtom, useSetAtom } from 'jotai'
 import { useCallback } from 'react'
+import type { DamageCalculatorInputValue } from '../../data/types'
+import { calcResultAtom, isColoredAtom } from '../../store/jotai'
 import { calculateDamages } from '../../utils/calcDamage'
-import { calcResultAtom, isColoredAtom } from './jotai'
-import type { DamageCalculatorInputValue } from './types'
 
-interface CalcButtonSectionProps {
-	form: FormInstance<DamageCalculatorInputValue>
-}
-
-function CalcButtonSection(props: CalcButtonSectionProps) {
-	const { form } = props
+function CalcButtonSection() {
 	const [isColored, setIsColored] = useAtom(isColoredAtom)
 	const toggleIsColored = useCallback(() => {
 		setIsColored((prev) => !prev)
 	}, [setIsColored])
 	const setResult = useSetAtom(calcResultAtom)
 	const handleCalculate = useCallback(() => {
-		const values = form.getFieldsValue()
-		setResult(calculateDamages(values))
-	}, [form, setResult])
+		// setResult(calculateDamages())
+	}, [])
 	return (
 		<Space style={{ marginBottom: 12 }}>
 			<Button

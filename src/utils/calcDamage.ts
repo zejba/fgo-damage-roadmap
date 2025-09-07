@@ -1,11 +1,11 @@
 import type {
+	Buff,
+	BuffType,
 	CardColor,
 	CardType,
 	CommandCard,
 	DamageCalculatorInputValue,
-	SkillData,
-	SkillType,
-} from '../features/DamageCalculator/types'
+} from '../data/types'
 
 const cardCorrectionValues = {
 	noblePhantasm: 1,
@@ -119,7 +119,7 @@ export type ProcessedTurnResult = TurnResult & {
 }
 
 function processArgs(args: DamageCalculatorInputValue) {
-	function processSkillData(skillData: SkillData): Required<SkillData> {
+	function processSkillData(skillData: Buff): Required<Buff> {
 		const { skillType, skillName, amount, turns, times } = skillData
 		return {
 			skillType: skillType ?? 'atkBuff',
@@ -155,7 +155,7 @@ function processArgs(args: DamageCalculatorInputValue) {
 			targetDamage,
 			dtdr,
 			dsr,
-			turnEffects,
+			buffs: turnEffects,
 			card1Effects,
 			card2Effects,
 			card3Effects,
@@ -263,7 +263,7 @@ export function calculateDamages(
 	}
 	const classCorrectionValue = getClassCorrectionValue(servantClass)
 	const initialBuff = [0, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]
-	const simulatedBuffs: Record<SkillType, number[][]> = {
+	const simulatedBuffs: Record<BuffType, number[][]> = {
 		atkBuff: [[...initialBuff]],
 		busterBuff: [[...initialBuff]],
 		busterPowerBuff: [[...initialBuff]],
@@ -555,16 +555,16 @@ export function calculateDamages(
 
 		//ターン経過処理
 		for (const key in simulatedBuffs) {
-			for (let k = 0; k < simulatedBuffs[key as SkillType].length; k++) {
+			for (let k = 0; k < simulatedBuffs[key as BuffType].length; k++) {
 				if (
-					simulatedBuffs[key as SkillType][k][1] !== Number.POSITIVE_INFINITY
+					simulatedBuffs[key as BuffType][k][1] !== Number.POSITIVE_INFINITY
 				) {
-					simulatedBuffs[key as SkillType][k][1] -= 1
+					simulatedBuffs[key as BuffType][k][1] -= 1
 				}
 			}
-			simulatedBuffs[key as SkillType] = simulatedBuffs[
-				key as SkillType
-			].filter((ele) => ele[1] > 0)
+			simulatedBuffs[key as BuffType] = simulatedBuffs[key as BuffType].filter(
+				(ele) => ele[1] > 0,
+			)
 		}
 	}
 
@@ -660,8 +660,8 @@ function getClassCorrectionValue(servantClass: string) {
 
 //バフ取得
 function pushBuffs(
-	simulatedBuffs: Record<SkillType, number[][]>,
-	newBuffs: Required<SkillData>[],
+	simulatedBuffs: Record<BuffType, number[][]>,
+	newBuffs: Required<Buff>[],
 ) {
 	for (const buff of newBuffs) {
 		const { skillType, amount, turns, times } = buff
@@ -677,8 +677,8 @@ function pushBuffs(
 
 //バフ処理
 function consumeBuff(
-	simulatedBuffs: Record<SkillType, number[][]>,
-	skillType: SkillType,
+	simulatedBuffs: Record<BuffType, number[][]>,
+	skillType: BuffType,
 ) {
 	let res = 0
 	for (let i = 0; i < simulatedBuffs[skillType].length; i++) {

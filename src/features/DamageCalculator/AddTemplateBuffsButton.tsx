@@ -1,44 +1,32 @@
-import { Button, Dropdown, type FormInstance } from 'antd'
-import { memo, useCallback } from 'react'
+import { Button, Dropdown } from 'antd'
+import { useSetAtom } from 'jotai'
+import { useCallback } from 'react'
 import { appendSkills, craftEssences } from '../../data/templateBuffs'
-import type { DamageCalculatorInputValue } from './types'
-
-interface Props {
-	form: FormInstance<DamageCalculatorInputValue>
-}
+import { addBuffsAtom } from '../../store/startingBuffs'
 
 const templateBuffs = [...appendSkills, ...craftEssences]
 
 const items = [
 	...Object.values(templateBuffs).map((skill) => ({
-		label: skill.skillName,
-		key: skill.skillName,
+		label: skill.name,
+		key: skill.name,
 	})),
 ]
 
-const AddTemplateBuffsButton = memo((props: Props) => {
-	const { form } = props
-	const handleSelect = useCallback(
+function AddTemplateBuffsButton() {
+	const addEffect = useSetAtom(addBuffsAtom)
+	const addClassScores = useCallback(
 		(e: { key: string }) => {
-			const prev = form.getFieldValue('passiveEffects')
-			const selectedBuff = templateBuffs.find(
-				(option) => option.skillName === e.key,
-			)
-			if (selectedBuff) {
-				form.setFieldsValue({
-					passiveEffects: [...(prev ?? []), selectedBuff],
-				})
-			}
+			const buff = templateBuffs.find((buff) => buff.name === e.key)
+			if (buff) addEffect([buff])
 		},
-		[form],
+		[addEffect],
 	)
 	return (
-		<>
-			<Dropdown menu={{ items, onClick: handleSelect }}>
-				<Button>テンプレ追加</Button>
-			</Dropdown>
-		</>
+		<Dropdown menu={{ items, onClick: addClassScores }}>
+			<Button>テンプレ追加</Button>
+		</Dropdown>
 	)
-})
+}
 
 export default AddTemplateBuffsButton

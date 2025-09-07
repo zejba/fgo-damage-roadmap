@@ -2,8 +2,8 @@ import { Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
+import { calcResultAtom } from '../../store/jotai'
 import type { ProcessedTurnResult } from '../../utils/calcDamage'
-import { calcResultAtom } from './jotai'
 
 type RecordType = {
 	key: string

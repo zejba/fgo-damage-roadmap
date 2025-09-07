@@ -1,6 +1,13 @@
-import type { SkillType } from '../features/DamageCalculator/types'
+import type {
+	BuffType,
+	CardColor,
+	CardType,
+	DamageJudgement,
+	ServantAttribute,
+	ServantClass,
+} from './types'
 
-export const servantClasses: { value: string; label: string }[] = [
+export const servantClasses: { value: ServantClass; label: string }[] = [
 	{ value: 'saber', label: '剣' },
 	{ value: 'archer', label: '弓' },
 	{ value: 'lancer', label: '槍' },
@@ -27,7 +34,7 @@ export const servantRarities: { value: string; label: string }[] = [
 	{ value: '5', label: '★5' },
 ]
 
-export const servantAttributes: { value: string; label: string }[] = [
+export const servantAttributes: { value: ServantAttribute; label: string }[] = [
 	{ value: 'sky', label: '天' },
 	{ value: 'earth', label: '地' },
 	{ value: 'human', label: '人' },
@@ -35,20 +42,20 @@ export const servantAttributes: { value: string; label: string }[] = [
 	{ value: 'beast', label: '獣' },
 ]
 
-export const cardColors: { value: string; label: string }[] = [
+export const cardColors: { value: CardColor; label: string }[] = [
 	{ value: 'buster', label: 'B' },
 	{ value: 'arts', label: 'A' },
 	{ value: 'quick', label: 'Q' },
 ]
 
-export const cardTypeOptions: { value: string; label: string }[] = [
+export const cardTypeOptions: { value: CardType; label: string }[] = [
 	{ value: 'noblePhantasm', label: 'N' },
 	{ value: 'buster', label: 'B' },
 	{ value: 'arts', label: 'A' },
 	{ value: 'quick', label: 'Q' },
 ]
 
-export const skillTypes: { value: SkillType; label: string }[] = [
+export const skillTypes: { value: BuffType; label: string }[] = [
 	{ value: 'atkBuff', label: '攻撃バフ' },
 	{ value: 'busterBuff', label: 'Bバフ' },
 	{ value: 'busterPowerBuff', label: 'B威力バフ' },
@@ -100,7 +107,10 @@ export const enemyAttrOptions: { value: number; label: string }[] = [
 	{ value: 1.1, label: '1.1' },
 ]
 
-export const damageJudgmentOptions: { value: string; label: string }[] = [
+export const damageJudgementOptions: {
+	value: DamageJudgement
+	label: string
+}[] = [
 	{ value: 'default', label: 'default' },
 	{ value: 'noDamage', label: '0(回数消費有)' },
 	{ value: 'nothing', label: '0(回数消費無)' },
