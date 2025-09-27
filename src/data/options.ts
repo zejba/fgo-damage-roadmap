@@ -63,7 +63,7 @@ export const skillTypes: { value: BuffType; label: string }[] = [
   { value: 'artsCriticalBuff', label: 'Aクリバフ' },
   { value: 'quickCriticalBuff', label: 'Qクリバフ' },
   { value: 'spBuff', label: '特攻バフ' },
-  { value: 'cardCriticalBuff', label: 'クリ限色バフ' },
+  { value: 'cardCriticalBuff', label: 'クリ時色バフ' },
   { value: 'npSuperEffectiveCorrection', label: '特攻宝具' },
   { value: 'npValueUp', label: '宝具倍率増加' },
   { value: 'spDef', label: '特殊耐性' },
