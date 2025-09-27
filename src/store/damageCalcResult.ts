@@ -1,4 +1,4 @@
-import { atom } from 'jotai'
-import type { ProcessedTurnResult } from '../utils/calcDamage'
+import { atom } from 'jotai';
+import type { ProcessedTurnResult } from '../utils/calcDamage';
 
-export const damageCalcResultAtom = atom<ProcessedTurnResult[]>([])
+export const damageCalcResultAtom = atom<ProcessedTurnResult[]>([]);

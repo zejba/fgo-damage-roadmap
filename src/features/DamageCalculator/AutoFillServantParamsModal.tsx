@@ -1,167 +1,142 @@
+import { Button, Checkbox, Flex, Modal, type ModalProps, Select, Space, Typography } from 'antd';
+import { useAtom } from 'jotai';
+import { useAtomCallback } from 'jotai/utils';
+import { useCallback } from 'react';
+import { GOLD_ATK_FOU_MAX, GRAND_SERVANT_ATK_BONUS, SILVER_ATK_FOU_MAX } from '../../data/constants';
+import ServantData from '../../data/servant_data.json';
+import type { CardColor } from '../../data/types';
 import {
-	Button,
-	Checkbox,
-	Flex,
-	Modal,
-	type ModalProps,
-	Select,
-	Space,
-	Typography,
-} from 'antd'
-import { useAtom } from 'jotai'
-import { useAtomCallback } from 'jotai/utils'
-import { useCallback } from 'react'
-import {
-	GOLD_ATK_FOU_MAX,
-	GRAND_SERVANT_ATK_BONUS,
-	SILVER_ATK_FOU_MAX,
-} from '../../data/constants'
-import ServantData from '../../data/servant_data.json'
-import type { CardColor } from '../../data/types'
-import {
-	craftEssenceAtkAtom,
-	footprintAAtom,
-	footprintBAtom,
-	footprintQAtom,
-	hasFootPrintAtom,
-	hasGoldenFouAtkAtom,
-	hitCountAAtom,
-	hitCountBAtom,
-	hitCountEXAtom,
-	hitCountNAtom,
-	hitCountQAtom,
-	isGrandServantAtom,
-	isLv120Atom,
-	npColorAtom,
-	npGainAtom,
-	npValueAtom,
-	servantAtkAtom,
-	servantAttributeAtom,
-	servantClassAtom,
-	servantIndexAtom,
-	starRateAtom,
-	titleAtom,
-} from '../../store/servantParams'
+  craftEssenceAtkAtom,
+  footprintAAtom,
+  footprintBAtom,
+  footprintQAtom,
+  hasFootPrintAtom,
+  hasGoldenFouAtkAtom,
+  hitCountAAtom,
+  hitCountBAtom,
+  hitCountEXAtom,
+  hitCountNAtom,
+  hitCountQAtom,
+  isGrandServantAtom,
+  isLv120Atom,
+  npColorAtom,
+  npGainAtom,
+  npValueAtom,
+  servantAtkAtom,
+  servantAttributeAtom,
+  servantClassAtom,
+  servantIndexAtom,
+  starRateAtom,
+  titleAtom
+} from '../../store/servantParams';
 
 const servantOptions = ServantData.map((servant, index) => ({
-	value: index,
-	label: servant.name,
-}))
+  value: index,
+  label: servant.name
+}));
 
 interface SetServantInfoModalProps extends ModalProps {
-	closeModal: () => void
+  closeModal: () => void;
 }
 
 function AutoFillServantParamsModal(props: SetServantInfoModalProps) {
-	const { closeModal, ...rest } = props
-	const [servantIndex, setServantIndex] = useAtom(servantIndexAtom)
-	const [isLv120, setIsLv120] = useAtom(isLv120Atom)
-	const [hasGoldFou, setHasGoldFou] = useAtom(hasGoldenFouAtkAtom)
-	const [hasFootprint, setHasFootprint] = useAtom(hasFootPrintAtom)
-	const [isGrandServant, setIsGrandServant] = useAtom(isGrandServantAtom)
+  const { closeModal, ...rest } = props;
+  const [servantIndex, setServantIndex] = useAtom(servantIndexAtom);
+  const [isLv120, setIsLv120] = useAtom(isLv120Atom);
+  const [hasGoldFou, setHasGoldFou] = useAtom(hasGoldenFouAtkAtom);
+  const [hasFootprint, setHasFootprint] = useAtom(hasFootPrintAtom);
+  const [isGrandServant, setIsGrandServant] = useAtom(isGrandServantAtom);
 
-	const handlePerfection = useCallback(() => {
-		setIsLv120(true)
-		setHasGoldFou(true)
-		setHasFootprint(true)
-		setIsGrandServant(true)
-	}, [setHasFootprint, setHasGoldFou, setIsLv120, setIsGrandServant])
+  const handlePerfection = useCallback(() => {
+    setIsLv120(true);
+    setHasGoldFou(true);
+    setHasFootprint(true);
+    setIsGrandServant(true);
+  }, [setHasFootprint, setHasGoldFou, setIsLv120, setIsGrandServant]);
 
-	const handleSubmit = useAtomCallback(
-		useCallback(
-			(get, set) => {
-				const servantIndex = get(servantIndexAtom)
-				const isLv120 = get(isLv120Atom)
-				const hasGoldFou = get(hasGoldenFouAtkAtom)
-				const hasFootprint = get(hasFootPrintAtom)
-				const isGrandServant = get(isGrandServantAtom)
-				const servant = ServantData[servantIndex ?? 0]
-				if (servantIndex === null || !servant) {
-					closeModal()
-					return
-				}
+  const handleSubmit = useAtomCallback(
+    useCallback(
+      (get, set) => {
+        const servantIndex = get(servantIndexAtom);
+        const isLv120 = get(isLv120Atom);
+        const hasGoldFou = get(hasGoldenFouAtkAtom);
+        const hasFootprint = get(hasFootPrintAtom);
+        const isGrandServant = get(isGrandServantAtom);
+        const servant = ServantData[servantIndex ?? 0];
+        if (servantIndex === null || !servant) {
+          closeModal();
+          return;
+        }
 
-				const atk =
-					SILVER_ATK_FOU_MAX +
-					(isLv120 ? Number(servant.atk120) : Number(servant.atkMax)) +
-					(hasGoldFou ? GOLD_ATK_FOU_MAX : 0) +
-					(isGrandServant ? GRAND_SERVANT_ATK_BONUS : 0)
-				const footPrintValue = hasFootprint ? 500 : 0
+        const atk =
+          SILVER_ATK_FOU_MAX +
+          (isLv120 ? Number(servant.atk120) : Number(servant.atkMax)) +
+          (hasGoldFou ? GOLD_ATK_FOU_MAX : 0) +
+          (isGrandServant ? GRAND_SERVANT_ATK_BONUS : 0);
+        const footPrintValue = hasFootprint ? 500 : 0;
 
-				set(titleAtom, servant.name)
-				set(servantClassAtom, servant.className)
-				set(servantAttributeAtom, servant.attribute)
-				set(servantAtkAtom, atk)
-				set(craftEssenceAtkAtom, SILVER_ATK_FOU_MAX)
-				set(npColorAtom, servant.npColor as CardColor)
-				set(npValueAtom, Number(servant.npValue))
-				set(npGainAtom, Number(servant.npGain))
-				set(starRateAtom, Number(servant.starRate))
-				set(hitCountNAtom, Number(servant.npHit))
-				set(hitCountBAtom, Number(servant.bHit))
-				set(hitCountAAtom, Number(servant.aHit))
-				set(hitCountQAtom, Number(servant.qHit))
-				set(hitCountEXAtom, Number(servant.exHit))
-				set(footprintBAtom, footPrintValue)
-				set(footprintAAtom, footPrintValue)
-				set(footprintQAtom, footPrintValue)
+        set(titleAtom, servant.name);
+        set(servantClassAtom, servant.className);
+        set(servantAttributeAtom, servant.attribute);
+        set(servantAtkAtom, atk);
+        set(craftEssenceAtkAtom, SILVER_ATK_FOU_MAX);
+        set(npColorAtom, servant.npColor as CardColor);
+        set(npValueAtom, Number(servant.npValue));
+        set(npGainAtom, Number(servant.npGain));
+        set(starRateAtom, Number(servant.starRate));
+        set(hitCountNAtom, Number(servant.npHit));
+        set(hitCountBAtom, Number(servant.bHit));
+        set(hitCountAAtom, Number(servant.aHit));
+        set(hitCountQAtom, Number(servant.qHit));
+        set(hitCountEXAtom, Number(servant.exHit));
+        set(footprintBAtom, footPrintValue);
+        set(footprintAAtom, footPrintValue);
+        set(footprintQAtom, footPrintValue);
 
-				closeModal()
-			},
-			[closeModal],
-		),
-	)
+        closeModal();
+      },
+      [closeModal]
+    )
+  );
 
-	return (
-		<Modal
-			title="サーヴァント情報自動入力"
-			onOk={handleSubmit}
-			onCancel={closeModal}
-			okText="入力"
-			cancelText="キャンセル"
-			{...rest}
-		>
-			<Flex vertical gap={4}>
-				<Select
-					placeholder="サーヴァント名"
-					options={servantOptions}
-					showSearch
-					optionFilterProp="label"
-					value={servantIndex}
-					onChange={setServantIndex}
-				/>
-				<Space>
-					<Button onClick={handlePerfection}>完全体</Button>(
-					<Checkbox
-						checked={isLv120}
-						onChange={(e) => setIsLv120(e.target.checked)}
-					>
-						Lv.120
-					</Checkbox>
-					<Checkbox
-						checked={hasGoldFou}
-						onChange={(e) => setHasGoldFou(e.target.checked)}
-					>
-						金フォウ
-					</Checkbox>
-					<Checkbox
-						checked={hasFootprint}
-						onChange={(e) => setHasFootprint(e.target.checked)}
-					>
-						足跡
-					</Checkbox>
-					<Checkbox
-						checked={isGrandServant}
-						onChange={(e) => setIsGrandServant(e.target.checked)}
-					>
-						グランド
-					</Checkbox>
-					)
-				</Space>
-				<Typography.Text>※ATK銀フォウ込みで入力されます</Typography.Text>
-			</Flex>
-		</Modal>
-	)
+  return (
+    <Modal
+      title="サーヴァント情報自動入力"
+      onOk={handleSubmit}
+      onCancel={closeModal}
+      okText="入力"
+      cancelText="キャンセル"
+      {...rest}
+    >
+      <Flex vertical gap={4}>
+        <Select
+          placeholder="サーヴァント名"
+          options={servantOptions}
+          showSearch
+          optionFilterProp="label"
+          value={servantIndex}
+          onChange={setServantIndex}
+        />
+        <Space>
+          <Button onClick={handlePerfection}>完全体</Button>(
+          <Checkbox checked={isLv120} onChange={(e) => setIsLv120(e.target.checked)}>
+            Lv.120
+          </Checkbox>
+          <Checkbox checked={hasGoldFou} onChange={(e) => setHasGoldFou(e.target.checked)}>
+            金フォウ
+          </Checkbox>
+          <Checkbox checked={hasFootprint} onChange={(e) => setHasFootprint(e.target.checked)}>
+            足跡
+          </Checkbox>
+          <Checkbox checked={isGrandServant} onChange={(e) => setIsGrandServant(e.target.checked)}>
+            グランド
+          </Checkbox>
+          )
+        </Space>
+        <Typography.Text>※ATK銀フォウ込みで入力されます</Typography.Text>
+      </Flex>
+    </Modal>
+  );
 }
 
-export default AutoFillServantParamsModal
+export default AutoFillServantParamsModal;

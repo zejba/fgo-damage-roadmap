@@ -1,12 +1,12 @@
-import { PlusOutlined } from '@ant-design/icons'
-import { Button, type ButtonProps } from 'antd'
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, type ButtonProps } from 'antd';
 
 function AddBuffButton(props: ButtonProps) {
-	return (
-		<Button icon={<PlusOutlined />} {...props}>
-			追加
-		</Button>
-	)
+  return (
+    <Button icon={<PlusOutlined />} {...props}>
+      追加
+    </Button>
+  );
 }
 
-export default AddBuffButton
+export default AddBuffButton;

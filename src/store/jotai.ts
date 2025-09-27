@@ -1,4 +1,4 @@
-import { atom } from 'jotai'
+import { atom } from 'jotai';
 
-export const isColoredAtom = atom(false)
-export const isRequiredNpStarCalcAtom = atom(false)
+export const isColoredAtom = atom(false);
+export const isRequiredNpStarCalcAtom = atom(false);

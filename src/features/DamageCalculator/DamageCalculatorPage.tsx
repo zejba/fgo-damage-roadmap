@@ -1,15 +1,15 @@
-import { Typography } from 'antd'
-import { DamageCalcInputSection } from './DamageCalcInputSection'
-import ResultTable from './ResultTable'
+import { Typography } from 'antd';
+import { DamageCalcInputSection } from './DamageCalcInputSection';
+import ResultTable from './ResultTable';
 
 function DamageCalculatorPage() {
-	return (
-		<>
-			<Typography.Title level={3}>ダメージ計算</Typography.Title>
-			<DamageCalcInputSection />
-			<ResultTable />
-		</>
-	)
+  return (
+    <>
+      <Typography.Title level={3}>ダメージ計算</Typography.Title>
+      <DamageCalcInputSection />
+      <ResultTable />
+    </>
+  );
 }
 
-export default DamageCalculatorPage
+export default DamageCalculatorPage;
