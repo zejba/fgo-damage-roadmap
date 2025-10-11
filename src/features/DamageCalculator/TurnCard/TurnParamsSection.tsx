@@ -15,7 +15,7 @@ export function TurnParamsSection(props: TurnParamsSectionProps) {
   const isRequiredNpStarCalc = useAtomValue(isRequiredNpStarCalcAtom);
   const [turnParams, setTurnParams] = useAtom(turnParamsAtom);
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       <Space.Compact>
         <SpaceCompactHeader>クラス相性</SpaceCompactHeader>
         <Select
@@ -59,6 +59,6 @@ export function TurnParamsSection(props: TurnParamsSectionProps) {
           />
         </Space.Compact>
       </CollapseWithOutHeader>
-    </>
+    </div>
   );
 }

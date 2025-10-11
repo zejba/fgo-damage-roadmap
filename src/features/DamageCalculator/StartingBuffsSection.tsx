@@ -1,4 +1,4 @@
-import { Button, Card, Flex, Space } from 'antd';
+import { Button, Space } from 'antd';
 import { type PrimitiveAtom, useAtom, useSetAtom } from 'jotai';
 import { useCallback } from 'react';
 import AddBuffButton from '../../components/AddBuffButton';
@@ -7,6 +7,8 @@ import type { Buff } from '../../data/types';
 import { addBuffsAtom, defaultBuff, startingBuffAtomsAtom } from '../../store/startingBuffs';
 import AddTemplateBuffsButton from './AddTemplateBuffsButton';
 import { MemoizedBuffForm } from './BuffForm';
+import { Card } from '../../components/Card';
+import { FormContainer } from '../../components/FormContainer';
 
 function AddClassScoresButton() {
   const addEffect = useSetAtom(addBuffsAtom);
@@ -36,14 +38,14 @@ export function StartingBuffsSection() {
   }, [addBuff]);
   return (
     <Card title="パッシブ・開始時効果" style={{ width: '100%' }}>
-      <Flex vertical gap={4} align="flex-start">
+      <FormContainer style={{ gap: 4 }}>
         <Space>
           <AddBuffButton onClick={handleAddBuff} />
           <AddClassScoresButton />
           <AddTemplateBuffsButton />
         </Space>
         <BuffFormsSection />
-      </Flex>
+      </FormContainer>
     </Card>
   );
 }

@@ -3,8 +3,12 @@ import { Button, Space, Switch, Typography } from 'antd';
 import { useAtom } from 'jotai';
 import { useAtomCallback } from 'jotai/utils';
 import { useCallback } from 'react';
-import { damageCalcResultAtom } from '../../store/damageCalcResult';
-import { isColoredAtom } from '../../store/jotai';
+import {
+  damageCalcResultAtom,
+  damageCalcResultNpColorAtom,
+  isNpStarCalculatedAtom
+} from '../../store/damageCalcResult';
+import { isColoredAtom, isRequiredNpStarCalcAtom } from '../../store/jotai';
 import {
   craftEssenceAtkAtom,
   footprintAAtom,
@@ -57,10 +61,12 @@ function CalcButtonSection() {
       };
       const result = calculateDamages(input);
       set(damageCalcResultAtom, result);
+      set(damageCalcResultNpColorAtom, input.npColor);
+      set(isNpStarCalculatedAtom, get(isRequiredNpStarCalcAtom));
     }, [])
   );
   return (
-    <Space style={{ marginBottom: 12 }}>
+    <Space style={{ marginTop: 12, marginBottom: 12 }}>
       <Button
         style={{ width: 'fit-content' }}
         type="primary"

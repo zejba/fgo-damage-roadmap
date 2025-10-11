@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Flex } from 'antd';
+import { Button } from 'antd';
 import { useAtom, useSetAtom } from 'jotai';
 import type { PrimitiveAtom } from 'jotai';
 import { useCallback } from 'react';
@@ -9,6 +9,15 @@ import CalcButtonSection from './CalcButtonSection';
 import { ServantParamsSection } from './ServantParamsSection';
 import { StartingBuffsSection } from './StartingBuffsSection';
 import { TurnCard } from './TurnCard/TurnCard';
+import styled from 'styled-components';
+
+const CardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 648px;
+`;
 
 function TurnCardsSection() {
   const [turnAtoms, dispatch] = useAtom(turnAtomsAtom);
@@ -17,11 +26,11 @@ function TurnCardsSection() {
     [dispatch]
   );
   return (
-    <Flex vertical gap={12} align="flex-start" style={{ width: '100%' }}>
+    <CardContainer>
       {turnAtoms.map((turnAtom, index) => (
         <TurnCard key={`${turnAtom}`} turnAtom={turnAtom} turnNumber={index + 1} remove={handleRemove} />
       ))}
-    </Flex>
+    </CardContainer>
   );
 }
 
@@ -40,12 +49,12 @@ function AddTurnCardButton() {
 export function DamageCalcInputSection() {
   return (
     <>
-      <Flex vertical gap={12} align="center" style={{ width: 648, marginBottom: 12 }}>
+      <CardContainer>
         <ServantParamsSection />
         <StartingBuffsSection />
         <TurnCardsSection />
         <AddTurnCardButton />
-      </Flex>
+      </CardContainer>
       <CalcButtonSection />
     </>
   );

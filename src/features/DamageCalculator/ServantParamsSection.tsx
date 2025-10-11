@@ -1,5 +1,5 @@
 import { DatabaseOutlined } from '@ant-design/icons';
-import { Button, Card, Flex, Input, InputNumber, Select, Space } from 'antd';
+import { Button, Input, InputNumber, Select, Space } from 'antd';
 import { useAtom } from 'jotai';
 import SpaceCompactHeader from '../../components/SpaceCompactHeader';
 import { cardColors, servantAttributes, servantClasses } from '../../data/options';
@@ -18,6 +18,8 @@ import {
 } from '../../store/servantParams';
 import AutoFillServantParamsModal from './AutoFillServantParamsModal';
 import ServantParamsNpStarSection from './ServantParamsNpStarSection';
+import { Card } from '../../components/Card';
+import { FormContainer } from '../../components/FormContainer';
 
 // タイトル・クラス・属性
 function TitleClassAttributeRow() {
@@ -132,7 +134,7 @@ function AutoFillServantParamsModalSection() {
 export function ServantParamsSection() {
   return (
     <Card title="基本情報" style={{ width: '100%' }}>
-      <Flex vertical gap={12} align="flex-start">
+      <FormContainer>
         <AutoFillServantParamsModalSection />
         <TitleClassAttributeRow />
         <ServantAtkRow />
@@ -140,7 +142,7 @@ export function ServantParamsSection() {
         <NoblePhantasmRow />
         <FootprintRow />
         <ServantParamsNpStarSection />
-      </Flex>
+      </FormContainer>
     </Card>
   );
 }

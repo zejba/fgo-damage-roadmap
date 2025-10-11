@@ -182,33 +182,25 @@ function getNpCorrectionValue(type: CardType, npColor: CardColor, nth: number) {
 }
 
 export type TurnResult = {
-  baseDamages: number[];
-  constantDamages: number[];
-  nps: number[];
-  minStars: number[];
-  maxStars: number[];
-  minStarRates: number[];
-  maxStarRates: number[];
+  baseDamages: [number, number, number, number];
+  constantDamages: [number, number, number, number];
+  nps: [number, number, number, number];
+  minStars: [number, number, number, number];
+  maxStars: [number, number, number, number];
+  minStarRates: [number, number, number, number];
+  maxStarRates: [number, number, number, number];
   passRate: number;
-  atkBuffs: number[];
-  cardBuffs: number[];
-  npOrCrBuffs: number[];
-  spBuffs: number[];
+  atkBuffs: [number, number, number, number];
+  cardBuffs: [number, number, number, number];
+  npOrCrBuffs: [number, number, number, number];
+  spBuffs: [number, number, number, number];
 };
 
-const cardLabels = {
-  buster: 'B',
-  arts: 'A',
-  quick: 'Q',
-  noblePhantasm: 'N',
-  extra: 'EX'
-} as const;
-
 export type ProcessedTurnResult = TurnResult & {
-  damage90: number[];
-  damage100: number[];
-  damage110: number[];
-  selectedCards: ('B' | 'A' | 'Q' | 'N' | 'EX')[];
+  damage90: [number, number, number, number];
+  damage100: [number, number, number, number];
+  damage110: [number, number, number, number];
+  selectedCards: [CardType, CardType, CardType, 'EX'];
   targetDamage: number;
 };
 
@@ -459,30 +451,31 @@ export function calculateDamages(args: DamageCalculatorInputValue): ProcessedTur
   // 表用のデータに加工
   const processedResult = result.map((turnResult, turnIndex) => {
     const damage90 = turnResult.baseDamages.map((baseDamage, index) =>
-      Math.floor(baseDamage * 0.9 + turnResult.constantDamages[index])
-    );
+      Math.floor(baseDamage * 0.9 + turnResult.constantDamages[index]!)
+    ) as [number, number, number, number];
     const damage100 = turnResult.baseDamages.map((baseDamage, index) =>
-      Math.floor(baseDamage * 1 + turnResult.constantDamages[index])
-    );
+      Math.floor(baseDamage * 1 + turnResult.constantDamages[index]!)
+    ) as [number, number, number, number];
     const damage110 = turnResult.baseDamages.map((baseDamage, index) =>
-      Math.floor(baseDamage * 1.1 + turnResult.constantDamages[index])
-    );
+      Math.floor(baseDamage * 1.1 + turnResult.constantDamages[index]!)
+    ) as [number, number, number, number];
     return {
       ...turnResult,
-      damage90: [...damage90, damage90.reduce((a, b) => a + b, 0)],
-      damage100: [...damage100, damage100.reduce((a, b) => a + b, 0)],
-      damage110: [...damage110, damage110.reduce((a, b) => a + b, 0)],
-      baseDamages: [...turnResult.baseDamages, turnResult.baseDamages.reduce((a, b) => a + b, 0)],
-      constantDamages: [...turnResult.constantDamages, turnResult.constantDamages.reduce((a, b) => a + b, 0)],
-      nps: [...turnResult.nps, turnResult.nps.reduce((a, b) => a + b, 0)],
-      minStars: [...turnResult.minStars, turnResult.minStars.reduce((a, b) => a + b, 0)],
-      maxStars: [...turnResult.maxStars, turnResult.maxStars.reduce((a, b) => a + b, 0)],
+      damage90,
+      damage100,
+      damage110,
+      baseDamages: turnResult.baseDamages,
+      constantDamages: turnResult.constantDamages,
+      nps: turnResult.nps,
+      minStars: turnResult.minStars,
+      maxStars: turnResult.maxStars,
       selectedCards: [
-        cardLabels[turns[turnIndex].card1.params.type],
-        cardLabels[turns[turnIndex].card2.params.type],
-        cardLabels[turns[turnIndex].card3.params.type]
-      ],
-      targetDamage: turns[turnIndex].params.targetDamage
+        turns[turnIndex]!.card1.params.type,
+        turns[turnIndex]!.card2.params.type,
+        turns[turnIndex]!.card3.params.type,
+        'EX'
+      ] as [CardType, CardType, CardType, 'EX'],
+      targetDamage: turns[turnIndex]!.params.targetDamage
     };
   });
   return processedResult;
@@ -493,7 +486,7 @@ function pushBuffs(simulatedBuffs: Record<BuffType, BuffValue[]>, newBuffs: Buff
   for (const buff of newBuffs) {
     const { type, amount, turn, count } = buff;
     if (turn === -1 && count === -1) {
-      simulatedBuffs[type][0].amount += amount;
+      simulatedBuffs[type][0]!.amount += amount;
     } else {
       simulatedBuffs[type].push({
         amount,
@@ -544,10 +537,10 @@ function calcPassRate(d1: number, d2: number, d3: number, d4: number, target: nu
   let cnt = 0;
   let right = 39999;
   for (let i = 0; i < 40000; i += 1) {
-    if (first[i] >= target) {
+    if (first[i]! >= target) {
       break;
     }
-    while (right > 0 && first[i] + second[right] >= target) {
+    while (right > 0 && first[i]! + second[right]! >= target) {
       right -= 1;
     }
     cnt += right + 1;
@@ -613,10 +606,10 @@ function starGetCalc(
   isCr: boolean,
   hit: number,
   ovk: number
-) {
+): [number, number, number, number] {
   const fixedOvk = ovk > hit ? hit : ovk;
   let sr = starRate + cardStarCorr * (1 + cardbuff) + fb + dsr + stargetbuff + (isCr ? 0.2 : 0);
-  const result = [0, 0, 0, 0];
+  const result: [number, number, number, number] = [0, 0, 0, 0];
   //発生率
   // オバキル0
   result[2] = Math.min(sr, 3);

@@ -86,6 +86,8 @@ export type CardColor = 'buster' | 'arts' | 'quick';
 
 export type CardType = 'buster' | 'arts' | 'quick' | 'noblePhantasm' | 'extra';
 
-export type SelectbleCardType = 'buster' | 'arts' | 'quick' | 'noblePhantasm';
+export type SelectableCardType = 'buster' | 'arts' | 'quick' | 'noblePhantasm';
 
 export type CardCategory = 'normal' | 'noblePhantasm' | 'extra';
+
+export type CardInitial = 'B' | 'A' | 'Q' | 'N' | 'EX';

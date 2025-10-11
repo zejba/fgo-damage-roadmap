@@ -1,4 +1,4 @@
-import { Button, Checkbox, Flex, Modal, type ModalProps, Select, Space, Typography } from 'antd';
+import { Button, Checkbox, Modal, type ModalProps, Select, Space, Typography } from 'antd';
 import { useAtom } from 'jotai';
 import { useAtomCallback } from 'jotai/utils';
 import { useCallback } from 'react';
@@ -29,6 +29,7 @@ import {
   starRateAtom,
   titleAtom
 } from '../../store/servantParams';
+import { FormContainer } from '../../components/FormContainer';
 
 const servantOptions = ServantData.map((servant, index) => ({
   value: index,
@@ -108,7 +109,7 @@ function AutoFillServantParamsModal(props: SetServantInfoModalProps) {
       cancelText="キャンセル"
       {...rest}
     >
-      <Flex vertical gap={4}>
+      <FormContainer>
         <Select
           placeholder="サーヴァント名"
           options={servantOptions}
@@ -116,6 +117,7 @@ function AutoFillServantParamsModal(props: SetServantInfoModalProps) {
           optionFilterProp="label"
           value={servantIndex}
           onChange={setServantIndex}
+          style={{ width: 400, maxWidth: '100%' }}
         />
         <Space>
           <Button onClick={handlePerfection}>完全体</Button>(
@@ -134,7 +136,7 @@ function AutoFillServantParamsModal(props: SetServantInfoModalProps) {
           )
         </Space>
         <Typography.Text>※ATK銀フォウ込みで入力されます</Typography.Text>
-      </Flex>
+      </FormContainer>
     </Modal>
   );
 }

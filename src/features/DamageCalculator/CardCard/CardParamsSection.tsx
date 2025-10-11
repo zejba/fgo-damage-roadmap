@@ -1,4 +1,4 @@
-import { Checkbox, Flex, InputNumber, Select, Space } from 'antd';
+import { Checkbox, InputNumber, Select, Space } from 'antd';
 import { type PrimitiveAtom, useAtom, useAtomValue } from 'jotai';
 import SpaceCompactHeader from '../../../components/SpaceCompactHeader';
 import { cardTypeOptions, damageJudgementOptions } from '../../../data/options';
@@ -26,29 +26,24 @@ export function CardParamsSection(props: CardParamsSectionProps) {
           onChange={(value) => setCardParams((prev) => ({ ...prev, type: value }))}
         />
       )}
-      <Flex
-        style={{
-          outline: '1px solid #BFBFBF',
-          outlineOffset: '-1px',
-          paddingLeft: 8,
-          paddingRight: 8,
-          alignItems: 'center'
-        }}
-      >
-        {!isEx && (
-          <Checkbox
-            checked={cardParams.isCritical}
-            onChange={(e) =>
-              setCardParams((prev) => ({
-                ...prev,
-                isCritical: e.target.checked
-              }))
-            }
-          >
-            クリティカル
-          </Checkbox>
-        )}
-      </Flex>
+      {!isEx && (
+        <Checkbox
+          checked={cardParams.isCritical}
+          onChange={(e) =>
+            setCardParams((prev) => ({
+              ...prev,
+              isCritical: e.target.checked
+            }))
+          }
+          style={{
+            outline: '1px solid #d9d9d9',
+            outlineOffset: '-1px',
+            padding: '4px 8px'
+          }}
+        >
+          クリティカル
+        </Checkbox>
+      )}
       <Select
         value={cardParams.damageJudgement}
         onChange={(value) => setCardParams((prev) => ({ ...prev, damageJudgement: value }))}

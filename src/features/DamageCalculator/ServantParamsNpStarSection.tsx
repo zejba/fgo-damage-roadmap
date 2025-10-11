@@ -1,4 +1,4 @@
-import { Flex, InputNumber, Space, Switch, Typography } from 'antd';
+import { InputNumber, Space, Switch, Typography } from 'antd';
 import { useAtom } from 'jotai';
 import { useCallback } from 'react';
 import CollapseWithOutHeader from '../../components/CollapseWithOutHeader';
@@ -14,6 +14,7 @@ import {
   npGainAtom,
   starRateAtom
 } from '../../store/servantParams';
+import { FormContainer } from '../../components/FormContainer';
 
 function NpGainRow() {
   const [npGain, setNpGain] = useAtom(npGainAtom);
@@ -67,19 +68,19 @@ function ServantParamsNpStarSection() {
     setIsRequiredNpStarCalc((prev) => !prev);
   }, [setIsRequiredNpStarCalc]);
   return (
-    <>
+    <div>
       <Space>
         <Typography.Text>NP・スター計算</Typography.Text>
         <Switch value={isRequiredNpStarCalc} onChange={toggleIsRequiredNpStarCalc} />
       </Space>
       <CollapseWithOutHeader isActive={isRequiredNpStarCalc}>
-        <Flex vertical gap={12} align="flex-start">
+        <FormContainer style={{ marginTop: 8 }}>
           <NpGainRow />
           <StarRateRow />
           <HitCountRow />
-        </Flex>
+        </FormContainer>
       </CollapseWithOutHeader>
-    </>
+    </div>
   );
 }
 

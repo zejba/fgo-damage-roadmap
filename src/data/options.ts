@@ -111,8 +111,19 @@ export const damageJudgementOptions: {
 ];
 
 export const cardColorStyles = {
-  buster: 'tomato',
-  arts: 'cornflowerblue',
-  quick: 'lightgreen',
-  extra: '#F0F0F0'
+  buster: '#FF4444',
+  arts: '#3B9CFF',
+  quick: '#66D966',
+  B: '#FF4444',
+  A: '#3B9CFF',
+  Q: '#66D966',
+  extra: undefined
+} as const;
+
+export const cardInitial = {
+  buster: 'B',
+  arts: 'A',
+  quick: 'Q',
+  extra: 'EX',
+  noblePhantasm: 'N'
 } as const;

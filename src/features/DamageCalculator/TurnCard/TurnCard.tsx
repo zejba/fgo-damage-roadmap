@@ -1,5 +1,5 @@
 import { CloseOutlined } from '@ant-design/icons';
-import { Button, Card, Flex } from 'antd';
+import { Button, Modal } from 'antd';
 import type { PrimitiveAtom } from 'jotai';
 import { focusAtom } from 'jotai-optics';
 import { splitAtom, useAtomCallback } from 'jotai/utils';
@@ -11,6 +11,8 @@ import { defaultBuff } from '../../../store/startingBuffs';
 import { CardCard } from '../CardCard/CardCard';
 import { TurnParamsSection } from './TurnParamsSection';
 import { TurnStartingBuffForms } from './TurnStartingBuffForms';
+import { Card } from '../../../components/Card';
+import { FormContainer } from '../../../components/FormContainer';
 
 interface TurnCardInnerProps {
   turnAtom: PrimitiveAtom<TurnFormValue>;
@@ -35,17 +37,17 @@ const TurnCardInner = memo((props: TurnCardInnerProps) => {
     )
   );
   return (
-    <Flex vertical gap={12} align="flex-start">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start' }}>
       <TurnParamsSection turnParamsAtom={turnParamsAtom} />
-      <Flex vertical gap={4} align="flex-start">
+      <FormContainer style={{ gap: 4 }}>
         <AddBuffButton onClick={addTurnBuff} />
         <TurnStartingBuffForms turnBuffAtomsAtom={turnBuffAtomsAtom} />
-      </Flex>
+      </FormContainer>
       <CardCard title="1st" cardAtom={card1Atom} />
       <CardCard title="2nd" cardAtom={card2Atom} />
       <CardCard title="3rd" cardAtom={card3Atom} />
       <CardCard title="4th" cardAtom={card4Atom} />
-    </Flex>
+    </div>
   );
 });
 
@@ -57,9 +59,16 @@ interface TurnCardProps {
 
 export const TurnCard = memo((props: TurnCardProps) => {
   const { turnAtom, turnNumber, remove } = props;
-  const handleRemoveTurn = useCallback(() => {
-    remove(turnAtom);
-  }, [remove, turnAtom]);
+  const handleRemoveTurn = useCallback(
+    () =>
+      Modal.confirm({
+        title: `ターン${turnNumber}を削除しますか？`,
+        onOk() {
+          remove(turnAtom);
+        }
+      }),
+    [remove, turnAtom, turnNumber]
+  );
   return (
     <Card
       title={`${turnNumber}T目`}

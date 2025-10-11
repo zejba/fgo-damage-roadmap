@@ -1,4 +1,3 @@
-import { Card, Flex } from 'antd';
 import { type WritableAtom, useAtomValue } from 'jotai';
 import { focusAtom } from 'jotai-optics';
 import { splitAtom, useAtomCallback } from 'jotai/utils';
@@ -12,6 +11,8 @@ import { npColorAtom } from '../../../store/servantParams';
 import { defaultBuff } from '../../../store/startingBuffs';
 import { CardBuffForms } from './CardBuffForms';
 import { CardParamsSection } from './CardParamsSection';
+import { Card } from '../../../components/Card';
+import { FormContainer } from '../../../components/FormContainer';
 
 interface CardCardInnerProps {
   cardParamsAtom: WritableAtom<CardParams, [SetStateAction<CardParams>], void>;
@@ -31,13 +32,13 @@ function CardCardInner(props: CardCardInnerProps) {
     )
   );
   return (
-    <Flex vertical gap={12} align="flex-start">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start' }}>
       <CardParamsSection cardParamsAtom={cardParamsAtom} />
-      <Flex vertical gap={4} align="flex-start">
+      <FormContainer style={{ gap: 4 }}>
         <AddBuffButton onClick={addBuff} />
         <CardBuffForms cardBuffAtomsAtom={cardBuffAtomsAtom} />
-      </Flex>
-    </Flex>
+      </FormContainer>
+    </div>
   );
 }
 
@@ -65,7 +66,11 @@ export function CardCard(props: CardCardProps) {
     return cardColorStyles[cardType];
   }, [isColored, cardType, npColor]);
   return (
-    <Card title={title} style={{ width: '100%' }} styles={{ header: { backgroundColor: titleBgColor } }}>
+    <Card
+      title={title}
+      style={{ width: '100%' }}
+      styles={{ header: { backgroundColor: titleBgColor, transition: 'background-color 0.2s' } }}
+    >
       <MemoizedCardCardInner cardParamsAtom={cardParamsAtom} cardBuffsAtom={cardBuffsAtom} />
     </Card>
   );
