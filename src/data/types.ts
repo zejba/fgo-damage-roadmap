@@ -91,3 +91,23 @@ export type SelectableCardType = 'buster' | 'arts' | 'quick' | 'noblePhantasm';
 export type CardCategory = 'normal' | 'noblePhantasm' | 'extra';
 
 export type CardInitial = 'B' | 'A' | 'Q' | 'N' | 'EX';
+
+export interface DamageCalcFormValue {
+  servantClass: ServantClass;
+  servantAttribute: ServantAttribute;
+  atk: number;
+  npColor: CardColor;
+  npValue: number;
+  footprintB: number;
+  footprintA: number;
+  footprintQ: number;
+  npGain: number;
+  starRate: number;
+  hitCountN: number;
+  hitCountB: number;
+  hitCountA: number;
+  hitCountQ: number;
+  hitCountEX: number;
+  startingBuffs: Buff[];
+  turns: TurnFormValue[];
+}

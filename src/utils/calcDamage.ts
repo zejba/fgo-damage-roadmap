@@ -5,7 +5,17 @@ import {
   EXTRA_DAMAGE_COEFFICIENT,
   SELECT_ORDER_COEFFICIENT
 } from '../data/constants';
-import type { Buff, BuffType, CardCategory, CardColor, CardType, DamageJudgement, TurnFormValue } from '../data/types';
+import type {
+  Buff,
+  BuffType,
+  CardCategory,
+  CardColor,
+  CardType,
+  DamageJudgement,
+  ServantAttribute,
+  ServantClass,
+  TurnFormValue
+} from '../data/types';
 import { getClassAtkCorrectionValue } from './getClassAtkCorrectionValue';
 
 interface BuffForCalc {
@@ -41,8 +51,8 @@ interface TurnForCalc {
 }
 
 export interface DamageCalculatorInputValue {
-  servantClass: string;
-  servantAttribute: string;
+  servantClass: ServantClass;
+  servantAttribute: ServantAttribute;
   atk: number;
   npColor: CardColor;
   npValue: number;

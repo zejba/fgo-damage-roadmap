@@ -3,8 +3,6 @@ import { useAtom } from 'jotai';
 import { useAtomCallback } from 'jotai/utils';
 import { useCallback } from 'react';
 import { GOLD_ATK_FOU_MAX, GRAND_SERVANT_ATK_BONUS, SILVER_ATK_FOU_MAX } from '../../data/constants';
-import ServantData from '../../data/servant_data.json';
-import type { CardColor } from '../../data/types';
 import {
   craftEssenceAtkAtom,
   footprintAAtom,
@@ -30,8 +28,9 @@ import {
   titleAtom
 } from '../../store/servantParams';
 import { FormContainer } from '../../components/FormContainer';
+import { servantData } from '../../data/servantData';
 
-const servantOptions = ServantData.map((servant, index) => ({
+const servantOptions = servantData.map((servant, index) => ({
   value: index,
   label: servant.name
 }));
@@ -63,7 +62,7 @@ function AutoFillServantParamsModal(props: SetServantInfoModalProps) {
         const hasGoldFou = get(hasGoldenFouAtkAtom);
         const hasFootprint = get(hasFootPrintAtom);
         const isGrandServant = get(isGrandServantAtom);
-        const servant = ServantData[servantIndex ?? 0];
+        const servant = servantData[servantIndex ?? 0];
         if (servantIndex === null || !servant) {
           closeModal();
           return;
@@ -81,15 +80,15 @@ function AutoFillServantParamsModal(props: SetServantInfoModalProps) {
         set(servantAttributeAtom, servant.attribute);
         set(servantAtkAtom, atk);
         set(craftEssenceAtkAtom, SILVER_ATK_FOU_MAX);
-        set(npColorAtom, servant.npColor as CardColor);
-        set(npValueAtom, Number(servant.npValue));
-        set(npGainAtom, Number(servant.npGain));
-        set(starRateAtom, Number(servant.starRate));
-        set(hitCountNAtom, Number(servant.npHit));
-        set(hitCountBAtom, Number(servant.bHit));
-        set(hitCountAAtom, Number(servant.aHit));
-        set(hitCountQAtom, Number(servant.qHit));
-        set(hitCountEXAtom, Number(servant.exHit));
+        set(npColorAtom, servant.noblePhantasm.card);
+        set(npValueAtom, servant.noblePhantasm.value);
+        set(npGainAtom, servant.npGain);
+        set(starRateAtom, servant.starGen);
+        set(hitCountNAtom, servant.hitCounts.np);
+        set(hitCountBAtom, servant.hitCounts.buster);
+        set(hitCountAAtom, servant.hitCounts.arts);
+        set(hitCountQAtom, servant.hitCounts.quick);
+        set(hitCountEXAtom, servant.hitCounts.extra);
         set(footprintBAtom, footPrintValue);
         set(footprintAAtom, footPrintValue);
         set(footprintQAtom, footPrintValue);
