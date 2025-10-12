@@ -10,70 +10,46 @@ import {
 } from '../../store/damageCalcResult';
 import { isColoredAtom, isRequiredNpStarCalcAtom } from '../../store/jotai';
 import {
-  craftEssenceAtkAtom,
-  footprintAAtom,
-  footprintBAtom,
-  footprintQAtom,
-  hitCountAAtom,
-  hitCountBAtom,
-  hitCountEXAtom,
-  hitCountNAtom,
-  hitCountQAtom,
-  npColorAtom,
-  npGainAtom,
-  npValueAtom,
-  servantAtkAtom,
-  servantAttributeAtom,
-  servantClassAtom,
-  starRateAtom
-} from '../../store/servantParams';
-import { startingBuffsAtom } from '../../store/startingBuffs';
-import { turnsAtom } from '../../store/turns';
-import {
   type DamageCalculatorInputValue,
   calculateDamages,
   convertBuffForCalc,
   convertTurnForCalc
 } from '../../utils/calcDamage';
+import { currentFormDataAtom } from '../../store/formData';
 
 function CalcButtonSection() {
   const [isColored, setIsColored] = useAtom(isColoredAtom);
   const handleCalculate = useAtomCallback(
     useCallback((get, set) => {
-      const input: DamageCalculatorInputValue = {
-        servantClass: get(servantClassAtom),
-        servantAttribute: get(servantAttributeAtom),
-        atk: (get(servantAtkAtom) || 0) + (get(craftEssenceAtkAtom) || 0),
-        npColor: get(npColorAtom),
-        npValue: get(npValueAtom) || 0,
-        footprintB: get(footprintBAtom) || 0,
-        footprintA: get(footprintAAtom) || 0,
-        footprintQ: get(footprintQAtom) || 0,
-        npGain: get(npGainAtom) || 0,
-        starRate: get(starRateAtom) || 0,
-        hitCountN: get(hitCountNAtom) || 0,
-        hitCountB: get(hitCountBAtom) || 0,
-        hitCountA: get(hitCountAAtom) || 0,
-        hitCountQ: get(hitCountQAtom) || 0,
-        hitCountEX: get(hitCountEXAtom) || 0,
-        startingBuffs: get(startingBuffsAtom).map(convertBuffForCalc),
-        turns: get(turnsAtom).map(convertTurnForCalc)
+      const input = get(currentFormDataAtom);
+      const value: DamageCalculatorInputValue = {
+        servantClass: input.servantClass,
+        servantAttribute: input.servantAttribute,
+        atk: (input.servantAtk || 0) + (input.craftEssenceAtk || 0),
+        npColor: input.npColor,
+        npValue: input.npValue || 0,
+        footprintB: input.footprintB || 0,
+        footprintA: input.footprintA || 0,
+        footprintQ: input.footprintQ || 0,
+        npGain: input.npGain || 0,
+        starRate: input.starRate || 0,
+        hitCountN: input.hitCountN || 0,
+        hitCountB: input.hitCountB || 0,
+        hitCountA: input.hitCountA || 0,
+        hitCountQ: input.hitCountQ || 0,
+        hitCountEX: input.hitCountEX || 0,
+        startingBuffs: input.startingBuffs.map(convertBuffForCalc),
+        turns: input.turns.map(convertTurnForCalc)
       };
-      const result = calculateDamages(input);
+      const result = calculateDamages(value);
       set(damageCalcResultAtom, result);
-      set(damageCalcResultNpColorAtom, input.npColor);
+      set(damageCalcResultNpColorAtom, value.npColor);
       set(isNpStarCalculatedAtom, get(isRequiredNpStarCalcAtom));
     }, [])
   );
   return (
     <Space style={{ marginTop: 12, marginBottom: 12 }}>
-      <Button
-        style={{ width: 'fit-content' }}
-        type="primary"
-        onClick={handleCalculate}
-        icon={<CalculatorFilled />}
-        iconPosition="end"
-      >
+      <Button type="primary" onClick={handleCalculate} icon={<CalculatorFilled />} iconPosition="end">
         計算
       </Button>
       <Space>

@@ -20,6 +20,7 @@ import AutoFillServantParamsModal from './AutoFillServantParamsModal';
 import ServantParamsNpStarSection from './ServantParamsNpStarSection';
 import { Card } from '../../components/Card';
 import { FormContainer } from '../../components/FormContainer';
+import { SaveLoadButtonSection } from './SaveLoadButtonSection';
 
 // タイトル・クラス・属性
 function TitleClassAttributeRow() {
@@ -135,7 +136,10 @@ export function ServantParamsSection() {
   return (
     <Card title="基本情報" style={{ width: '100%' }}>
       <FormContainer>
-        <AutoFillServantParamsModalSection />
+        <Space>
+          <AutoFillServantParamsModalSection />
+          <SaveLoadButtonSection />
+        </Space>
         <TitleClassAttributeRow />
         <ServantAtkRow />
         <CraftEssenceAtkRow />
