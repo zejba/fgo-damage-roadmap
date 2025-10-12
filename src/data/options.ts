@@ -134,3 +134,21 @@ export const cardInitial = {
   extra: 'EX',
   noblePhantasm: 'N'
 } as const;
+
+export const localizedServantClass = {
+  saber: 'セイバー',
+  archer: 'アーチャー',
+  lancer: 'ランサー',
+  rider: 'ライダー',
+  caster: 'キャスター',
+  assassin: 'アサシン',
+  berserker: 'バーサーカー',
+  ruler: 'ルーラー',
+  avenger: 'アヴェンジャー',
+  alterEgo: 'アルターエゴ',
+  moonCancer: 'ムーンキャンサー',
+  pretender: 'プリテンダー',
+  foreigner: 'フォーリナー',
+  shielder: 'シールダー',
+  beast: 'ビースト'
+} as const;

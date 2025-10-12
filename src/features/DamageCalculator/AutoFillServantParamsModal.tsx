@@ -1,4 +1,4 @@
-import { Button, Checkbox, Modal, type ModalProps, Select, Space, Typography } from 'antd';
+import { Button, Checkbox, message, Modal, type ModalProps, Select, Space, Typography } from 'antd';
 import { useAtom } from 'jotai';
 import { useAtomCallback } from 'jotai/utils';
 import { useCallback } from 'react';
@@ -27,11 +27,14 @@ import {
   starRateAtom
 } from '../../store/servantParams';
 import { FormContainer } from '../../components/FormContainer';
-import { servantData } from '../../data/servantData';
+import { startingBuffsAtom } from '../../store/startingBuffs';
+import { v4 } from 'uuid';
+import { localizedServantClass } from '../../data/options';
+import servantData from '../../data/servant_data';
 
 const servantOptions = servantData.map((servant, index) => ({
   value: index,
-  label: servant.name
+  label: `${servant.collectionNo}. ${servant.name} (${localizedServantClass[servant.className]})`
 }));
 
 interface SetServantInfoModalProps extends ModalProps {
@@ -90,7 +93,19 @@ function AutoFillServantParamsModal(props: SetServantInfoModalProps) {
         set(footprintBAtom, footPrintValue);
         set(footprintAAtom, footPrintValue);
         set(footprintQAtom, footPrintValue);
+        set(
+          startingBuffsAtom,
+          servant.classPassive.map((buff) => ({
+            id: v4(),
+            name: 'クラススキル',
+            type: buff.type,
+            amount: buff.value,
+            turn: buff.turn === -1 ? null : buff.turn,
+            count: buff.count === -1 ? null : buff.count
+          }))
+        );
 
+        message.success(`${servant.name}の情報を入力しました`);
         closeModal();
       },
       [closeModal]
