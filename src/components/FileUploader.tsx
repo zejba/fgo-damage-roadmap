@@ -45,7 +45,8 @@ export function FileUploader({ onFileLoaded, style, accept }: FileUploaderProps)
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
-            wordBreak: 'break-all'
+            wordBreak: 'break-all',
+            margin: 0
           }}
         >
           {fileName ?? '選択してください'}

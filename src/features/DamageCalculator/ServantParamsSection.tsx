@@ -16,7 +16,7 @@ import {
   servantClassAtom,
   titleAtom
 } from '../../store/servantParams';
-import AutoFillServantParamsModal from './AutoFillServantParamsModal';
+import AutoFillModal from './AutoFillModal/AutoFillModal';
 import ServantParamsNpStarSection from './ServantParamsNpStarSection';
 import { Card } from '../../components/Card';
 import { FormContainer } from '../../components/FormContainer';
@@ -127,7 +127,7 @@ function AutoFillServantParamsModalSection() {
       <Button onClick={openServantModal} icon={<DatabaseOutlined />}>
         自動入力
       </Button>
-      <AutoFillServantParamsModal open={isServantModalOpen} closeModal={closeServantModal} />
+      <AutoFillModal open={isServantModalOpen} closeModal={closeServantModal} />
     </>
   );
 }

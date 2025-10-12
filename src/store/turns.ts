@@ -22,7 +22,7 @@ export const defaultTurn: Omit<TurnFormValue, 'id'> = {
   card1: {
     params: {
       type: 'noblePhantasm',
-      isCritical: false,
+      isCritical: true,
       damageJudgement: 'default',
       overKillCount: null
     },
@@ -31,7 +31,7 @@ export const defaultTurn: Omit<TurnFormValue, 'id'> = {
   card2: {
     params: {
       type: 'buster',
-      isCritical: false,
+      isCritical: true,
       damageJudgement: 'default',
       overKillCount: null
     },
@@ -40,7 +40,7 @@ export const defaultTurn: Omit<TurnFormValue, 'id'> = {
   card3: {
     params: {
       type: 'buster',
-      isCritical: false,
+      isCritical: true,
       damageJudgement: 'default',
       overKillCount: null
     },

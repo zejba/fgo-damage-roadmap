@@ -1,0 +1,22 @@
+[
+  {
+    "id": "94051101",
+    "name": "魔性菩薩",
+    "turns": [
+      { "targetDamage": 500000, "dtdr": 100, "dsr": 0 },
+      { "targetDamage": 850000, "dtdr": 100, "dsr": 0 },
+      { "targetDamage": 1000000, "dtdr": 100, "dsr": 0 },
+      { "targetDamage": 450000, "dtdr": 100, "dsr": 0 }
+    ]
+  },
+  {
+    "id": "94072598",
+    "name": "愛欲の魔王",
+    "turns": [
+      { "targetDamage": 707526, "dtdr": 100, "dsr": 0 },
+      { "targetDamage": 861336, "dtdr": 100, "dsr": 0 },
+      { "targetDamage": 984384, "dtdr": 100, "dsr": 0 },
+      { "targetDamage": 1161265, "dtdr": 100, "dsr": 0 }
+    ]
+  }
+]
