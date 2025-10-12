@@ -1,6 +1,6 @@
 import DamageCalculatorPage from './pages/DamageCalculatorPage';
 import Layout from './features/Layout';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import { ConvertFromOldServicePage } from './pages/ConvertFromOldServicePage';
 import { ConfigProvider, ThemeConfig } from 'antd';
 import { DEFAULT_FORM_BORDER_COLOR } from './data/constants';
