@@ -1,6 +1,6 @@
 import { Typography } from 'antd';
-import { DamageCalcInputSection } from './DamageCalcInputSection';
-import ResultTable from './ResultTable';
+import { DamageCalcInputSection } from '../features/DamageCalculator/DamageCalcInputSection';
+import ResultTable from '../features/DamageCalculator/ResultTable';
 
 function DamageCalculatorPage() {
   return (

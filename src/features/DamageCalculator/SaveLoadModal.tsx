@@ -1,7 +1,7 @@
 import { ModalProps, Modal, Typography } from 'antd';
 import { useState } from 'react';
 import { ExportFormValuesButton } from './ExportFormValuesButton';
-import { ImportFormValuesUploader } from './ImportFormValuesUploader';
+import { FileUploader } from '../../components/FileUploader';
 import { ImportFormValuesButton } from './ImportFormValuesButton';
 import { LocalStorageSaveSection } from './LocalStorageSaveSection';
 import { LocalStorageSelectSection } from './LocalStorageSelectSection';
@@ -42,7 +42,7 @@ function FileSection() {
       <p>JSON形式で保存されます</p>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
         <ExportFormValuesButton />
-        <ImportFormValuesUploader onFileLoaded={setFile} />
+        <FileUploader onFileLoaded={setFile} accept=".json" />
         <ImportFormValuesButton file={file} />
       </div>
     </>

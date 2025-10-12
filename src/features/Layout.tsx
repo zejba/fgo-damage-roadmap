@@ -1,4 +1,5 @@
 import { Layout as AntdLayout, Typography } from 'antd';
+import { Link } from 'react-router-dom';
 const { Header, Content } = AntdLayout;
 
 interface Props {
@@ -17,15 +18,17 @@ function Layout({ children }: Props) {
           backgroundColor: 'cadetblue'
         }}
       >
-        <Typography.Title
-          level={3}
-          style={{
-            color: 'white',
-            margin: 0
-          }}
-        >
-          FGO Damage Roadmap
-        </Typography.Title>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <Typography.Title
+            level={3}
+            style={{
+              color: 'white',
+              margin: 0
+            }}
+          >
+            FGO Damage Roadmap
+          </Typography.Title>
+        </Link>
       </Header>
       <AntdLayout>
         <Content

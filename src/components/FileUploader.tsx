@@ -3,9 +3,10 @@ import { UploadOutlined } from '@ant-design/icons';
 import { useCallback, useState } from 'react';
 import styled from 'styled-components';
 
-interface ImportFormValuesUploaderProps {
+interface FileUploaderProps {
   onFileLoaded: (file: File) => void;
   style?: React.CSSProperties;
+  accept?: string;
 }
 
 const StyledUpload = styled(Upload)`
@@ -15,7 +16,7 @@ const StyledUpload = styled(Upload)`
   }
 `;
 
-export function ImportFormValuesUploader({ onFileLoaded, style }: ImportFormValuesUploaderProps) {
+export function FileUploader({ onFileLoaded, style, accept }: FileUploaderProps) {
   const [fileName, setFileName] = useState<string | null>(null);
 
   const handleFileUpload = useCallback(
@@ -28,7 +29,7 @@ export function ImportFormValuesUploader({ onFileLoaded, style }: ImportFormValu
   );
 
   return (
-    <StyledUpload accept=".json" beforeUpload={handleFileUpload} showUploadList={false} style={style}>
+    <StyledUpload accept={accept} beforeUpload={handleFileUpload} showUploadList={false} style={style}>
       <div
         style={{
           display: 'flex',
