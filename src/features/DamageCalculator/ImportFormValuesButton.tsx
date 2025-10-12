@@ -26,6 +26,7 @@ export function ImportFormValuesButton({ file, disabled }: ImportFormValuesButto
         }
         const data = validateDamageCalcFormValue(JSON.parse(e.target.result));
         setFormData(data);
+        message.success('ファイルの内容を反映しました');
       } catch (error) {
         console.error(error);
         message.error('ファイルの読み込みに失敗しました');

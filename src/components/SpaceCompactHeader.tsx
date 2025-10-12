@@ -9,7 +9,7 @@ function SpaceCompactHeader(props: ButtonProps) {
         padding: '0 8px',
         color: 'black',
         cursor: 'text',
-        backgroundColor: 'rgba(0, 0, 0, 0.02)',
+        backgroundColor: '#f3f3f3',
         ...style
       }}
       {...rest}

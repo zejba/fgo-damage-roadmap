@@ -4,6 +4,7 @@ import SpaceCompactHeader from '../../../components/SpaceCompactHeader';
 import { cardTypeOptions, damageJudgementOptions } from '../../../data/options';
 import type { CardParams } from '../../../data/types';
 import { isRequiredNpStarCalcAtom } from '../../../store/jotai';
+import { DEFAULT_FORM_BORDER_COLOR } from '../../../data/constants';
 
 interface CardParamsSectionProps {
   cardParamsAtom: PrimitiveAtom<CardParams>;
@@ -36,8 +37,8 @@ export function CardParamsSection(props: CardParamsSectionProps) {
             }))
           }
           style={{
-            outline: '1px solid #d9d9d9',
-            outlineOffset: '-1px',
+            border: `1px solid ${DEFAULT_FORM_BORDER_COLOR}`,
+            borderRight: 'none',
             padding: '4px 8px'
           }}
         >

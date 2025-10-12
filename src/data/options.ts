@@ -111,12 +111,12 @@ export const damageJudgementOptions: {
 ];
 
 export const cardColorStyles = {
-  buster: '#FF4444',
+  buster: '#ff6044',
   arts: '#3B9CFF',
-  quick: '#66D966',
-  B: '#FF4444',
+  quick: '#6de76d',
+  B: '#ff6044',
   A: '#3B9CFF',
-  Q: '#66D966',
+  Q: '#6de76d',
   extra: undefined
 } as const;
 

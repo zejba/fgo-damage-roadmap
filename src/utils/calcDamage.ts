@@ -125,8 +125,11 @@ export function convertTurnForCalc(turn: TurnFormValue): TurnForCalc {
   };
 }
 
-function getCardCorrectionValue(type: CardType, nth: number) {
-  return CARD_CORRECTION_VALUES[type] * (type === 'noblePhantasm' ? 1 : 1 + (nth - 1) * SELECT_ORDER_COEFFICIENT);
+function getCardCorrectionValue(type: CardType, npColor: CardColor, nth: number) {
+  return (
+    CARD_CORRECTION_VALUES[type === 'noblePhantasm' ? npColor : type] *
+    (type === 'noblePhantasm' ? 1 : 1 + (nth - 1) * SELECT_ORDER_COEFFICIENT)
+  );
 }
 
 function getFirstBonusValues(selectedCardColors: CardColor[]) {
@@ -330,6 +333,8 @@ export function calculateDamages(args: DamageCalculatorInputValue): ProcessedTur
       if (damageJudgement === 'nothing') {
         continue;
       }
+      const fixedIsCritical = cardType !== 'extra' && cardType !== 'noblePhantasm' && isCritical;
+
       const cardCategory: CardCategory =
         cardType === 'noblePhantasm' ? 'noblePhantasm' : cardType === 'extra' ? 'extra' : 'normal';
       const cardColor = cardType === 'noblePhantasm' ? npColor : cardType;
@@ -347,13 +352,13 @@ export function calculateDamages(args: DamageCalculatorInputValue): ProcessedTur
       let damageCoefficient = 1;
       if (cardCategory === 'noblePhantasm') {
         damageCoefficient = (npValue + consumeBuff(simulatedBuffs, 'npValueUp')) / 100;
-        const spnp = consumeBuff(simulatedBuffs, 'npSuperEffectiveCorrection');
-        if (spnp !== 0) {
-          damageCoefficient *= spnp / 100;
+        const npSuperEffectiveCorrection = consumeBuff(simulatedBuffs, 'npSuperEffectiveCorrection');
+        if (npSuperEffectiveCorrection !== 0) {
+          damageCoefficient *= npSuperEffectiveCorrection / 100;
         }
       } else if (cardCategory === 'extra') {
         damageCoefficient = isChain ? EXTRA_DAMAGE_COEFFICIENT.chain : EXTRA_DAMAGE_COEFFICIENT.default;
-      } else if (isCritical) {
+      } else if (fixedIsCritical) {
         damageCoefficient = CRITICAL_DAMAGE_COEFFICIENT;
       }
 
@@ -361,19 +366,17 @@ export function calculateDamages(args: DamageCalculatorInputValue): ProcessedTur
       const atkBuff = Math.max(consumeBuff(simulatedBuffs, 'atkBuff') / 100, -1);
       const cardBuff = consumeBuff(simulatedBuffs, `${cardColor}Buff`) / 100;
       const cardPowerBuff = consumeBuff(simulatedBuffs, `${cardColor}PowerBuff`) / 100;
-      const totalCardBuff = Math.max(
-        cardBuff + cardPowerBuff + (isCritical ? consumeBuff(simulatedBuffs, 'cardCriticalBuff') / 100 : 0),
-        -1
-      );
+      const cardCriticalBuff = fixedIsCritical ? consumeBuff(simulatedBuffs, 'cardCriticalBuff') / 100 : 0;
+      const totalCardBuff = Math.max(cardBuff + cardPowerBuff + cardCriticalBuff, -1);
       const spBuff = Math.max(consumeBuff(simulatedBuffs, 'spBuff') / 100, -1);
       const spDef = Math.min(consumeBuff(simulatedBuffs, 'spDef') / 100, 1);
       const npGetBuff = Math.max(consumeBuff(simulatedBuffs, 'npGetBuff') / 100, -1);
       const starGetBuff = consumeBuff(simulatedBuffs, 'starGetBuff') / 100;
-      const cardCorrectionValue = getCardCorrectionValue(cardType, cardIndex + 1);
+      const cardCorrectionValue = getCardCorrectionValue(cardType, npColor, cardIndex + 1);
       const npOrCrBuff =
         cardType === 'noblePhantasm'
           ? Math.max(consumeBuff(simulatedBuffs, 'noblePhantasmBuff') / 100, -1)
-          : isCritical && cardColor !== 'extra'
+          : fixedIsCritical && cardColor !== 'extra'
             ? Math.max(
                 (consumeBuff(simulatedBuffs, 'criticalBuff') +
                   consumeBuff(simulatedBuffs, `${cardColor}CriticalBuff`)) /
@@ -398,25 +401,26 @@ export function calculateDamages(args: DamageCalculatorInputValue): ProcessedTur
         );
         turnResult.constantDamages[cardIndex] = constantDamage;
       }
-      turnResult.nps[cardIndex] = npGetCalc(
-        npGain,
-        cardNpCorrectionValue,
-        Math.max(cardBuff, -1),
-        cardType === 'noblePhantasm' ? 0 : firstBonusA,
-        turnInput.params.dtdr,
-        npGetBuff,
-        isCritical,
-        hitCount,
-        overKillCount
-      );
+      turnResult.nps[cardIndex] =
+        npGetCalc(
+          npGain,
+          cardNpCorrectionValue,
+          Math.max(cardBuff + cardCriticalBuff, -1),
+          cardType === 'noblePhantasm' ? 0 : firstBonusA,
+          turnInput.params.dtdr / 100,
+          npGetBuff,
+          fixedIsCritical,
+          hitCount,
+          overKillCount
+        ) / 100;
       const [minStar, maxStar, minStarRate, maxStarRate] = starGetCalc(
-        starRate,
+        starRate / 100,
         cardStarCorrectionValue,
-        cardBuff,
+        Math.max(cardBuff + cardCriticalBuff, -1),
         cardType === 'noblePhantasm' ? 0 : firstBonusQ,
-        turnInput.params.dsr,
+        turnInput.params.dsr / 100,
         starGetBuff,
-        isCritical,
+        fixedIsCritical,
         hitCount,
         overKillCount
       );
@@ -467,7 +471,7 @@ export function calculateDamages(args: DamageCalculatorInputValue): ProcessedTur
       Math.floor(baseDamage * 1 + turnResult.constantDamages[index]!)
     ) as [number, number, number, number];
     const damage110 = turnResult.baseDamages.map((baseDamage, index) =>
-      Math.floor(baseDamage * 1.1 + turnResult.constantDamages[index]!)
+      Math.floor(baseDamage * 1.099 + turnResult.constantDamages[index]!)
     ) as [number, number, number, number];
     return {
       ...turnResult,
@@ -642,5 +646,7 @@ function starGetCalc(
     }
   }
   result[1] += result[0];
+  result[2] = Math.floor(Math.max(result[2], 0) * 1000) / 10;
+  result[3] = Math.floor(Math.max(result[3], 0) * 1000) / 10;
   return result;
 }

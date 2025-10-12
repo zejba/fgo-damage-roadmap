@@ -117,8 +117,19 @@ function defineColumns(
 }
 function buildDataSource(result: ProcessedTurnResult[], isNpStarCalculated: boolean): RecordType[] {
   return result.flatMap((turnResult, turnIndex) => {
-    const { selectedCards, damage90, damage100, damage110, passRate, targetDamage, nps, minStars, maxStars } =
-      turnResult;
+    const {
+      selectedCards,
+      damage90,
+      damage100,
+      damage110,
+      passRate,
+      targetDamage,
+      nps,
+      minStars,
+      maxStars,
+      minStarRates,
+      maxStarRates
+    } = turnResult;
     const damage90Sum = damage90.reduce((a, b) => a + b, 0);
     const damage100Sum = damage100.reduce((a, b) => a + b, 0);
     const damage110Sum = damage110.reduce((a, b) => a + b, 0);
@@ -194,6 +205,17 @@ function buildDataSource(result: ProcessedTurnResult[], isNpStarCalculated: bool
               total: `${totalMinStar}～${totalMaxStar}`,
               targetDamage: '-',
               passRate: '-'
+            },
+            {
+              key: `turn-${turnIndex + 1}-star-rate`,
+              turn: null,
+              first: `${minStarRates[0]}%～${maxStarRates[0]}%`,
+              second: `${minStarRates[1]}%～${maxStarRates[1]}%`,
+              third: `${minStarRates[2]}%～${maxStarRates[2]}%`,
+              ex: `${minStarRates[3]}%～${maxStarRates[3]}%`,
+              total: '-',
+              targetDamage: '-',
+              passRate: '-'
             }
           ])
     ];
@@ -207,7 +229,7 @@ function ResultTable() {
   const isNpStarCalculated = useAtomValue(isNpStarCalculatedAtom);
   const dataSource = useMemo(() => buildDataSource(result, isNpStarCalculated), [result, isNpStarCalculated]);
   const columns = useMemo(
-    () => defineColumns(isColored, npColor, isNpStarCalculated ? 6 : 4),
+    () => defineColumns(isColored, npColor, isNpStarCalculated ? 7 : 4),
     [isColored, npColor, isNpStarCalculated]
   );
   return <Table columns={columns} dataSource={dataSource} pagination={false} rowHoverable={false} bordered />;

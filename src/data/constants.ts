@@ -10,7 +10,6 @@ export const EXTRA_DAMAGE_COEFFICIENT = {
 export const CRITICAL_DAMAGE_COEFFICIENT = 2;
 
 export const CARD_CORRECTION_VALUES = {
-  noblePhantasm: 1,
   buster: 1.5,
   arts: 1,
   quick: 0.8,
@@ -18,3 +17,5 @@ export const CARD_CORRECTION_VALUES = {
 } as const;
 
 export const SELECT_ORDER_COEFFICIENT = 0.2;
+
+export const DEFAULT_FORM_BORDER_COLOR = '#8b8b8b';
