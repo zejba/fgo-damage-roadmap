@@ -79,7 +79,13 @@ export function CardCard(props: CardCardProps) {
       title={title}
       style={{ width: '100%' }}
       styles={{
-        header: { backgroundColor: titleBgColor, transition: 'background-color 0.2s', minHeight: '40px' },
+        header: {
+          color: titleBgColor ? 'white' : undefined,
+          paddingLeft: '20px',
+          backgroundColor: titleBgColor,
+          transition: 'background-color 0.2s',
+          minHeight: '40px'
+        },
         body: { backgroundColor: bgColor, transition: 'background-color 0.2s' }
       }}
     >

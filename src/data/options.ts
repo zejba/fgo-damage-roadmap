@@ -111,17 +111,17 @@ export const damageJudgementOptions: {
 ];
 
 export const cardColorStyles = {
-  buster: '#ff6044',
-  arts: '#3B9CFF',
-  quick: '#75f375',
-  B: '#ff6044',
-  A: '#3B9CFF',
-  Q: '#75f375',
+  buster: '#eb2f25ff',
+  arts: '#4171ffff',
+  quick: '#43e438ff',
+  B: '#eb2f25ff',
+  A: '#4171ffff',
+  Q: '#43e438ff',
   extra: undefined
 } as const;
 
 export const cardColorStylesThin = {
-  buster: '#ffd5c5',
+  buster: '#ffd2c5ff',
   arts: '#a8d8ff',
   quick: '#d1ffd1',
   extra: undefined

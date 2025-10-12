@@ -15,7 +15,7 @@ function Layout({ children }: Props) {
           alignItems: 'center',
           paddingLeft: 24,
           height: 48,
-          backgroundColor: 'cadetblue'
+          background: 'linear-gradient(90deg, #003c79, #0e78e1, #003c79)'
         }}
       >
         <Link to="/" style={{ textDecoration: 'none' }}>
@@ -23,7 +23,8 @@ function Layout({ children }: Props) {
             level={3}
             style={{
               color: 'white',
-              margin: 0
+              margin: 0,
+              fontFamily: '游明朝, Yu Mincho, serif'
             }}
           >
             FGO Damage Roadmap
