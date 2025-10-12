@@ -93,6 +93,7 @@ export type CardCategory = 'normal' | 'noblePhantasm' | 'extra';
 export type CardInitial = 'B' | 'A' | 'Q' | 'N' | 'EX';
 
 export interface DamageCalcFormValue {
+  title: string;
   servantClass: ServantClass;
   servantAttribute: ServantAttribute;
   servantAtk: number | null;

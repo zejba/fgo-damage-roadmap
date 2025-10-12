@@ -14,7 +14,7 @@ export function SaveLoadModal(props: Props) {
   const { closeModal, open } = props;
 
   return (
-    <Modal title="入力データの保存・読み込み" open={open} onCancel={closeModal} width={600} {...props}>
+    <Modal title="入力データ管理" open={open} onCancel={closeModal} width={600} {...props} footer={null}>
       <LocalStorageSection />
       <FileSection />
     </Modal>

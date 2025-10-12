@@ -1,5 +1,5 @@
-import { Input, Button, Space } from 'antd';
-import { useState, useCallback } from 'react';
+import { Button, Space } from 'antd';
+import { useCallback } from 'react';
 import { useSetAtom } from 'jotai';
 import { useAtomCallback } from 'jotai/utils';
 import { message } from 'antd';
@@ -8,15 +8,14 @@ import { saveFormDataAtom } from '../../store/localStorage';
 import { currentFormDataAtom } from '../../store/formData';
 
 export function LocalStorageSaveSection() {
-  const [saveName, setSaveName] = useState('');
   const saveFormData = useSetAtom(saveFormDataAtom);
 
   const handleSave = useAtomCallback(
     useCallback(
-      (get, _set, name: string) => {
+      (get) => {
         try {
           const formData = get(currentFormDataAtom);
-          saveFormData({ name: name.trim() ? name.trim() : '無題', data: formData });
+          saveFormData({ name: formData.title.trim() || '無題', data: formData });
           message.success('データを保存しました');
           return true;
         } catch (error) {
@@ -33,22 +32,10 @@ export function LocalStorageSaveSection() {
     )
   );
 
-  const handleSaveClick = useCallback(() => {
-    const success = handleSave(saveName);
-    if (success) {
-      setSaveName('');
-    }
-  }, [handleSave, saveName]);
-
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSaveName(e.target.value);
-  }, []);
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8 }}>
       <Space>
-        <Input placeholder="無題" value={saveName} onChange={handleInputChange} onPressEnter={handleSaveClick} />
-        <Button type="primary" icon={<SaveOutlined />} onClick={handleSaveClick}>
+        <Button type="primary" icon={<SaveOutlined />} onClick={handleSave}>
           保存
         </Button>
       </Space>

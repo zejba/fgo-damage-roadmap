@@ -16,7 +16,8 @@ import {
   hitCountBAtom,
   hitCountAAtom,
   hitCountQAtom,
-  hitCountEXAtom
+  hitCountEXAtom,
+  titleAtom
 } from '../store/servantParams';
 import { startingBuffsAtom } from '../store/startingBuffs';
 import { turnsAtom } from '../store/turns';
@@ -24,6 +25,7 @@ import { DamageCalcFormValue } from '../data/types';
 
 export const currentFormDataAtom = atom((get) => {
   const formData: DamageCalcFormValue = {
+    title: get(titleAtom),
     servantClass: get(servantClassAtom),
     servantAttribute: get(servantAttributeAtom),
     servantAtk: get(servantAtkAtom),
@@ -46,4 +48,28 @@ export const currentFormDataAtom = atom((get) => {
     isNpStarCalculated: get(isRequiredNpStarCalcAtom)
   };
   return formData;
+});
+
+export const setFormDataAtom = atom(null, (_get, set, formData: DamageCalcFormValue) => {
+  set(titleAtom, formData.title);
+  set(servantClassAtom, formData.servantClass);
+  set(servantAttributeAtom, formData.servantAttribute);
+  set(servantAtkAtom, formData.servantAtk);
+  set(craftEssenceAtkAtom, formData.craftEssenceAtk);
+  set(npColorAtom, formData.npColor);
+  set(npValueAtom, formData.npValue);
+  set(footprintBAtom, formData.footprintB);
+  set(footprintAAtom, formData.footprintA);
+  set(footprintQAtom, formData.footprintQ);
+  set(npGainAtom, formData.npGain);
+  set(starRateAtom, formData.starRate);
+  set(hitCountNAtom, formData.hitCountN);
+  set(hitCountBAtom, formData.hitCountB);
+  set(hitCountAAtom, formData.hitCountA);
+  set(hitCountQAtom, formData.hitCountQ);
+  set(hitCountEXAtom, formData.hitCountEX);
+  set(startingBuffsAtom, formData.startingBuffs);
+  set(turnsAtom, formData.turns);
+  set(isColoredAtom, formData.isColored);
+  set(isRequiredNpStarCalcAtom, formData.isNpStarCalculated);
 });

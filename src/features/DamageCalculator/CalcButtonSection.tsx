@@ -1,5 +1,5 @@
 import { CalculatorFilled } from '@ant-design/icons';
-import { Button, Space, Switch, Typography } from 'antd';
+import { Button, message, Space, Switch, Typography } from 'antd';
 import { useAtom } from 'jotai';
 import { useAtomCallback } from 'jotai/utils';
 import { useCallback } from 'react';
@@ -16,35 +16,41 @@ import {
   convertTurnForCalc
 } from '../../utils/calcDamage';
 import { currentFormDataAtom } from '../../store/formData';
+import { validateDamageCalcFormValue } from '../../zod-schema/damageCalcFormSchema';
 
 function CalcButtonSection() {
   const [isColored, setIsColored] = useAtom(isColoredAtom);
   const handleCalculate = useAtomCallback(
     useCallback((get, set) => {
-      const input = get(currentFormDataAtom);
-      const value: DamageCalculatorInputValue = {
-        servantClass: input.servantClass,
-        servantAttribute: input.servantAttribute,
-        atk: (input.servantAtk || 0) + (input.craftEssenceAtk || 0),
-        npColor: input.npColor,
-        npValue: input.npValue || 0,
-        footprintB: input.footprintB || 0,
-        footprintA: input.footprintA || 0,
-        footprintQ: input.footprintQ || 0,
-        npGain: input.npGain || 0,
-        starRate: input.starRate || 0,
-        hitCountN: input.hitCountN || 0,
-        hitCountB: input.hitCountB || 0,
-        hitCountA: input.hitCountA || 0,
-        hitCountQ: input.hitCountQ || 0,
-        hitCountEX: input.hitCountEX || 0,
-        startingBuffs: input.startingBuffs.map(convertBuffForCalc),
-        turns: input.turns.map(convertTurnForCalc)
-      };
-      const result = calculateDamages(value);
-      set(damageCalcResultAtom, result);
-      set(damageCalcResultNpColorAtom, value.npColor);
-      set(isNpStarCalculatedAtom, get(isRequiredNpStarCalcAtom));
+      try {
+        const input = validateDamageCalcFormValue(get(currentFormDataAtom));
+        const value: DamageCalculatorInputValue = {
+          servantClass: input.servantClass,
+          servantAttribute: input.servantAttribute,
+          atk: (input.servantAtk || 0) + (input.craftEssenceAtk || 0),
+          npColor: input.npColor,
+          npValue: input.npValue || 0,
+          footprintB: input.footprintB || 0,
+          footprintA: input.footprintA || 0,
+          footprintQ: input.footprintQ || 0,
+          npGain: input.npGain || 0,
+          starRate: input.starRate || 0,
+          hitCountN: input.hitCountN || 0,
+          hitCountB: input.hitCountB || 0,
+          hitCountA: input.hitCountA || 0,
+          hitCountQ: input.hitCountQ || 0,
+          hitCountEX: input.hitCountEX || 0,
+          startingBuffs: input.startingBuffs.map(convertBuffForCalc),
+          turns: input.turns.map(convertTurnForCalc)
+        };
+        const result = calculateDamages(value);
+        set(damageCalcResultAtom, result);
+        set(damageCalcResultNpColorAtom, value.npColor);
+        set(isNpStarCalculatedAtom, get(isRequiredNpStarCalcAtom));
+      } catch (e) {
+        console.error('Calculation failed:', e);
+        message.error('計算に失敗しました。入力値を確認してください。');
+      }
     }, [])
   );
   return (

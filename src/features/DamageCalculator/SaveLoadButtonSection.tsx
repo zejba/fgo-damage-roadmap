@@ -8,7 +8,7 @@ export function SaveLoadButtonSection() {
   return (
     <>
       <Button icon={<SaveOutlined />} onClick={openModal}>
-        保存・読み込み
+        データ管理
       </Button>
       <SaveLoadModal closeModal={closeModal} open={isModalOpen} />
     </>

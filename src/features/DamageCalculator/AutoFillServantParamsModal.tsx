@@ -24,8 +24,7 @@ import {
   servantAttributeAtom,
   servantClassAtom,
   servantIndexAtom,
-  starRateAtom,
-  titleAtom
+  starRateAtom
 } from '../../store/servantParams';
 import { FormContainer } from '../../components/FormContainer';
 import { servantData } from '../../data/servantData';
@@ -75,7 +74,6 @@ function AutoFillServantParamsModal(props: SetServantInfoModalProps) {
           (isGrandServant ? GRAND_SERVANT_ATK_BONUS : 0);
         const footPrintValue = hasFootprint ? 500 : 0;
 
-        set(titleAtom, servant.name);
         set(servantClassAtom, servant.className);
         set(servantAttributeAtom, servant.attribute);
         set(servantAtkAtom, atk);
