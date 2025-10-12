@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { DamageCalcInputSection } from '../features/DamageCalculator/DamageCalcInputSection';
 import ResultTable from '../features/DamageCalculator/ResultTable';
 import CalcButtonSection from '../features/DamageCalculator/CalcButtonSection';
+import AppliedBuffsTable from '../features/DamageCalculator/AppliedBuffsTable';
 
 const Container = styled.div`
   display: flex;
@@ -44,17 +45,17 @@ const CalcButtonWrapper = styled.div`
   @media (min-width: 1480px) {
     position: sticky;
     bottom: 0;
-    margin-top: 16px;
     order: 2; /* 横並び時は下部に表示 */
-    background: white;
-    z-index: 10;
     padding-top: 16px;
-    border-top: 1px solid #f0f0f0;
   }
 `;
 
-const ResultTableWrapper = styled.div`
+const ResultTablesWrapper = styled.div`
   order: 2; /* 縦並び時は下部に表示 */
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 
   @media (min-width: 1480px) {
     flex: 1;
@@ -83,9 +84,10 @@ function DamageCalculatorPage() {
           <CalcButtonWrapper>
             <CalcButtonSection />
           </CalcButtonWrapper>
-          <ResultTableWrapper>
+          <ResultTablesWrapper>
             <ResultTable />
-          </ResultTableWrapper>
+            <AppliedBuffsTable />
+          </ResultTablesWrapper>
         </ResultSection>
       </Container>
     </>
