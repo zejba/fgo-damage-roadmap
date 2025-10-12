@@ -54,7 +54,7 @@ function CalcButtonSection() {
     }, [])
   );
   return (
-    <Space style={{ marginTop: 12, marginBottom: 12 }}>
+    <Space style={{ marginBottom: 12 }}>
       <Button type="primary" onClick={handleCalculate} icon={<CalculatorFilled />} iconPosition="end">
         計算
       </Button>

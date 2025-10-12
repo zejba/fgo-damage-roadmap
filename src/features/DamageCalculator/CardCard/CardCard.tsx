@@ -4,7 +4,7 @@ import { splitAtom, useAtomCallback } from 'jotai/utils';
 import { type SetStateAction, memo, useCallback, useMemo } from 'react';
 import { v4 } from 'uuid';
 import AddBuffButton from '../../../components/AddBuffButton';
-import { cardColorStyles } from '../../../data/options';
+import { cardColorStyles, cardColorStylesThin } from '../../../data/options';
 import type { Buff, CardFormValue, CardParams } from '../../../data/types';
 import { isColoredAtom } from '../../../store/jotai';
 import { npColorAtom } from '../../../store/servantParams';
@@ -56,6 +56,15 @@ export function CardCard(props: CardCardProps) {
   const isColored = useAtomValue(isColoredAtom);
   const cardType = useAtomValue(cardParamsAtom).type;
   const npColor = useAtomValue(npColorAtom);
+  const bgColor = useMemo(() => {
+    if (!isColored) {
+      return undefined;
+    }
+    if (cardType === 'noblePhantasm') {
+      return cardColorStylesThin[npColor];
+    }
+    return cardColorStylesThin[cardType];
+  }, [isColored, cardType, npColor]);
   const titleBgColor = useMemo(() => {
     if (!isColored) {
       return undefined;
@@ -69,7 +78,10 @@ export function CardCard(props: CardCardProps) {
     <Card
       title={title}
       style={{ width: '100%' }}
-      styles={{ header: { backgroundColor: titleBgColor, transition: 'background-color 0.2s' } }}
+      styles={{
+        header: { backgroundColor: titleBgColor, transition: 'background-color 0.2s', minHeight: '40px' },
+        body: { backgroundColor: bgColor, transition: 'background-color 0.2s' }
+      }}
     >
       <MemoizedCardCardInner cardParamsAtom={cardParamsAtom} cardBuffsAtom={cardBuffsAtom} />
     </Card>

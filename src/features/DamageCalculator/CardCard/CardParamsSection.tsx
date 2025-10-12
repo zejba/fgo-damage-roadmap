@@ -39,7 +39,8 @@ export function CardParamsSection(props: CardParamsSectionProps) {
           style={{
             border: `1px solid ${DEFAULT_FORM_BORDER_COLOR}`,
             borderRight: 'none',
-            padding: '4px 8px'
+            padding: '4px 8px',
+            backgroundColor: 'white'
           }}
         >
           クリティカル

@@ -15,6 +15,7 @@ import { isColoredAtom } from '../../store/jotai';
 type RecordType = {
   key: string;
   turn: string | null;
+  headerRowSpan: number;
   first: string;
   second: string;
   third: string;
@@ -24,19 +25,16 @@ type RecordType = {
   passRate: string | null;
 };
 
-function defineColumns(
-  isColored: boolean,
-  npColor: CardColor | undefined,
-  turnRowSpan: number
-): ColumnsType<RecordType> {
+function defineColumns(isColored: boolean, npColor: CardColor | undefined): ColumnsType<RecordType> {
   const npColorStyle = npColor ? cardColorStyles[npColor] : undefined;
   const columns: ColumnsType<RecordType> = [
     {
-      title: 'ターン',
+      title: '',
       dataIndex: 'turn',
       key: 'turn',
       onCell: (record) => ({
-        rowSpan: record.turn ? turnRowSpan : 0
+        rowSpan: record.headerRowSpan,
+        style: { textAlign: 'center' }
       })
     },
     {
@@ -140,6 +138,7 @@ function buildDataSource(result: ProcessedTurnResult[], isNpStarCalculated: bool
       {
         key: `turn-${turnIndex + 1}-header`,
         turn: `${turnIndex + 1}T`,
+        headerRowSpan: 4,
         first: cardInitial[selectedCards[0]],
         second: cardInitial[selectedCards[1]],
         third: cardInitial[selectedCards[2]],
@@ -151,6 +150,7 @@ function buildDataSource(result: ProcessedTurnResult[], isNpStarCalculated: bool
       {
         key: `turn-${turnIndex + 1}-90`,
         turn: null,
+        headerRowSpan: 0,
         first: damage90[0].toLocaleString(),
         second: damage90[1].toLocaleString(),
         third: damage90[2].toLocaleString(),
@@ -162,6 +162,7 @@ function buildDataSource(result: ProcessedTurnResult[], isNpStarCalculated: bool
       {
         key: `turn-${turnIndex + 1}-100`,
         turn: null,
+        headerRowSpan: 0,
         first: damage100[0].toLocaleString(),
         second: damage100[1].toLocaleString(),
         third: damage100[2].toLocaleString(),
@@ -173,6 +174,7 @@ function buildDataSource(result: ProcessedTurnResult[], isNpStarCalculated: bool
       {
         key: `turn-${turnIndex + 1}-110`,
         turn: null,
+        headerRowSpan: 0,
         first: damage110[0].toLocaleString(),
         second: damage110[1].toLocaleString(),
         third: damage110[2].toLocaleString(),
@@ -186,7 +188,8 @@ function buildDataSource(result: ProcessedTurnResult[], isNpStarCalculated: bool
         : [
             {
               key: `turn-${turnIndex + 1}-np`,
-              turn: null,
+              turn: 'NP',
+              headerRowSpan: 1,
               first: `${nps[0]}%`,
               second: `${nps[1]}%`,
               third: `${nps[2]}%`,
@@ -197,7 +200,8 @@ function buildDataSource(result: ProcessedTurnResult[], isNpStarCalculated: bool
             },
             {
               key: `turn-${turnIndex + 1}-star`,
-              turn: null,
+              turn: '星',
+              headerRowSpan: 2,
               first: `${minStars[0]}～${maxStars[0]}`,
               second: `${minStars[1]}～${maxStars[1]}`,
               third: `${minStars[2]}～${maxStars[2]}`,
@@ -209,6 +213,7 @@ function buildDataSource(result: ProcessedTurnResult[], isNpStarCalculated: bool
             {
               key: `turn-${turnIndex + 1}-star-rate`,
               turn: null,
+              headerRowSpan: 0,
               first: `${minStarRates[0]}%～${maxStarRates[0]}%`,
               second: `${minStarRates[1]}%～${maxStarRates[1]}%`,
               third: `${minStarRates[2]}%～${maxStarRates[2]}%`,
@@ -228,10 +233,7 @@ function ResultTable() {
   const npColor = useAtomValue(damageCalcResultNpColorAtom);
   const isNpStarCalculated = useAtomValue(isNpStarCalculatedAtom);
   const dataSource = useMemo(() => buildDataSource(result, isNpStarCalculated), [result, isNpStarCalculated]);
-  const columns = useMemo(
-    () => defineColumns(isColored, npColor, isNpStarCalculated ? 7 : 4),
-    [isColored, npColor, isNpStarCalculated]
-  );
+  const columns = useMemo(() => defineColumns(isColored, npColor), [isColored, npColor]);
   return <Table columns={columns} dataSource={dataSource} pagination={false} rowHoverable={false} bordered />;
 }
 

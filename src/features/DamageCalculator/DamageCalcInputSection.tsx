@@ -5,7 +5,6 @@ import type { PrimitiveAtom } from 'jotai';
 import { useCallback } from 'react';
 import type { TurnFormValue } from '../../data/types';
 import { addTurnAtom, defaultTurn, turnAtomsAtom } from '../../store/turns';
-import CalcButtonSection from './CalcButtonSection';
 import { ServantParamsSection } from './ServantParamsSection';
 import { StartingBuffsSection } from './StartingBuffsSection';
 import { TurnCard } from './TurnCard/TurnCard';
@@ -26,11 +25,11 @@ function TurnCardsSection() {
     [dispatch]
   );
   return (
-    <CardContainer>
+    <>
       {turnAtoms.map((turnAtom, index) => (
         <TurnCard key={`${turnAtom}`} turnAtom={turnAtom} turnNumber={index + 1} remove={handleRemove} />
       ))}
-    </CardContainer>
+    </>
   );
 }
 
@@ -55,7 +54,6 @@ export function DamageCalcInputSection() {
         <TurnCardsSection />
         <AddTurnCardButton />
       </CardContainer>
-      <CalcButtonSection />
     </>
   );
 }

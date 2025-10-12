@@ -5,6 +5,7 @@ import { FileUploader } from '../../components/FileUploader';
 import { ImportFormValuesButton } from './ImportFormValuesButton';
 import { LocalStorageSaveSection } from './LocalStorageSaveSection';
 import { LocalStorageSelectSection } from './LocalStorageSelectSection';
+import { Link } from 'react-router-dom';
 
 interface Props extends ModalProps {
   closeModal: () => void;
@@ -17,6 +18,7 @@ export function SaveLoadModal(props: Props) {
     <Modal title="入力データ管理" open={open} onCancel={closeModal} width={600} {...props} footer={null}>
       <LocalStorageSection />
       <FileSection />
+      <Link to="/convert-from-old-service">旧サービスからのデータ移行</Link>
     </Modal>
   );
 }
