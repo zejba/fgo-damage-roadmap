@@ -75,8 +75,7 @@ export function LocalStorageSelectSection() {
       <Space direction="vertical" style={{ width: '100%' }}>
         <Compact>
           <Select
-            style={{ width: '100%' }}
-            placeholder="選択してください"
+            style={{ width: '100%', paddingLeft: 4 }}
             value={selectedSaveId}
             onValueChange={setSelectedSaveId}
             options={selectOptions}

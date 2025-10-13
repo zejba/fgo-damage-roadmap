@@ -346,7 +346,7 @@ export function calculateDamages(args: DamageCalculatorInputValue): ProcessedTur
 
       const constantDamage =
         consumeBuff(simulatedBuffs, 'damagePlus') +
-        (isBusterChain ? BUSTER_CHAIN_CONSTANT_DAMAGE_COEFFICIENT * correctedAtk : 0);
+        (cardCategory === 'normal' && isBusterChain ? BUSTER_CHAIN_CONSTANT_DAMAGE_COEFFICIENT * correctedAtk : 0);
 
       // ダメージ係数
       let damageCoefficient = 1;
