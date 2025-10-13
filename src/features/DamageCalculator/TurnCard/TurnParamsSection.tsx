@@ -24,31 +24,36 @@ export function TurnParamsSection(props: TurnParamsSectionProps) {
           value={turnParams.classAffinity}
           onValueChange={(value) => setTurnParams((prev) => ({ ...prev, classAffinity: value }))}
           options={enemyClassOptions}
+          style={{ width: 60 }}
         />
         <CompactItemText>属性相性</CompactItemText>
         <Select
           value={turnParams.attributeAffinity}
           onValueChange={(value) => setTurnParams((prev) => ({ ...prev, attributeAffinity: value }))}
           options={enemyClassOptions}
+          style={{ width: 60 }}
         />
         <CompactItemText>目標ダメージ</CompactItemText>
         <InputNumber
           value={turnParams.targetDamage}
           onValueChange={(value) => setTurnParams((prev) => ({ ...prev, targetDamage: value }))}
+          style={{ width: 100 }}
         />
       </Compact>
       <CollapseWithOutHeader isActive={isRequiredNpStarCalc}>
-        <Compact style={{ width: 500 }}>
+        <Compact>
           <CompactItemText>DTDR（敵NP補正）</CompactItemText>
           <InputNumber
             value={turnParams.dtdr}
             onValueChange={(value) => setTurnParams((prev) => ({ ...prev, enemyNpCharge: value }))}
+            style={{ width: 80 }}
           />
           <CompactItemText>%</CompactItemText>
           <CompactItemText>DSR（敵スター補正）</CompactItemText>
           <InputNumber
             value={turnParams.dsr}
             onValueChange={(value) => setTurnParams((prev) => ({ ...prev, dsr: value }))}
+            style={{ width: 80 }}
           />
           <CompactItemText>%</CompactItemText>
         </Compact>

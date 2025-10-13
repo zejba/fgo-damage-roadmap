@@ -234,7 +234,16 @@ function ResultTable() {
   const isNpStarCalculated = useAtomValue(isNpStarCalculatedAtom);
   const dataSource = useMemo(() => buildDataSource(result, isNpStarCalculated), [result, isNpStarCalculated]);
   const columns = useMemo(() => defineColumns(isColored, npColor), [isColored, npColor]);
-  return <Table columns={columns} dataSource={dataSource} pagination={false} rowHoverable={false} bordered />;
+  return (
+    <Table
+      columns={columns}
+      dataSource={dataSource}
+      pagination={false}
+      rowHoverable={false}
+      bordered
+      footer={() => null}
+    />
+  );
 }
 
 export default ResultTable;

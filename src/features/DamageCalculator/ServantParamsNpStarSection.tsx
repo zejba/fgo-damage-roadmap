@@ -21,9 +21,9 @@ import { InputNumber } from '../../components/InputNumber';
 function NpGainRow() {
   const [npGain, setNpGain] = useAtom(npGainAtom);
   return (
-    <Compact style={{ width: 300 }}>
+    <Compact>
       <CompactItemText>NP獲得量</CompactItemText>
-      <InputNumber value={npGain} onValueChange={setNpGain} />
+      <InputNumber value={npGain} onValueChange={setNpGain} style={{ width: 80 }} />
       <CompactItemText>%</CompactItemText>
     </Compact>
   );
@@ -34,7 +34,7 @@ function StarRateRow() {
   return (
     <Compact style={{ width: 300 }}>
       <CompactItemText>スター発生率</CompactItemText>
-      <InputNumber value={starRate} onValueChange={setStarRate} />
+      <InputNumber value={starRate} onValueChange={setStarRate} style={{ width: 80 }} />
       <CompactItemText>%</CompactItemText>
     </Compact>
   );
@@ -50,15 +50,15 @@ function HitCountRow() {
     <Compact>
       <CompactItemText>Hit数</CompactItemText>
       <CompactItemText>N</CompactItemText>
-      <InputNumber value={hitCountN} onValueChange={setHitCountN} style={{ width: 76 }} />
+      <InputNumber value={hitCountN} onValueChange={setHitCountN} style={{ width: 60 }} />
       <CompactItemText>B</CompactItemText>
-      <InputNumber value={hitCountB} onValueChange={setHitCountB} style={{ width: 76 }} />
+      <InputNumber value={hitCountB} onValueChange={setHitCountB} style={{ width: 60 }} />
       <CompactItemText>A</CompactItemText>
-      <InputNumber value={hitCountA} onValueChange={setHitCountA} style={{ width: 76 }} />
+      <InputNumber value={hitCountA} onValueChange={setHitCountA} style={{ width: 60 }} />
       <CompactItemText>Q</CompactItemText>
-      <InputNumber value={hitCountQ} onValueChange={setHitCountQ} style={{ width: 76 }} />
+      <InputNumber value={hitCountQ} onValueChange={setHitCountQ} style={{ width: 60 }} />
       <CompactItemText>EX</CompactItemText>
-      <InputNumber value={hitCountEX} onValueChange={setHitCountEX} style={{ width: 76 }} />
+      <InputNumber value={hitCountEX} onValueChange={setHitCountEX} style={{ width: 60 }} />
     </Compact>
   );
 }

@@ -52,7 +52,7 @@ function ServantAtkRow() {
   return (
     <Compact>
       <CompactItemText>ATK</CompactItemText>
-      <InputNumber style={{ width: 140 }} value={servantAtk} onValueChange={setServantAtk} />
+      <InputNumber style={{ width: 100 }} value={servantAtk} onValueChange={setServantAtk} />
     </Compact>
   );
 }
@@ -63,7 +63,7 @@ function CraftEssenceAtkRow() {
   return (
     <Compact>
       <CompactItemText>礼装ATK</CompactItemText>
-      <InputNumber style={{ width: 160 }} value={craftEssenceAtk} onValueChange={setCraftEssenceAtk} />
+      <InputNumber style={{ width: 100 }} value={craftEssenceAtk} onValueChange={setCraftEssenceAtk} />
       <PrimaryOutlinedButton style={{ borderRadius: '0', borderLeft: 'none' }} onClick={() => setCraftEssenceAtk(2000)}>
         2000
       </PrimaryOutlinedButton>
@@ -88,7 +88,7 @@ function NoblePhantasmRow() {
     <Compact>
       <CompactItemText>宝具</CompactItemText>
       <Select options={cardColors} style={{ width: 60 }} value={npColor} onValueChange={setNpColor} />
-      <InputNumber style={{ width: 120 }} value={npValue} onValueChange={setNpValue} />
+      <InputNumber style={{ width: 80 }} value={npValue} onValueChange={setNpValue} />
       <CompactItemText>%</CompactItemText>
     </Compact>
   );
@@ -103,11 +103,11 @@ function FootprintRow() {
     <Compact>
       <CompactItemText>足跡</CompactItemText>
       <CompactItemText>B</CompactItemText>
-      <InputNumber max={500} min={0} value={footprintB} onValueChange={setFootprintB} />
+      <InputNumber max={500} min={0} value={footprintB} onValueChange={setFootprintB} style={{ width: 60 }} />
       <CompactItemText>A</CompactItemText>
-      <InputNumber max={500} min={0} value={footprintA} onValueChange={setFootprintA} />
+      <InputNumber max={500} min={0} value={footprintA} onValueChange={setFootprintA} style={{ width: 60 }} />
       <CompactItemText>Q</CompactItemText>
-      <InputNumber max={500} min={0} value={footprintQ} onValueChange={setFootprintQ} />
+      <InputNumber max={500} min={0} value={footprintQ} onValueChange={setFootprintQ} style={{ width: 60 }} />
     </Compact>
   );
 }

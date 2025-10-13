@@ -65,8 +65,13 @@ const ResultTablesWrapper = styled.div`
 
   @media (max-width: 780px) {
     .ant-table-cell {
-      font-size: 12px !important;
+      font-size: 0.8rem !important;
     }
+  }
+
+  @media (max-width: 604px) {
+    width: 560px;
+    overflow-x: auto;
   }
 `;
 

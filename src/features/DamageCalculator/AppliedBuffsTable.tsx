@@ -108,7 +108,16 @@ function buildDataSource(result: ProcessedTurnResult[]): RecordType[] {
 function AppliedBuffsTable() {
   const result = useAtomValue(damageCalcResultAtom);
   const dataSource = useMemo(() => buildDataSource(result), [result]);
-  return <Table columns={columns} dataSource={dataSource} pagination={false} rowHoverable={false} bordered />;
+  return (
+    <Table
+      columns={columns}
+      dataSource={dataSource}
+      pagination={false}
+      rowHoverable={false}
+      bordered
+      footer={() => null}
+    />
+  );
 }
 
 export default AppliedBuffsTable;
