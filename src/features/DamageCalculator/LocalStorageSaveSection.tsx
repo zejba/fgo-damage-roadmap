@@ -1,4 +1,4 @@
-import { Button, Space } from 'antd';
+import { Space } from 'antd';
 import { useCallback } from 'react';
 import { useSetAtom } from 'jotai';
 import { useAtomCallback } from 'jotai/utils';
@@ -6,6 +6,7 @@ import { message } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
 import { saveFormDataAtom } from '../../store/localStorage';
 import { currentFormDataAtom } from '../../store/formData';
+import { PrimaryButton } from '../../components/Button.tsx/PrimaryButton';
 
 export function LocalStorageSaveSection() {
   const saveFormData = useSetAtom(saveFormDataAtom);
@@ -35,9 +36,9 @@ export function LocalStorageSaveSection() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8 }}>
       <Space>
-        <Button type="primary" icon={<SaveOutlined />} onClick={handleSave}>
+        <PrimaryButton startIcon={<SaveOutlined />} onClick={handleSave} style={{ height: 36 }}>
           保存
-        </Button>
+        </PrimaryButton>
       </Space>
     </div>
   );

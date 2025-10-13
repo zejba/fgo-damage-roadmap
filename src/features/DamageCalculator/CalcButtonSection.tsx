@@ -1,5 +1,5 @@
 import { CalculatorFilled } from '@ant-design/icons';
-import { Button, message, Space, Switch, Typography } from 'antd';
+import { message, Space, Switch } from 'antd';
 import { useAtom } from 'jotai';
 import { useAtomCallback } from 'jotai/utils';
 import { useCallback } from 'react';
@@ -17,6 +17,7 @@ import {
 } from '../../utils/calcDamage';
 import { currentFormDataAtom } from '../../store/formData';
 import { validateDamageCalcFormValue } from '../../zod-schema/damageCalcFormSchema';
+import { PrimaryButton } from '../../components/Button.tsx/PrimaryButton';
 
 function CalcButtonSection() {
   const [isColored, setIsColored] = useAtom(isColoredAtom);
@@ -55,11 +56,11 @@ function CalcButtonSection() {
   );
   return (
     <Space style={{ marginBottom: 12 }}>
-      <Button type="primary" onClick={handleCalculate} icon={<CalculatorFilled />} iconPosition="end">
+      <PrimaryButton style={{ height: 36 }} onClick={handleCalculate} startIcon={<CalculatorFilled />}>
         計算
-      </Button>
+      </PrimaryButton>
       <Space>
-        <Typography.Text>カード選択に色をつける</Typography.Text>
+        カード選択に色をつける
         <Switch value={isColored} onChange={setIsColored} />
       </Space>
     </Space>

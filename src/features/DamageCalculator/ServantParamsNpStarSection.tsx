@@ -1,4 +1,4 @@
-import { Space, Switch, Typography } from 'antd';
+import { Space, Switch } from 'antd';
 import { useAtom } from 'jotai';
 import { useCallback } from 'react';
 import CollapseWithOutHeader from '../../components/CollapseWithOutHeader';
@@ -21,7 +21,7 @@ import { InputNumber } from '../../components/InputNumber';
 function NpGainRow() {
   const [npGain, setNpGain] = useAtom(npGainAtom);
   return (
-    <Compact style={{ width: 200 }}>
+    <Compact style={{ width: 300 }}>
       <CompactItemText>NP獲得量</CompactItemText>
       <InputNumber value={npGain} onValueChange={setNpGain} />
       <CompactItemText>%</CompactItemText>
@@ -32,7 +32,7 @@ function NpGainRow() {
 function StarRateRow() {
   const [starRate, setStarRate] = useAtom(starRateAtom);
   return (
-    <Compact style={{ width: 200 }}>
+    <Compact style={{ width: 300 }}>
       <CompactItemText>スター発生率</CompactItemText>
       <InputNumber value={starRate} onValueChange={setStarRate} />
       <CompactItemText>%</CompactItemText>
@@ -47,18 +47,18 @@ function HitCountRow() {
   const [hitCountQ, setHitCountQ] = useAtom(hitCountQAtom);
   const [hitCountEX, setHitCountEX] = useAtom(hitCountEXAtom);
   return (
-    <Compact style={{ width: 520 }}>
+    <Compact>
       <CompactItemText>Hit数</CompactItemText>
       <CompactItemText>N</CompactItemText>
-      <InputNumber value={hitCountN} onValueChange={setHitCountN} />
+      <InputNumber value={hitCountN} onValueChange={setHitCountN} style={{ width: 76 }} />
       <CompactItemText>B</CompactItemText>
-      <InputNumber value={hitCountB} onValueChange={setHitCountB} />
+      <InputNumber value={hitCountB} onValueChange={setHitCountB} style={{ width: 76 }} />
       <CompactItemText>A</CompactItemText>
-      <InputNumber value={hitCountA} onValueChange={setHitCountA} />
+      <InputNumber value={hitCountA} onValueChange={setHitCountA} style={{ width: 76 }} />
       <CompactItemText>Q</CompactItemText>
-      <InputNumber value={hitCountQ} onValueChange={setHitCountQ} />
+      <InputNumber value={hitCountQ} onValueChange={setHitCountQ} style={{ width: 76 }} />
       <CompactItemText>EX</CompactItemText>
-      <InputNumber value={hitCountEX} onValueChange={setHitCountEX} />
+      <InputNumber value={hitCountEX} onValueChange={setHitCountEX} style={{ width: 76 }} />
     </Compact>
   );
 }
@@ -71,7 +71,7 @@ function ServantParamsNpStarSection() {
   return (
     <div>
       <Space>
-        <Typography.Text>NP・スター計算</Typography.Text>
+        NP・スター計算
         <Switch value={isRequiredNpStarCalc} onChange={toggleIsRequiredNpStarCalc} />
       </Space>
       <CollapseWithOutHeader isActive={isRequiredNpStarCalc}>

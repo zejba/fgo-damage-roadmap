@@ -1,4 +1,4 @@
-import { Button, message, Select as AntdSelect, Typography } from 'antd';
+import { message, Select as AntdSelect, Typography } from 'antd';
 import { useAtomCallback } from 'jotai/utils';
 import { useCallback, useState } from 'react';
 import { FormContainer } from '../../../components/FormContainer';
@@ -9,6 +9,7 @@ import { enemyClassOptions, enemyAttrOptions } from '../../../data/options';
 import { Compact } from '../../../components/Compact';
 import { CompactItemText } from '../../../components/CompactItemText';
 import { Select } from '../../../components/Select';
+import { PrimaryOutlinedButton } from '../../../components/Button.tsx/PrimaryOutlinedButton';
 
 const questOptions = questData.map((quest) => ({
   value: quest.id,
@@ -55,7 +56,7 @@ export function QuestAutoFillTab() {
         optionFilterProp="label"
         value={selectedQuestId}
         onChange={setSelectedQuestId}
-        style={{ width: 400, maxWidth: '100%' }}
+        style={{ width: 480, maxWidth: '100%' }}
       />
 
       <Compact>
@@ -76,9 +77,9 @@ export function QuestAutoFillTab() {
       </Compact>
       <Typography.Text>※ 入力済みのターン情報は上書きされます</Typography.Text>
 
-      <Button type="primary" onClick={handleSubmit} disabled={selectedQuestId === null} style={{ marginTop: 16 }}>
+      <PrimaryOutlinedButton onClick={handleSubmit} disabled={selectedQuestId === null}>
         入力
-      </Button>
+      </PrimaryOutlinedButton>
     </FormContainer>
   );
 }

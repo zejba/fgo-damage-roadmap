@@ -1,11 +1,12 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, type ButtonProps } from 'antd';
+import { BaseButtonProps } from './Button.tsx/BaseButton';
+import { PrimaryOutlinedButton } from './Button.tsx/PrimaryOutlinedButton';
 
-function AddBuffButton(props: ButtonProps) {
+function AddBuffButton(props: BaseButtonProps) {
   return (
-    <Button icon={<PlusOutlined />} {...props}>
+    <PrimaryOutlinedButton startIcon={<PlusOutlined />} {...props}>
       追加
-    </Button>
+    </PrimaryOutlinedButton>
   );
 }
 

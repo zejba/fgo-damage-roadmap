@@ -81,7 +81,7 @@ function FileSection() {
           <Typography.Title level={5} style={{ margin: '0 0 8px 0', fontSize: '14px' }}>
             読み込み
           </Typography.Title>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-start' }}>
             <FileUploader onFileLoaded={setFile} accept=".json" />
             <ImportFormValuesButton file={file} />
           </div>

@@ -1,7 +1,6 @@
 import { DatabaseOutlined } from '@ant-design/icons';
-import { Button, Input, Space } from 'antd';
+import { Button, Space } from 'antd';
 import { useAtom } from 'jotai';
-import SpaceCompactHeader from '../../components/SpaceCompactHeader';
 import { cardColors, servantAttributes, servantClasses } from '../../data/options';
 import { useBoolean } from '../../hooks/useBoolean';
 import {
@@ -25,6 +24,8 @@ import { Select } from '../../components/Select';
 import { Compact } from '../../components/Compact';
 import { InputNumber } from '../../components/InputNumber';
 import { CompactItemText } from '../../components/CompactItemText';
+import { Input } from '../../components/Input';
+import { PrimaryOutlinedButton } from '../../components/Button.tsx/PrimaryOutlinedButton';
 
 // タイトル・クラス・属性
 function TitleClassAttributeRow() {
@@ -32,8 +33,8 @@ function TitleClassAttributeRow() {
   const [servantClass, setServantClass] = useAtom(servantClassAtom);
   const [servantAttribute, setServantAttribute] = useAtom(servantAttributeAtom);
   return (
-    <Compact style={{ width: 400 }}>
-      <Input placeholder="タイトル" value={title} onChange={(e) => setTitle(e.target.value)} />
+    <Compact>
+      <Input placeholder="タイトル" style={{ width: 300 }} value={title} onChange={(e) => setTitle(e.target.value)} />
       <Select options={servantClasses} style={{ width: 60 }} value={servantClass} onValueChange={setServantClass} />
       <Select
         options={servantAttributes}
@@ -50,7 +51,7 @@ function ServantAtkRow() {
   const [servantAtk, setServantAtk] = useAtom(servantAtkAtom);
   return (
     <Compact>
-      <SpaceCompactHeader>ATK</SpaceCompactHeader>
+      <CompactItemText>ATK</CompactItemText>
       <InputNumber style={{ width: 140 }} value={servantAtk} onValueChange={setServantAtk} />
     </Compact>
   );
@@ -61,7 +62,7 @@ function CraftEssenceAtkRow() {
   const [craftEssenceAtk, setCraftEssenceAtk] = useAtom(craftEssenceAtkAtom);
   return (
     <Compact>
-      <SpaceCompactHeader>礼装ATK</SpaceCompactHeader>
+      <CompactItemText>礼装ATK</CompactItemText>
       <InputNumber style={{ width: 160 }} value={craftEssenceAtk} onValueChange={setCraftEssenceAtk} />
       <Button onClick={() => setCraftEssenceAtk(2000)}>2000</Button>
       <Button onClick={() => setCraftEssenceAtk(2400)}>2400</Button>
@@ -76,7 +77,7 @@ function NoblePhantasmRow() {
   const [npValue, setNpValue] = useAtom(npValueAtom);
   return (
     <Compact>
-      <SpaceCompactHeader>宝具</SpaceCompactHeader>
+      <CompactItemText>宝具</CompactItemText>
       <Select options={cardColors} style={{ width: 60 }} value={npColor} onValueChange={setNpColor} />
       <InputNumber style={{ width: 120 }} value={npValue} onValueChange={setNpValue} />
       <CompactItemText>%</CompactItemText>
@@ -91,13 +92,13 @@ function FootprintRow() {
   const [footprintQ, setFootprintQ] = useAtom(footprintQAtom);
   return (
     <Compact>
-      <SpaceCompactHeader>足跡</SpaceCompactHeader>
+      <CompactItemText>足跡</CompactItemText>
       <CompactItemText>B</CompactItemText>
       <InputNumber max={500} min={0} value={footprintB} onValueChange={setFootprintB} />
       <CompactItemText>A</CompactItemText>
-      <InputNumber style={{ width: 92 }} max={500} min={0} value={footprintA} onValueChange={setFootprintA} />
+      <InputNumber max={500} min={0} value={footprintA} onValueChange={setFootprintA} />
       <CompactItemText>Q</CompactItemText>
-      <InputNumber style={{ width: 92 }} max={500} min={0} value={footprintQ} onValueChange={setFootprintQ} />
+      <InputNumber max={500} min={0} value={footprintQ} onValueChange={setFootprintQ} />
     </Compact>
   );
 }
@@ -106,9 +107,9 @@ function AutoFillServantParamsModalSection() {
   const [isServantModalOpen, openServantModal, closeServantModal] = useBoolean(false);
   return (
     <>
-      <Button onClick={openServantModal} icon={<DatabaseOutlined />}>
+      <PrimaryOutlinedButton onClick={openServantModal} startIcon={<DatabaseOutlined />}>
         自動入力
-      </Button>
+      </PrimaryOutlinedButton>
       <AutoFillModal open={isServantModalOpen} closeModal={closeServantModal} />
     </>
   );

@@ -1,9 +1,10 @@
 import { useCallback } from 'react';
-import { Button, message } from 'antd';
+import { message } from 'antd';
 import { FileAddOutlined } from '@ant-design/icons';
 import { validateDamageCalcFormValue } from '../../zod-schema/damageCalcFormSchema';
 import { setFormDataAtom } from '../../store/formData';
 import { useSetAtom } from 'jotai';
+import { PrimaryOutlinedButton } from '../../components/Button.tsx/PrimaryOutlinedButton';
 
 interface ImportFormValuesButtonProps {
   file: File | null;
@@ -40,8 +41,8 @@ export function ImportFormValuesButton({ file, disabled }: ImportFormValuesButto
   }, [file, setFormData]);
 
   return (
-    <Button type="default" onClick={handleClick} disabled={disabled || !file} icon={<FileAddOutlined />}>
+    <PrimaryOutlinedButton onClick={handleClick} disabled={disabled || !file} startIcon={<FileAddOutlined />}>
       適用
-    </Button>
+    </PrimaryOutlinedButton>
   );
 }

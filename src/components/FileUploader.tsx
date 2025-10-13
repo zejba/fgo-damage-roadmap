@@ -1,7 +1,8 @@
-import { Upload, Button } from 'antd';
+import { Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { useCallback, useState } from 'react';
 import styled from 'styled-components';
+import { PrimaryOutlinedButton } from './Button.tsx/PrimaryOutlinedButton';
 
 interface FileUploaderProps {
   onFileLoaded: (file: File) => void;
@@ -39,7 +40,7 @@ export function FileUploader({ onFileLoaded, style, accept }: FileUploaderProps)
           width: '100%'
         }}
       >
-        <Button icon={<UploadOutlined />}>ファイルを選択</Button>
+        <PrimaryOutlinedButton startIcon={<UploadOutlined />}>ファイルを選択</PrimaryOutlinedButton>
         <p
           style={{
             overflow: 'hidden',

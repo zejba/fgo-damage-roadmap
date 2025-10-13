@@ -1,4 +1,4 @@
-import { Button, Space } from 'antd';
+import { Space } from 'antd';
 import { type PrimitiveAtom, useAtom, useSetAtom } from 'jotai';
 import { useCallback } from 'react';
 import AddBuffButton from '../../components/AddBuffButton';
@@ -9,13 +9,14 @@ import AddTemplateBuffsButton from './AddTemplateBuffsButton';
 import { MemoizedBuffForm } from './BuffForm';
 import { Card } from '../../components/Card';
 import { FormContainer } from '../../components/FormContainer';
+import { PrimaryOutlinedButton } from '../../components/Button.tsx/PrimaryOutlinedButton';
 
 function AddClassScoresButton() {
   const addEffect = useSetAtom(addBuffsAtom);
   const addClassScores = useCallback(() => {
     addEffect(classScores);
   }, [addEffect]);
-  return <Button onClick={addClassScores}>スコア追加</Button>;
+  return <PrimaryOutlinedButton onClick={addClassScores}>スコア追加</PrimaryOutlinedButton>;
 }
 
 function BuffFormsSection() {

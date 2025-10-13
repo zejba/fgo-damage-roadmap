@@ -1,15 +1,15 @@
-import { Button } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
 import { SaveLoadModal } from './SaveLoadModal';
 import { useBoolean } from '../../hooks/useBoolean';
+import { PrimaryOutlinedButton } from '../../components/Button.tsx/PrimaryOutlinedButton';
 
 export function SaveLoadButtonSection() {
   const [isModalOpen, openModal, closeModal] = useBoolean(false);
   return (
     <>
-      <Button icon={<SaveOutlined />} onClick={openModal}>
+      <PrimaryOutlinedButton startIcon={<SaveOutlined />} onClick={openModal}>
         データ管理
-      </Button>
+      </PrimaryOutlinedButton>
       <SaveLoadModal closeModal={closeModal} open={isModalOpen} />
     </>
   );

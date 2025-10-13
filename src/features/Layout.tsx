@@ -37,8 +37,7 @@ function Layout({ children }: Props) {
             backgroundColor: 'white',
             padding: 12,
             margin: 0,
-            minHeight: 280,
-            minWidth: 640
+            minHeight: 280
           }}
         >
           {children}

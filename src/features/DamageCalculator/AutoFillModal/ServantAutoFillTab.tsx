@@ -1,4 +1,4 @@
-import { Button, Checkbox, message, Select, Space, Typography } from 'antd';
+import { Checkbox, message, Select, Space, Typography } from 'antd';
 import { useAtom } from 'jotai';
 import { useAtomCallback } from 'jotai/utils';
 import { useCallback } from 'react';
@@ -31,6 +31,7 @@ import { startingBuffsAtom } from '../../../store/startingBuffs';
 import { v4 } from 'uuid';
 import { localizedServantClass } from '../../../data/options';
 import servantData from '../../../data/servant_data';
+import { PrimaryOutlinedButton } from '../../../components/Button.tsx/PrimaryOutlinedButton';
 
 const servantOptions = servantData.map((servant, index) => ({
   value: index,
@@ -111,10 +112,10 @@ export function ServantAutoFillTab() {
         optionFilterProp="label"
         value={servantIndex}
         onChange={setServantIndex}
-        style={{ width: 400, maxWidth: '100%' }}
+        style={{ width: 480, maxWidth: '100%' }}
       />
       <Space>
-        <Button onClick={handlePerfection}>完全体</Button>(
+        <PrimaryOutlinedButton onClick={handlePerfection}>完全体</PrimaryOutlinedButton>(
         <Checkbox checked={isLv120} onChange={(e) => setIsLv120(e.target.checked)}>
           Lv.120
         </Checkbox>
@@ -130,9 +131,9 @@ export function ServantAutoFillTab() {
         )
       </Space>
       <Typography.Text>※ ATK銀フォウ込みで入力されます</Typography.Text>
-      <Button type="primary" onClick={handleSubmit} disabled={servantIndex === null} style={{ marginTop: 16 }}>
+      <PrimaryOutlinedButton onClick={handleSubmit} disabled={servantIndex === null}>
         入力
-      </Button>
+      </PrimaryOutlinedButton>
     </FormContainer>
   );
 }

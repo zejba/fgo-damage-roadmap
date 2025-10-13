@@ -1,4 +1,4 @@
-import { Button, Space, Popconfirm } from 'antd';
+import { Space, Popconfirm } from 'antd';
 import { useState, useCallback, useMemo } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { message } from 'antd';
@@ -8,6 +8,8 @@ import { setFormDataAtom } from '../../store/formData';
 import { validateDamageCalcFormValue } from '../../zod-schema/damageCalcFormSchema';
 import { Select } from '../../components/Select';
 import { Compact } from '../../components/Compact';
+import { PrimaryOutlinedButton } from '../../components/Button.tsx/PrimaryOutlinedButton';
+import { DangerOutlinedButton } from '../../components/Button.tsx/DangerOutlinedButton';
 
 export function LocalStorageSelectSection() {
   const [selectedSaveId, setSelectedSaveId] = useState<string | null>(null);
@@ -81,9 +83,9 @@ export function LocalStorageSelectSection() {
           />
         </Compact>
         <Space>
-          <Button icon={<FileAddOutlined />} onClick={handleLoad} disabled={!selectedSaveId}>
+          <PrimaryOutlinedButton startIcon={<FileAddOutlined />} onClick={handleLoad} disabled={!selectedSaveId}>
             適用
-          </Button>
+          </PrimaryOutlinedButton>
           <Popconfirm
             title="削除の確認"
             description="選択したデータを削除しますか？"
@@ -92,9 +94,9 @@ export function LocalStorageSelectSection() {
             cancelText="キャンセル"
             okType="danger"
           >
-            <Button danger icon={<DeleteOutlined />} disabled={!selectedSaveId}>
+            <DangerOutlinedButton startIcon={<DeleteOutlined />} disabled={!selectedSaveId}>
               削除
-            </Button>
+            </DangerOutlinedButton>
           </Popconfirm>
         </Space>
       </Space>

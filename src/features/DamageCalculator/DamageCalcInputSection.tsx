@@ -1,5 +1,4 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
 import { useAtom, useSetAtom } from 'jotai';
 import type { PrimitiveAtom } from 'jotai';
 import { useCallback } from 'react';
@@ -9,6 +8,7 @@ import { ServantParamsSection } from './ServantParamsSection';
 import { StartingBuffsSection } from './StartingBuffsSection';
 import { TurnCard } from './TurnCard/TurnCard';
 import styled from 'styled-components';
+import { PrimaryOutlinedButton } from '../../components/Button.tsx/PrimaryOutlinedButton';
 
 const CardContainer = styled.div`
   display: flex;
@@ -39,9 +39,9 @@ function AddTurnCardButton() {
     addTurn(window.structuredClone(defaultTurn));
   }, [addTurn]);
   return (
-    <Button onClick={handleAddTurn} icon={<PlusOutlined />}>
+    <PrimaryOutlinedButton onClick={handleAddTurn} startIcon={<PlusOutlined />}>
       ターン追加
-    </Button>
+    </PrimaryOutlinedButton>
   );
 }
 

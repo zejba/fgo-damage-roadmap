@@ -1,8 +1,9 @@
-import { Button, Dropdown } from 'antd';
+import { Dropdown } from 'antd';
 import { useSetAtom } from 'jotai';
 import { useCallback } from 'react';
 import { appendSkills, craftEssences } from '../../data/templateBuffs';
 import { addBuffsAtom } from '../../store/startingBuffs';
+import { PrimaryOutlinedButton } from '../../components/Button.tsx/PrimaryOutlinedButton';
 
 const templateBuffs = [...appendSkills, ...craftEssences];
 
@@ -24,7 +25,7 @@ function AddTemplateBuffsButton() {
   );
   return (
     <Dropdown menu={{ items, onClick: addClassScores }}>
-      <Button>テンプレ追加</Button>
+      <PrimaryOutlinedButton>テンプレ追加</PrimaryOutlinedButton>
     </Dropdown>
   );
 }
