@@ -4,6 +4,7 @@ import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import { ConvertFromOldServicePage } from './pages/ConvertFromOldServicePage';
 import { ConfigProvider, ThemeConfig } from 'antd';
 import { DEFAULT_FORM_BORDER_COLOR } from './data/constants';
+import { ControlViewport } from './features/ControlViewPort';
 
 const theme: ThemeConfig = {
   components: {
@@ -39,6 +40,7 @@ function App() {
           </Routes>
         </Layout>
       </Router>
+      <ControlViewport />
     </ConfigProvider>
   );
 }

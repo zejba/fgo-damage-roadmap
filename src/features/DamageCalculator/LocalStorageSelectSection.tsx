@@ -87,6 +87,7 @@ export function LocalStorageSelectSection() {
             onConfirm={handleDelete}
             okText="削除"
             cancelText="キャンセル"
+            okType="danger"
           >
             <Button danger icon={<DeleteOutlined />} disabled={!selectedSaveId}>
               削除

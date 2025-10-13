@@ -1,5 +1,5 @@
 import { CloseOutlined } from '@ant-design/icons';
-import { Button, Modal } from 'antd';
+import { Button, Popconfirm } from 'antd';
 import type { PrimitiveAtom } from 'jotai';
 import { focusAtom } from 'jotai-optics';
 import { splitAtom, useAtomCallback } from 'jotai/utils';
@@ -59,22 +59,22 @@ interface TurnCardProps {
 
 export const TurnCard = memo((props: TurnCardProps) => {
   const { turnAtom, turnNumber, remove } = props;
-  const handleRemoveTurn = useCallback(
-    () =>
-      Modal.confirm({
-        title: `ターン${turnNumber}を削除しますか？`,
-        onOk() {
-          remove(turnAtom);
-        }
-      }),
-    [remove, turnAtom, turnNumber]
-  );
+
+  const closeButton = useMemo(() => {
+    return (
+      <Popconfirm
+        title={`ターン${turnNumber}を削除しますか？`}
+        onConfirm={() => remove(turnAtom)}
+        cancelText="キャンセル"
+        okText="削除"
+        okType="danger"
+      >
+        <Button type="text" icon={<CloseOutlined />} />
+      </Popconfirm>
+    );
+  }, [remove, turnAtom, turnNumber]);
   return (
-    <Card
-      title={`${turnNumber}T目`}
-      extra={<Button onClick={handleRemoveTurn} type="text" icon={<CloseOutlined />} />}
-      style={{ width: '100%' }}
-    >
+    <Card title={`${turnNumber}T目`} extra={closeButton} style={{ width: '100%' }}>
       <TurnCardInner turnAtom={turnAtom} />
     </Card>
   );
