@@ -17,7 +17,19 @@ export function CardBuffForms(props: CardBuffFormsProps) {
     },
     [dispatch]
   );
-  return buffAtoms.map((buffAtom) => (
-    <MemoizedBuffForm key={`${buffAtom}`} buffAtom={buffAtom} remove={handleRemove} />
+  const handleMove = useCallback(
+    (atom: PrimitiveAtom<Buff>, before: PrimitiveAtom<Buff>) => {
+      dispatch({ type: 'move', atom, before });
+    },
+    [dispatch]
+  );
+  return buffAtoms.map((buffAtom, index) => (
+    <MemoizedBuffForm
+      key={`${buffAtom}`}
+      buffAtom={buffAtom}
+      remove={handleRemove}
+      move={handleMove}
+      beforeAtom={buffAtoms[index - 1]}
+    />
   ));
 }

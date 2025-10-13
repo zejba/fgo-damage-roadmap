@@ -27,8 +27,20 @@ function BuffFormsSection() {
     },
     [dispatch]
   );
-  return effectAtoms.map((effectAtom) => (
-    <MemoizedBuffForm key={`${effectAtom}`} buffAtom={effectAtom} remove={handleRemove} />
+  const handleMove = useCallback(
+    (atom: PrimitiveAtom<Buff>, before: PrimitiveAtom<Buff>) => {
+      dispatch({ type: 'move', atom, before });
+    },
+    [dispatch]
+  );
+  return effectAtoms.map((effectAtom, index) => (
+    <MemoizedBuffForm
+      key={`${effectAtom}`}
+      buffAtom={effectAtom}
+      remove={handleRemove}
+      move={handleMove}
+      beforeAtom={effectAtoms[index - 1]}
+    />
   ));
 }
 

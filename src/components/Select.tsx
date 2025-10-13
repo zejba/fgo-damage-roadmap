@@ -17,13 +17,18 @@ export interface SelectProps<T extends string | number | null>
 export function Select<T extends string | number | null>(props: SelectProps<T>) {
   const { onValueChange, onChange, value, options, placeholder, ...rest } = props;
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = (e.target.value ?? null) as T;
+    const value = (e.target.value === '' ? null : e.target.value) as T;
     onValueChange?.(value);
     onChange?.(e);
   };
   return (
-    <StyledSelect {...rest} onChange={handleChange} value={value ?? undefined}>
-      <option value={undefined} hidden>
+    <StyledSelect {...rest} onChange={handleChange} value={value ?? ''}>
+      {options.length === 0 && (
+        <option value="NO_OPTIONS" disabled>
+          No options
+        </option>
+      )}
+      <option value="" hidden>
         {placeholder}
       </option>
       {options?.map((option) => (

@@ -1,5 +1,5 @@
 import { DatabaseOutlined } from '@ant-design/icons';
-import { Button, Space } from 'antd';
+import { Space } from 'antd';
 import { useAtom } from 'jotai';
 import { cardColors, servantAttributes, servantClasses } from '../../data/options';
 import { useBoolean } from '../../hooks/useBoolean';
@@ -64,9 +64,18 @@ function CraftEssenceAtkRow() {
     <Compact>
       <CompactItemText>礼装ATK</CompactItemText>
       <InputNumber style={{ width: 160 }} value={craftEssenceAtk} onValueChange={setCraftEssenceAtk} />
-      <Button onClick={() => setCraftEssenceAtk(2000)}>2000</Button>
-      <Button onClick={() => setCraftEssenceAtk(2400)}>2400</Button>
-      <Button onClick={() => setCraftEssenceAtk(1000)}>1000</Button>
+      <PrimaryOutlinedButton style={{ borderRadius: '0', borderLeft: 'none' }} onClick={() => setCraftEssenceAtk(2000)}>
+        2000
+      </PrimaryOutlinedButton>
+      <PrimaryOutlinedButton style={{ borderRadius: '0', borderLeft: 'none' }} onClick={() => setCraftEssenceAtk(2400)}>
+        2400
+      </PrimaryOutlinedButton>
+      <PrimaryOutlinedButton
+        style={{ borderRadius: 0, borderLeft: 'none', borderTopRightRadius: 4, borderBottomRightRadius: 4 }}
+        onClick={() => setCraftEssenceAtk(1000)}
+      >
+        1000
+      </PrimaryOutlinedButton>
     </Compact>
   );
 }

@@ -1,32 +1,37 @@
-import { Dropdown } from 'antd';
 import { useSetAtom } from 'jotai';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { appendSkills, craftEssences } from '../../data/templateBuffs';
 import { addBuffsAtom } from '../../store/startingBuffs';
-import { PrimaryOutlinedButton } from '../../components/Button.tsx/PrimaryOutlinedButton';
+import { Select } from '../../components/Select';
 
 const templateBuffs = [...appendSkills, ...craftEssences];
 
 const items = [
   ...Object.values(templateBuffs).map((skill) => ({
     label: skill.name,
-    key: skill.name
+    value: skill.name
   }))
 ];
 
 function AddTemplateBuffsButton() {
   const addEffect = useSetAtom(addBuffsAtom);
-  const addClassScores = useCallback(
-    (e: { key: string }) => {
-      const buff = templateBuffs.find((buff) => buff.name === e.key);
+  const [selectedBuff, setSelectedBuff] = useState<string | null>('');
+  const handleChange = useCallback(
+    (value: string | null) => {
+      const buff = templateBuffs.find((buff) => buff.name === value);
       if (buff) addEffect([buff]);
+      setSelectedBuff('aaa');
     },
     [addEffect]
   );
   return (
-    <Dropdown menu={{ items, onClick: addClassScores }}>
-      <PrimaryOutlinedButton>テンプレ追加</PrimaryOutlinedButton>
-    </Dropdown>
+    <Select<string | null>
+      options={items}
+      value={selectedBuff}
+      onValueChange={handleChange}
+      style={{ height: 32, borderRadius: 6, paddingLeft: 6, paddingRight: 6 }}
+      placeholder="テンプレ追加"
+    />
   );
 }
 

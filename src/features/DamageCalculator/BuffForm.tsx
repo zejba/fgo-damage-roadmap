@@ -1,5 +1,4 @@
 import { ArrowUpOutlined, CloseOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
 import { type PrimitiveAtom, useAtom } from 'jotai';
 import { memo } from 'react';
 import { CompactItemText } from '../../components/CompactItemText';
@@ -9,14 +8,17 @@ import { Select } from '../../components/Select';
 import { Input } from '../../components/Input';
 import { InputNumber } from '../../components/InputNumber';
 import { Compact } from '../../components/Compact';
+import { PrimaryOutlinedButton } from '../../components/Button.tsx/PrimaryOutlinedButton';
 
 interface BuffFormProps {
   buffAtom: PrimitiveAtom<Buff>;
+  beforeAtom?: PrimitiveAtom<Buff>;
   remove: (atom: PrimitiveAtom<Buff>) => void;
+  move: (atom: PrimitiveAtom<Buff>, before: PrimitiveAtom<Buff>) => void;
 }
 
 export function BuffForm(props: BuffFormProps) {
-  const { buffAtom, remove } = props;
+  const { buffAtom, beforeAtom, remove, move } = props;
   const [buff, setBuff] = useAtom(buffAtom);
   return (
     <Compact style={{ width: '520px' }}>
@@ -52,13 +54,25 @@ export function BuffForm(props: BuffFormProps) {
         style={{ width: 52 }}
       />
       <CompactItemText>回</CompactItemText>
-      <Button onClick={() => remove(buffAtom)} style={{ padding: 8 }}>
-        <CloseOutlined />
-      </Button>
+      <PrimaryOutlinedButton
+        style={{ borderRadius: '0', borderLeft: 'none', paddingLeft: 8, paddingRight: 8 }}
+        onClick={() => remove(buffAtom)}
+        startIcon={<CloseOutlined />}
+      />
       {/* TODO implement */}
-      <Button onClick={() => {}} style={{ padding: 8 }}>
-        <ArrowUpOutlined />
-      </Button>
+      <PrimaryOutlinedButton
+        style={{
+          borderRadius: 0,
+          borderLeft: 'none',
+          borderTopRightRadius: 4,
+          borderBottomRightRadius: 4,
+          paddingLeft: 8,
+          paddingRight: 8,
+          paddingTop: 2
+        }}
+        startIcon={<ArrowUpOutlined />}
+        onClick={() => beforeAtom && move(buffAtom, beforeAtom)}
+      />
     </Compact>
   );
 }
