@@ -7,7 +7,7 @@ export function ControlViewport(): null {
       const viewport = document.querySelector('meta[name=viewport]');
       viewport?.setAttribute(
         'content',
-        window.outerWidth > 672 ? 'width=device-width, initial-scale=1.0' : 'width=672'
+        window.outerWidth > 604 ? 'width=device-width, initial-scale=1.0' : 'width=604'
       );
     };
 

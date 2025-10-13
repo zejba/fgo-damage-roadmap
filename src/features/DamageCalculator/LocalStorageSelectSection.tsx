@@ -1,4 +1,4 @@
-import { Button, Select, Space, Popconfirm } from 'antd';
+import { Button, Space, Popconfirm } from 'antd';
 import { useState, useCallback, useMemo } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { message } from 'antd';
@@ -6,9 +6,11 @@ import { DeleteOutlined, FileAddOutlined } from '@ant-design/icons';
 import { savedFormsArrayAtom, deleteFormDataAtom, getFormDataByIdAtom } from '../../store/localStorage';
 import { setFormDataAtom } from '../../store/formData';
 import { validateDamageCalcFormValue } from '../../zod-schema/damageCalcFormSchema';
+import { Select } from '../../components/Select';
+import { Compact } from '../../components/Compact';
 
 export function LocalStorageSelectSection() {
-  const [selectedSaveId, setSelectedSaveId] = useState<string | undefined>(undefined);
+  const [selectedSaveId, setSelectedSaveId] = useState<string | null>(null);
   const savedDataList = useAtomValue(savedFormsArrayAtom);
   const deleteFormData = useSetAtom(deleteFormDataAtom);
   const getFormDataById = useAtomValue(getFormDataByIdAtom);
@@ -47,7 +49,7 @@ export function LocalStorageSelectSection() {
       const deletedData = deleteFormData(selectedSaveId);
       if (deletedData) {
         message.success(`${deletedData.name} を削除しました`);
-        setSelectedSaveId(undefined);
+        setSelectedSaveId(null);
       } else {
         message.error('データが見つかりません');
       }
@@ -69,14 +71,15 @@ export function LocalStorageSelectSection() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8 }}>
       <Space direction="vertical" style={{ width: '100%' }}>
-        <Select
-          style={{ width: '100%' }}
-          placeholder="データを選択"
-          value={selectedSaveId}
-          onChange={setSelectedSaveId}
-          options={selectOptions}
-          allowClear
-        />
+        <Compact>
+          <Select
+            style={{ width: '100%' }}
+            placeholder="選択してください"
+            value={selectedSaveId}
+            onValueChange={setSelectedSaveId}
+            options={selectOptions}
+          />
+        </Compact>
         <Space>
           <Button icon={<FileAddOutlined />} onClick={handleLoad} disabled={!selectedSaveId}>
             適用

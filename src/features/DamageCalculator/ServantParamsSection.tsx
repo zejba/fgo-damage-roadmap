@@ -1,5 +1,5 @@
 import { DatabaseOutlined } from '@ant-design/icons';
-import { Button, Input, InputNumber, Select, Space } from 'antd';
+import { Button, Input, Space } from 'antd';
 import { useAtom } from 'jotai';
 import SpaceCompactHeader from '../../components/SpaceCompactHeader';
 import { cardColors, servantAttributes, servantClasses } from '../../data/options';
@@ -21,6 +21,10 @@ import ServantParamsNpStarSection from './ServantParamsNpStarSection';
 import { Card } from '../../components/Card';
 import { FormContainer } from '../../components/FormContainer';
 import { SaveLoadButtonSection } from './SaveLoadButtonSection';
+import { Select } from '../../components/Select';
+import { Compact } from '../../components/Compact';
+import { InputNumber } from '../../components/InputNumber';
+import { CompactItemText } from '../../components/CompactItemText';
 
 // タイトル・クラス・属性
 function TitleClassAttributeRow() {
@@ -28,16 +32,16 @@ function TitleClassAttributeRow() {
   const [servantClass, setServantClass] = useAtom(servantClassAtom);
   const [servantAttribute, setServantAttribute] = useAtom(servantAttributeAtom);
   return (
-    <Space.Compact>
-      <Input placeholder="タイトル" style={{ width: 340 }} value={title} onChange={(e) => setTitle(e.target.value)} />
-      <Select options={servantClasses} style={{ width: 60 }} value={servantClass} onChange={setServantClass} />
+    <Compact style={{ width: 400 }}>
+      <Input placeholder="タイトル" value={title} onChange={(e) => setTitle(e.target.value)} />
+      <Select options={servantClasses} style={{ width: 60 }} value={servantClass} onValueChange={setServantClass} />
       <Select
         options={servantAttributes}
         style={{ width: 60 }}
         value={servantAttribute}
-        onChange={setServantAttribute}
+        onValueChange={setServantAttribute}
       />
-    </Space.Compact>
+    </Compact>
   );
 }
 
@@ -45,7 +49,10 @@ function TitleClassAttributeRow() {
 function ServantAtkRow() {
   const [servantAtk, setServantAtk] = useAtom(servantAtkAtom);
   return (
-    <InputNumber addonBefore="ATK" style={{ width: 140 }} type="number" value={servantAtk} onChange={setServantAtk} />
+    <Compact>
+      <SpaceCompactHeader>ATK</SpaceCompactHeader>
+      <InputNumber style={{ width: 140 }} value={servantAtk} onValueChange={setServantAtk} />
+    </Compact>
   );
 }
 
@@ -53,18 +60,13 @@ function ServantAtkRow() {
 function CraftEssenceAtkRow() {
   const [craftEssenceAtk, setCraftEssenceAtk] = useAtom(craftEssenceAtkAtom);
   return (
-    <Space.Compact>
-      <InputNumber
-        addonBefore="礼装ATK"
-        style={{ width: 160 }}
-        type="number"
-        value={craftEssenceAtk}
-        onChange={setCraftEssenceAtk}
-      />
+    <Compact>
+      <SpaceCompactHeader>礼装ATK</SpaceCompactHeader>
+      <InputNumber style={{ width: 160 }} value={craftEssenceAtk} onValueChange={setCraftEssenceAtk} />
       <Button onClick={() => setCraftEssenceAtk(2000)}>2000</Button>
       <Button onClick={() => setCraftEssenceAtk(2400)}>2400</Button>
       <Button onClick={() => setCraftEssenceAtk(1000)}>1000</Button>
-    </Space.Compact>
+    </Compact>
   );
 }
 
@@ -73,11 +75,12 @@ function NoblePhantasmRow() {
   const [npColor, setNpColor] = useAtom(npColorAtom);
   const [npValue, setNpValue] = useAtom(npValueAtom);
   return (
-    <Space.Compact>
+    <Compact>
       <SpaceCompactHeader>宝具</SpaceCompactHeader>
-      <Select options={cardColors} style={{ width: 60 }} value={npColor} onChange={setNpColor} />
-      <InputNumber type="number" addonAfter="%" style={{ width: 120 }} value={npValue} onChange={setNpValue} />
-    </Space.Compact>
+      <Select options={cardColors} style={{ width: 60 }} value={npColor} onValueChange={setNpColor} />
+      <InputNumber style={{ width: 120 }} value={npValue} onValueChange={setNpValue} />
+      <CompactItemText>%</CompactItemText>
+    </Compact>
   );
 }
 
@@ -87,36 +90,15 @@ function FootprintRow() {
   const [footprintA, setFootprintA] = useAtom(footprintAAtom);
   const [footprintQ, setFootprintQ] = useAtom(footprintQAtom);
   return (
-    <Space.Compact>
+    <Compact>
       <SpaceCompactHeader>足跡</SpaceCompactHeader>
-      <InputNumber
-        addonBefore="B"
-        type="number"
-        style={{ width: 92 }}
-        max={500}
-        min={0}
-        value={footprintB}
-        onChange={setFootprintB}
-      />
-      <InputNumber
-        addonBefore="A"
-        type="number"
-        style={{ width: 92 }}
-        max={500}
-        min={0}
-        value={footprintA}
-        onChange={setFootprintA}
-      />
-      <InputNumber
-        addonBefore="Q"
-        type="number"
-        style={{ width: 92 }}
-        max={500}
-        min={0}
-        value={footprintQ}
-        onChange={setFootprintQ}
-      />
-    </Space.Compact>
+      <CompactItemText>B</CompactItemText>
+      <InputNumber max={500} min={0} value={footprintB} onValueChange={setFootprintB} />
+      <CompactItemText>A</CompactItemText>
+      <InputNumber style={{ width: 92 }} max={500} min={0} value={footprintA} onValueChange={setFootprintA} />
+      <CompactItemText>Q</CompactItemText>
+      <InputNumber style={{ width: 92 }} max={500} min={0} value={footprintQ} onValueChange={setFootprintQ} />
+    </Compact>
   );
 }
 

@@ -1,8 +1,7 @@
-import { InputNumber, Space, Switch, Typography } from 'antd';
+import { Space, Switch, Typography } from 'antd';
 import { useAtom } from 'jotai';
 import { useCallback } from 'react';
 import CollapseWithOutHeader from '../../components/CollapseWithOutHeader';
-import SpaceCompactHeader from '../../components/SpaceCompactHeader';
 
 import { isRequiredNpStarCalcAtom } from '../../store/jotai';
 import {
@@ -15,32 +14,29 @@ import {
   starRateAtom
 } from '../../store/servantParams';
 import { FormContainer } from '../../components/FormContainer';
+import { Compact } from '../../components/Compact';
+import { CompactItemText } from '../../components/CompactItemText';
+import { InputNumber } from '../../components/InputNumber';
 
 function NpGainRow() {
   const [npGain, setNpGain] = useAtom(npGainAtom);
   return (
-    <InputNumber
-      addonBefore="NP獲得量"
-      addonAfter="%"
-      type="number"
-      style={{ width: 180 }}
-      value={npGain}
-      onChange={setNpGain}
-    />
+    <Compact style={{ width: 200 }}>
+      <CompactItemText>NP獲得量</CompactItemText>
+      <InputNumber value={npGain} onValueChange={setNpGain} />
+      <CompactItemText>%</CompactItemText>
+    </Compact>
   );
 }
 
 function StarRateRow() {
   const [starRate, setStarRate] = useAtom(starRateAtom);
   return (
-    <InputNumber
-      addonBefore="スター発生率"
-      addonAfter="%"
-      type="number"
-      style={{ width: 200 }}
-      value={starRate}
-      onChange={setStarRate}
-    />
+    <Compact style={{ width: 200 }}>
+      <CompactItemText>スター発生率</CompactItemText>
+      <InputNumber value={starRate} onValueChange={setStarRate} />
+      <CompactItemText>%</CompactItemText>
+    </Compact>
   );
 }
 
@@ -51,14 +47,19 @@ function HitCountRow() {
   const [hitCountQ, setHitCountQ] = useAtom(hitCountQAtom);
   const [hitCountEX, setHitCountEX] = useAtom(hitCountEXAtom);
   return (
-    <Space.Compact>
-      <SpaceCompactHeader>Hit数</SpaceCompactHeader>
-      <InputNumber type="number" addonBefore="N" style={{ width: 80 }} value={hitCountN} onChange={setHitCountN} />
-      <InputNumber type="number" addonBefore="B" style={{ width: 80 }} value={hitCountB} onChange={setHitCountB} />
-      <InputNumber type="number" addonBefore="A" style={{ width: 80 }} value={hitCountA} onChange={setHitCountA} />
-      <InputNumber type="number" addonBefore="Q" style={{ width: 80 }} value={hitCountQ} onChange={setHitCountQ} />
-      <InputNumber type="number" addonBefore="EX" style={{ width: 80 }} value={hitCountEX} onChange={setHitCountEX} />
-    </Space.Compact>
+    <Compact style={{ width: 520 }}>
+      <CompactItemText>Hit数</CompactItemText>
+      <CompactItemText>N</CompactItemText>
+      <InputNumber value={hitCountN} onValueChange={setHitCountN} />
+      <CompactItemText>B</CompactItemText>
+      <InputNumber value={hitCountB} onValueChange={setHitCountB} />
+      <CompactItemText>A</CompactItemText>
+      <InputNumber value={hitCountA} onValueChange={setHitCountA} />
+      <CompactItemText>Q</CompactItemText>
+      <InputNumber value={hitCountQ} onValueChange={setHitCountQ} />
+      <CompactItemText>EX</CompactItemText>
+      <InputNumber value={hitCountEX} onValueChange={setHitCountEX} />
+    </Compact>
   );
 }
 

@@ -1,12 +1,14 @@
-import { Button, message, Select, Space, Typography } from 'antd';
+import { Button, message, Select as AntdSelect, Typography } from 'antd';
 import { useAtomCallback } from 'jotai/utils';
 import { useCallback, useState } from 'react';
 import { FormContainer } from '../../../components/FormContainer';
-import SpaceCompactHeader from '../../../components/SpaceCompactHeader';
 import { defaultTurn, turnsAtom } from '../../../store/turns';
 import { v4 } from 'uuid';
 import questData from '../../../data/quest_data';
 import { enemyClassOptions, enemyAttrOptions } from '../../../data/options';
+import { Compact } from '../../../components/Compact';
+import { CompactItemText } from '../../../components/CompactItemText';
+import { Select } from '../../../components/Select';
 
 const questOptions = questData.map((quest) => ({
   value: quest.id,
@@ -46,7 +48,7 @@ export function QuestAutoFillTab() {
 
   return (
     <FormContainer>
-      <Select
+      <AntdSelect
         placeholder="クエスト名"
         options={questOptions}
         showSearch
@@ -56,17 +58,22 @@ export function QuestAutoFillTab() {
         style={{ width: 400, maxWidth: '100%' }}
       />
 
-      <Space.Compact>
-        <SpaceCompactHeader>クラス相性</SpaceCompactHeader>
-        <Select value={classAffinity} onSelect={setClassAffinity} options={enemyClassOptions} style={{ width: 68 }} />
-        <SpaceCompactHeader>属性相性</SpaceCompactHeader>
+      <Compact>
+        <CompactItemText>クラス相性</CompactItemText>
+        <Select
+          value={classAffinity}
+          onValueChange={setClassAffinity}
+          options={enemyClassOptions}
+          style={{ width: 60 }}
+        />
+        <CompactItemText>属性相性</CompactItemText>
         <Select
           value={attributeAffinity}
-          onSelect={setAttributeAffinity}
+          onValueChange={setAttributeAffinity}
           options={enemyAttrOptions}
-          style={{ width: 68 }}
+          style={{ width: 60 }}
         />
-      </Space.Compact>
+      </Compact>
       <Typography.Text>※ 入力済みのターン情報は上書きされます</Typography.Text>
 
       <Button type="primary" onClick={handleSubmit} disabled={selectedQuestId === null} style={{ marginTop: 16 }}>

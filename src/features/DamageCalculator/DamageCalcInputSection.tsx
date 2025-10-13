@@ -15,7 +15,7 @@ const CardContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  width: 648px;
+  width: 580px;
 `;
 
 function TurnCardsSection() {

@@ -1,10 +1,12 @@
-import { Checkbox, InputNumber, Select, Space } from 'antd';
+import { Checkbox } from 'antd';
 import { type PrimitiveAtom, useAtom, useAtomValue } from 'jotai';
-import SpaceCompactHeader from '../../../components/SpaceCompactHeader';
 import { cardTypeOptions, damageJudgementOptions } from '../../../data/options';
 import type { CardParams } from '../../../data/types';
 import { isRequiredNpStarCalcAtom } from '../../../store/jotai';
-import { DEFAULT_FORM_BORDER_COLOR } from '../../../data/constants';
+import { Select } from '../../../components/Select';
+import { Compact } from '../../../components/Compact';
+import { CompactItemText } from '../../../components/CompactItemText';
+import { InputNumber } from '../../../components/InputNumber';
 
 interface CardParamsSectionProps {
   cardParamsAtom: PrimitiveAtom<CardParams>;
@@ -16,15 +18,15 @@ export function CardParamsSection(props: CardParamsSectionProps) {
   const isEx = cardParams.type === 'extra';
   const isRequiredNpStarCalc = useAtomValue(isRequiredNpStarCalcAtom);
   return (
-    <Space.Compact>
+    <Compact>
       {isEx ? (
-        <SpaceCompactHeader>EX</SpaceCompactHeader>
+        <CompactItemText>EX</CompactItemText>
       ) : (
         <Select
           options={cardTypeOptions}
           style={{ width: 60 }}
           value={cardParams.type}
-          onChange={(value) => setCardParams((prev) => ({ ...prev, type: value }))}
+          onValueChange={(value) => setCardParams((prev) => ({ ...prev, type: value }))}
         />
       )}
       {!isEx && (
@@ -37,8 +39,6 @@ export function CardParamsSection(props: CardParamsSectionProps) {
             }))
           }
           style={{
-            border: `1px solid ${DEFAULT_FORM_BORDER_COLOR}`,
-            borderRight: 'none',
             padding: '4px 8px',
             backgroundColor: 'white'
           }}
@@ -48,24 +48,24 @@ export function CardParamsSection(props: CardParamsSectionProps) {
       )}
       <Select
         value={cardParams.damageJudgement}
-        onChange={(value) => setCardParams((prev) => ({ ...prev, damageJudgement: value }))}
+        onValueChange={(value) => setCardParams((prev) => ({ ...prev, damageJudgement: value }))}
         options={damageJudgementOptions}
-        style={{ width: 132 }}
       />
       {isRequiredNpStarCalc && (
-        <InputNumber
-          value={cardParams.overKillCount}
-          onChange={(value) =>
-            setCardParams((prev) => ({
-              ...prev,
-              overKillCount: value
-            }))
-          }
-          type="number"
-          addonBefore="OverKill"
-          style={{ width: 140 }}
-        />
+        <>
+          <CompactItemText>OverKill</CompactItemText>
+          <InputNumber
+            value={cardParams.overKillCount}
+            onValueChange={(value) =>
+              setCardParams((prev) => ({
+                ...prev,
+                overKillCount: value
+              }))
+            }
+            style={{ width: 140 }}
+          />
+        </>
       )}
-    </Space.Compact>
+    </Compact>
   );
 }
