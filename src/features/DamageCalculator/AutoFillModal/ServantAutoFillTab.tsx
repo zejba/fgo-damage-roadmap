@@ -33,9 +33,9 @@ import { localizedServantClass } from '../../../data/options';
 import servantData from '../../../data/servant_data';
 import { PrimaryOutlinedButton } from '../../../components/Button.tsx/PrimaryOutlinedButton';
 
-const servantOptions = servantData.map((servant, index) => ({
-  value: index,
-  label: `${servant.collectionNo}. ${servant.name} (${localizedServantClass[servant.className]})`
+const servantOptions = servantData.map((servant) => ({
+  value: servant.id,
+  label: `${servant.collectionNo}. ${servant.name}${servant.anotherVersionName ? ` [${servant.anotherVersionName}]` : ''} (${localizedServantClass[servant.className]})`
 }));
 
 export function ServantAutoFillTab() {
@@ -59,7 +59,7 @@ export function ServantAutoFillTab() {
       const hasGoldFou = get(hasGoldenFouAtkAtom);
       const hasFootprint = get(hasFootPrintAtom);
       const isGrandServant = get(isGrandServantAtom);
-      const servant = servantData[servantIndex ?? 0];
+      const servant = servantData.find((s) => s.id === servantIndex);
       if (servantIndex === null || !servant) {
         return;
       }

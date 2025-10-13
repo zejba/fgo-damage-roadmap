@@ -1,8 +1,10 @@
 import { ServantClass, ServantAttribute, CardColor, BuffType } from './types';
 
 export interface ServantParam {
-  id: number;
+  id: string;
+  aaId: number;
   collectionNo: number;
+  anotherVersionName?: string;
   name: string;
   rarity: number;
   className: ServantClass;

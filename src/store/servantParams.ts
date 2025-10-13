@@ -20,7 +20,7 @@ export const hitCountAAtom = atom<number | null>(null);
 export const hitCountQAtom = atom<number | null>(null);
 export const hitCountEXAtom = atom<number | null>(null);
 
-export const servantIndexAtom = atom<number | null>(null);
+export const servantIndexAtom = atom<string | null>(null);
 export const isLv120Atom = atom(false);
 export const hasGoldenFouAtkAtom = atom(false);
 export const hasFootPrintAtom = atom(false);
