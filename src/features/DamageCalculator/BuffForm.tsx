@@ -21,7 +21,7 @@ export function BuffForm(props: BuffFormProps) {
   const { buffAtom, beforeAtom, remove, move } = props;
   const [buff, setBuff] = useAtom(buffAtom);
   return (
-    <Compact style={{ width: '520px' }}>
+    <Compact style={{ width: '528px' }}>
       <Input
         value={buff.name}
         onChange={(e) => setBuff({ ...buff, name: e.target.value })}
@@ -39,27 +39,26 @@ export function BuffForm(props: BuffFormProps) {
         placeholder="効果量"
         style={{ width: 80 }}
       />
-      <CompactItemText>%</CompactItemText>
+      <CompactItemText style={{ width: 28 }}>%</CompactItemText>
       <Select
         value={buff.turn}
         onValueChange={(value) => setBuff({ ...buff, turn: value })}
         options={turnOptions}
         style={{ width: 52 }}
       />
-      <CompactItemText>T</CompactItemText>
+      <CompactItemText style={{ width: 24 }}>T</CompactItemText>
       <Select
         value={buff.count}
         onValueChange={(value) => setBuff({ ...buff, count: value })}
         options={turnOptions}
         style={{ width: 52 }}
       />
-      <CompactItemText>回</CompactItemText>
+      <CompactItemText style={{ width: 32 }}>回</CompactItemText>
       <PrimaryOutlinedButton
-        style={{ borderRadius: '0', borderLeft: 'none', paddingLeft: 8, paddingRight: 8 }}
+        style={{ borderRadius: '0', borderLeft: 'none', paddingLeft: 8, paddingRight: 6, paddingTop: 2 }}
         onClick={() => remove(buffAtom)}
         startIcon={<CloseOutlined />}
       />
-      {/* TODO implement */}
       <PrimaryOutlinedButton
         style={{
           borderRadius: 0,
@@ -68,7 +67,7 @@ export function BuffForm(props: BuffFormProps) {
           borderBottomRightRadius: 4,
           paddingLeft: 8,
           paddingRight: 8,
-          paddingTop: 2
+          paddingTop: 1
         }}
         startIcon={<ArrowUpOutlined />}
         onClick={() => beforeAtom && move(buffAtom, beforeAtom)}

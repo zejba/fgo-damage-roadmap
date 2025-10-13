@@ -1,4 +1,4 @@
-import { ModalProps, Modal, Typography, Tabs } from 'antd';
+import { ModalProps, Typography, Tabs } from 'antd';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ExportFormValuesButton } from './ExportFormValuesButton';
@@ -6,6 +6,7 @@ import { FileUploader } from '../../components/FileUploader';
 import { ImportFormValuesButton } from './ImportFormValuesButton';
 import { LocalStorageSaveSection } from './LocalStorageSaveSection';
 import { LocalStorageSelectSection } from './LocalStorageSelectSection';
+import { Modal } from '../../components/Modal';
 
 interface Props extends ModalProps {
   closeModal: () => void;

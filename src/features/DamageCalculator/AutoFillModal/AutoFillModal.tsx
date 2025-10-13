@@ -1,6 +1,7 @@
-import { Modal, type ModalProps, Tabs } from 'antd';
+import { type ModalProps, Tabs } from 'antd';
 import { QuestAutoFillTab } from './QuestAutoFillTab';
 import { ServantAutoFillTab } from './ServantAutoFillTab';
+import { Modal } from '../../../components/Modal';
 
 interface AutoFillModalProps extends ModalProps {
   closeModal: () => void;
