@@ -15867,37 +15867,5 @@
       "value": 1000
     },
     "classPassive": []
-  },
-  {
-    "aaId": 106400,
-    "id": "106400",
-    "collectionNo": 456,
-    "name": "近藤勇",
-    "rarity": 5,
-    "className": "saber",
-    "attribute": "human",
-    "atkMax": 11782,
-    "atk120": 15139,
-    "starGen": 9.9,
-    "npGain": 0.35,
-    "hitCounts": {
-      "buster": 4,
-      "arts": 3,
-      "quick": 5,
-      "extra": 5,
-      "np": 8
-    },
-    "noblePhantasm": {
-      "card": "arts",
-      "value": 750
-    },
-    "classPassive": [
-      {
-        "type": "quickBuff",
-        "value": 6,
-        "turn": -1,
-        "count": -1
-      }
-    ]
   }
 ]
