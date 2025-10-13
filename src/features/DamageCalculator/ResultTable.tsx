@@ -131,7 +131,7 @@ function buildDataSource(result: ProcessedTurnResult[], isNpStarCalculated: bool
     const damage90Sum = damage90.reduce((a, b) => a + b, 0);
     const damage100Sum = damage100.reduce((a, b) => a + b, 0);
     const damage110Sum = damage110.reduce((a, b) => a + b, 0);
-    const totalNp = nps.reduce((a, b) => a + b, 0);
+    const totalNp = Math.round(nps.reduce((a, b) => a + b * 100, 0)) / 100;
     const totalMinStar = minStars.reduce((a, b) => a + b, 0);
     const totalMaxStar = maxStars.reduce((a, b) => a + b, 0);
     return [
