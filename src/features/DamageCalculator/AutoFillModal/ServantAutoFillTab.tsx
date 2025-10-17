@@ -4,7 +4,6 @@ import { useAtomCallback } from 'jotai/utils';
 import { useCallback } from 'react';
 import { GOLD_ATK_FOU_MAX, GRAND_SERVANT_ATK_BONUS, SILVER_ATK_FOU_MAX } from '../../../data/constants';
 import {
-  craftEssenceAtkAtom,
   footprintAAtom,
   footprintBAtom,
   footprintQAtom,
@@ -74,7 +73,6 @@ export function ServantAutoFillTab() {
       set(servantClassAtom, servant.className);
       set(servantAttributeAtom, servant.attribute);
       set(servantAtkAtom, atk);
-      set(craftEssenceAtkAtom, SILVER_ATK_FOU_MAX);
       set(npColorAtom, servant.noblePhantasm.card);
       set(npValueAtom, servant.noblePhantasm.value);
       set(npGainAtom, servant.npGain);

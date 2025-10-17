@@ -1,6 +1,6 @@
 import { type PrimitiveAtom, useAtom, useAtomValue } from 'jotai';
 import CollapseWithOutHeader from '../../../components/CollapseWithOutHeader';
-import { enemyClassOptions } from '../../../data/options';
+import { enemyAttrOptions, enemyClassOptions } from '../../../data/options';
 import type { TurnParams } from '../../../data/types';
 import { isRequiredNpStarCalcAtom } from '../../../store/jotai';
 import { Select } from '../../../components/Select';
@@ -30,7 +30,7 @@ export function TurnParamsSection(props: TurnParamsSectionProps) {
         <Select
           value={turnParams.attributeAffinity}
           onValueChange={(value) => setTurnParams((prev) => ({ ...prev, attributeAffinity: value }))}
-          options={enemyClassOptions}
+          options={enemyAttrOptions}
           style={{ width: 60 }}
         />
         <CompactItemText>目標ダメージ</CompactItemText>

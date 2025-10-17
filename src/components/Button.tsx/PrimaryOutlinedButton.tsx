@@ -3,7 +3,8 @@ import { BaseButton } from './BaseButton';
 
 export const PrimaryOutlinedButton = styled(BaseButton)`
   background-color: white;
-  border: 1px solid #757575;
+  border: 1px solid black;
+  color: black;
   &:not(:disabled) {
     transition:
       border-color 0.2s ease,
@@ -12,13 +13,6 @@ export const PrimaryOutlinedButton = styled(BaseButton)`
     &:hover {
       border-color: #2c8bff;
       color: #2c8bff;
-    }
-    &:focus {
-      outline-color: #084a9e;
-    }
-    &:active {
-      outline: 1px solid #93c2ff;
-      color: #084a9e;
     }
   }
   &:disabled {

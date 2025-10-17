@@ -14,9 +14,6 @@ export const DangerOutlinedButton = styled(BaseButton)`
       border-color: #ff8b8bff;
       color: #ff8b8bff;
     }
-    &:focus {
-      outline-color: #ec4840ff;
-    }
     &:active {
       outline: 1px solid #ff8b8bff;
       color: #ec4840ff;

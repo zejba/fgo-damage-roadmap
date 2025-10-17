@@ -79,6 +79,7 @@ export function LocalStorageSelectSection() {
             value={selectedSaveId}
             onValueChange={setSelectedSaveId}
             options={selectOptions}
+            placeholder="選択してください"
           />
         </Compact>
         <Space>

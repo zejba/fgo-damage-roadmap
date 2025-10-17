@@ -29,7 +29,7 @@ function AddTemplateBuffsButton() {
       options={items}
       value={selectedBuff}
       onValueChange={handleChange}
-      style={{ height: 32, borderRadius: 6, paddingLeft: 6, paddingRight: 6 }}
+      style={{ height: 32, borderRadius: 6, paddingLeft: 6, paddingRight: 6, color: 'black' }}
       placeholder="テンプレ追加"
     />
   );
