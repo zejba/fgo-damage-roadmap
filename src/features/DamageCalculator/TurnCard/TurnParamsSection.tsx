@@ -21,15 +21,15 @@ export function TurnParamsSection(props: TurnParamsSectionProps) {
       <Compact>
         <CompactItemText>クラス相性</CompactItemText>
         <Select
-          value={turnParams.classAffinity}
-          onValueChange={(value) => setTurnParams((prev) => ({ ...prev, classAffinity: value }))}
+          value={turnParams.classAffinity.toString()}
+          onValueChange={(value) => setTurnParams((prev) => ({ ...prev, classAffinity: parseFloat(value) }))}
           options={enemyClassOptions}
           style={{ width: 60 }}
         />
         <CompactItemText>属性相性</CompactItemText>
         <Select
-          value={turnParams.attributeAffinity}
-          onValueChange={(value) => setTurnParams((prev) => ({ ...prev, attributeAffinity: value }))}
+          value={turnParams.attributeAffinity.toString()}
+          onValueChange={(value) => setTurnParams((prev) => ({ ...prev, attributeAffinity: parseFloat(value) }))}
           options={enemyAttrOptions}
           style={{ width: 60 }}
         />

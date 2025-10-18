@@ -41,15 +41,15 @@ export function BuffForm(props: BuffFormProps) {
       />
       <CompactItemText style={{ width: 28 }}>%</CompactItemText>
       <Select
-        value={buff.turn}
-        onValueChange={(value) => setBuff({ ...buff, turn: value })}
+        value={buff.turn.toString()}
+        onValueChange={(value) => setBuff({ ...buff, turn: parseFloat(value) })}
         options={turnOptions}
         style={{ width: 52 }}
       />
       <CompactItemText style={{ width: 24 }}>T</CompactItemText>
       <Select
-        value={buff.count}
-        onValueChange={(value) => setBuff({ ...buff, count: value })}
+        value={buff.count.toString()}
+        onValueChange={(value) => setBuff({ ...buff, count: parseFloat(value) })}
         options={turnOptions}
         style={{ width: 52 }}
       />

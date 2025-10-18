@@ -72,33 +72,33 @@ export const skillTypes: { value: BuffType; label: string }[] = [
   { value: 'starGetBuff', label: '星発生バフ' }
 ];
 
-export const turnOptions: { value: number; label: string }[] = [
-  { value: 1, label: '1' },
-  { value: 2, label: '2' },
-  { value: 3, label: '3' },
-  { value: 4, label: '4' },
-  { value: 5, label: '5' },
-  { value: 6, label: '6' },
-  { value: 7, label: '7' },
-  { value: 8, label: '8' },
-  { value: 9, label: '9' },
-  { value: 10, label: '10' },
-  { value: -1, label: '-' }
+export const turnOptions: { value: string; label: string }[] = [
+  { value: '1', label: '1' },
+  { value: '2', label: '2' },
+  { value: '3', label: '3' },
+  { value: '4', label: '4' },
+  { value: '5', label: '5' },
+  { value: '6', label: '6' },
+  { value: '7', label: '7' },
+  { value: '8', label: '8' },
+  { value: '9', label: '9' },
+  { value: '10', label: '10' },
+  { value: '-1', label: '-' }
 ];
 
-export const enemyClassOptions: { value: number; label: string }[] = [
-  { value: 0.5, label: '0.5' },
-  { value: 1.0, label: '1.0' },
-  { value: 1.2, label: '1.2' },
-  { value: 1.5, label: '1.5' },
-  { value: 2.0, label: '2.0' },
-  { value: 5.0, label: '5.0' }
+export const enemyClassOptions: { value: string; label: string }[] = [
+  { value: '0.5', label: '0.5' },
+  { value: '1.0', label: '1.0' },
+  { value: '1.2', label: '1.2' },
+  { value: '1.5', label: '1.5' },
+  { value: '2.0', label: '2.0' },
+  { value: '5.0', label: '5.0' }
 ];
 
-export const enemyAttrOptions: { value: number; label: string }[] = [
-  { value: 0.9, label: '0.9' },
-  { value: 1.0, label: '1.0' },
-  { value: 1.1, label: '1.1' }
+export const enemyAttrOptions: { value: string; label: string }[] = [
+  { value: '0.9', label: '0.9' },
+  { value: '1.0', label: '1.0' },
+  { value: '1.1', label: '1.1' }
 ];
 
 export const damageJudgementOptions: {

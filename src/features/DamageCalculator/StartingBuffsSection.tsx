@@ -47,7 +47,7 @@ function BuffFormsSection() {
 export function StartingBuffsSection() {
   const addBuff = useSetAtom(addBuffsAtom);
   const handleAddBuff = useCallback(() => {
-    addBuff([defaultBuff]);
+    addBuff([{ ...defaultBuff, turn: -1 }]);
   }, [addBuff]);
   return (
     <Card title="パッシブ・開始時効果" style={{ width: '100%' }}>

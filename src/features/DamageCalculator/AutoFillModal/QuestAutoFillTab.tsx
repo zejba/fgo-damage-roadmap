@@ -62,15 +62,15 @@ export function QuestAutoFillTab() {
       <Compact>
         <CompactItemText>クラス相性</CompactItemText>
         <Select
-          value={classAffinity}
-          onValueChange={setClassAffinity}
+          value={classAffinity.toString()}
+          onValueChange={(value) => setClassAffinity(parseFloat(value))}
           options={enemyClassOptions}
           style={{ width: 60 }}
         />
         <CompactItemText>属性相性</CompactItemText>
         <Select
-          value={attributeAffinity}
-          onValueChange={setAttributeAffinity}
+          value={attributeAffinity.toString()}
+          onValueChange={(value) => setAttributeAffinity(parseFloat(value))}
           options={enemyAttrOptions}
           style={{ width: 60 }}
         />

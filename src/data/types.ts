@@ -3,8 +3,8 @@ export interface Buff {
   name: string;
   type: BuffType;
   amount: number | null;
-  turn: number | null;
-  count: number | null;
+  turn: number;
+  count: number;
 }
 
 export interface CardParams {

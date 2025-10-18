@@ -14,6 +14,6 @@ export const defaultBuff: Omit<Buff, 'id'> = {
   name: '',
   type: 'atkBuff',
   amount: null,
-  turn: null,
-  count: null
+  turn: 1,
+  count: -1
 };

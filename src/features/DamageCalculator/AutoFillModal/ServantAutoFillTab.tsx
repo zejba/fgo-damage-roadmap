@@ -92,8 +92,8 @@ export function ServantAutoFillTab() {
           name: 'クラススキル',
           type: buff.type,
           amount: buff.value,
-          turn: buff.turn === -1 ? null : buff.turn,
-          count: buff.count === -1 ? null : buff.count
+          turn: buff.turn,
+          count: buff.count
         }))
       );
 

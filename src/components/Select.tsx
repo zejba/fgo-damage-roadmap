@@ -16,11 +16,11 @@ export interface SelectProps<T extends string | number | null>
   placeholder?: string;
 }
 
-export function Select<T extends string | number | null>(props: SelectProps<T>) {
+export function Select<T extends string | null>(props: SelectProps<T>) {
   const { onValueChange, onChange, value, options, placeholder, style, ...rest } = props;
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = (e.target.value === '' ? null : e.target.value) as T;
-    onValueChange?.(value);
+    const value = e.target.value === '' ? null : e.target.value;
+    onValueChange?.(value as T);
     onChange?.(e);
   };
   return (
@@ -40,11 +40,16 @@ export function Select<T extends string | number | null>(props: SelectProps<T>) 
           No options
         </option>
       )}
-      {options?.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
+      {options?.map((option) => {
+        if (option.value === '') {
+          throw new Error('Option value cannot be an empty string');
+        }
+        return (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        );
+      })}
     </StyledSelect>
   );
 }
