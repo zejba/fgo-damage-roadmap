@@ -57,8 +57,8 @@ export const buffSchema = z.object({
   name: z.string(),
   type: buffTypeSchema,
   amount: z.number().nullable(),
-  turn: z.number().nullable(),
-  count: z.number().nullable()
+  turn: z.number(),
+  count: z.number()
 });
 
 export const cardParamsSchema = z.object({
