@@ -15899,5 +15899,37 @@
         "count": -1
       }
     ]
+  },
+  {
+    "aaId": 306200,
+    "id": "306200",
+    "collectionNo": 457,
+    "name": "エリザベート・バートリー",
+    "rarity": 5,
+    "className": "lancer",
+    "attribute": "star",
+    "atkMax": 12154,
+    "atk120": 15617,
+    "starGen": 11.8,
+    "npGain": 0.55,
+    "hitCounts": {
+      "buster": 5,
+      "arts": 4,
+      "quick": 5,
+      "extra": 5,
+      "np": 8
+    },
+    "noblePhantasm": {
+      "card": "2",
+      "value": 1000
+    },
+    "classPassive": [
+      {
+        "type": "criticalBuff",
+        "value": 12,
+        "turn": -1,
+        "count": -1
+      }
+    ]
   }
 ]
