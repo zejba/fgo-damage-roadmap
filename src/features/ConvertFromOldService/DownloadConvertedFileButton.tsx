@@ -108,6 +108,10 @@ function parseSkillData(skillArray: string[]): Buff[] {
       const turn = parseNumberOrNull(turnStr, `buff${i}-turn`);
       const count = parseNumberOrNull(countStr, `buff${i}-count`);
 
+      if (turn === null || count === null) {
+        throw new Error(`Invalid turn or count for buff index ${i}`);
+      }
+
       console.log(skillArray[baseIndex + 1]);
       buffs.push({
         id: v4(),
