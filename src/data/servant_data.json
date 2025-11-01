@@ -15931,5 +15931,37 @@
         "count": -1
       }
     ]
+  },
+  {
+    "aaId": 1102200,
+    "id": "1102200",
+    "collectionNo": 458,
+    "name": "終わりのエリザベート",
+    "rarity": 4,
+    "className": "avenger",
+    "attribute": "star",
+    "atkMax": 9828,
+    "atk120": 13972,
+    "starGen": 5.9,
+    "npGain": 0.56,
+    "hitCounts": {
+      "buster": 3,
+      "arts": 4,
+      "quick": 6,
+      "extra": 5,
+      "np": 6
+    },
+    "noblePhantasm": {
+      "card": "buster",
+      "value": 500
+    },
+    "classPassive": [
+      {
+        "type": "criticalBuff",
+        "value": 12,
+        "turn": -1,
+        "count": -1
+      }
+    ]
   }
 ]
