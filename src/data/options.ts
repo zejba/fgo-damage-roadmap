@@ -88,16 +88,16 @@ export const turnOptions: { value: string; label: string }[] = [
 
 export const enemyClassOptions: { value: string; label: string }[] = [
   { value: '0.5', label: '0.5' },
-  { value: '1.0', label: '1.0' },
+  { value: '1', label: '1.0' },
   { value: '1.2', label: '1.2' },
   { value: '1.5', label: '1.5' },
-  { value: '2.0', label: '2.0' },
-  { value: '5.0', label: '5.0' }
+  { value: '2', label: '2.0' },
+  { value: '5', label: '5.0' }
 ];
 
 export const enemyAttrOptions: { value: string; label: string }[] = [
   { value: '0.9', label: '0.9' },
-  { value: '1.0', label: '1.0' },
+  { value: '1', label: '1.0' },
   { value: '1.1', label: '1.1' }
 ];
 
