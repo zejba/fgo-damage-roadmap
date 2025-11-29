@@ -12,6 +12,11 @@ const StyledButton = styled.button`
     cursor: not-allowed;
     background-color: #b1b1b1ff;
   }
+
+  @media (max-width: 600px) {
+    font-size: 0.8em;
+    height: 28px;
+  }
 `;
 
 export interface BaseButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

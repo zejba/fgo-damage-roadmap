@@ -1,7 +1,7 @@
-import { Table } from 'antd';
+import { Flex, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useAtomValue } from 'jotai';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import {
   damageCalcResultAtom,
   damageCalcResultNpColorAtom,
@@ -11,6 +11,7 @@ import type { ProcessedTurnResult } from '../../utils/calcDamage';
 import { cardColorStyles, cardInitial } from '../../data/options';
 import { CardColor } from '../../data/types';
 import { isColoredAtom } from '../../store/jotai';
+import SaveResultAsImageButton from './SaveResultAsImageButton';
 
 type RecordType = {
   key: string;
@@ -29,12 +30,14 @@ function defineColumns(isColored: boolean, npColor: CardColor | undefined): Colu
   const npColorStyle = npColor ? cardColorStyles[npColor] : undefined;
   const columns: ColumnsType<RecordType> = [
     {
-      title: '',
+      title: 'T',
       dataIndex: 'turn',
       key: 'turn',
       onCell: (record) => ({
         rowSpan: record.headerRowSpan,
-        style: { textAlign: 'center' }
+        style: {
+          width: 0
+        }
       })
     },
     {
@@ -137,7 +140,7 @@ function buildDataSource(result: ProcessedTurnResult[], isNpStarCalculated: bool
     return [
       {
         key: `turn-${turnIndex + 1}-header`,
-        turn: `${turnIndex + 1}T`,
+        turn: `${turnIndex + 1}`,
         headerRowSpan: 4,
         first: cardInitial[selectedCards[0]],
         second: cardInitial[selectedCards[1]],
@@ -202,11 +205,11 @@ function buildDataSource(result: ProcessedTurnResult[], isNpStarCalculated: bool
               key: `turn-${turnIndex + 1}-star`,
               turn: '星',
               headerRowSpan: 2,
-              first: `${minStars[0]}～${maxStars[0]}`,
-              second: `${minStars[1]}～${maxStars[1]}`,
-              third: `${minStars[2]}～${maxStars[2]}`,
-              ex: `${minStars[3]}～${maxStars[3]}`,
-              total: `${totalMinStar}～${totalMaxStar}`,
+              first: `${minStars[0]} - ${maxStars[0]}`,
+              second: `${minStars[1]} - ${maxStars[1]}`,
+              third: `${minStars[2]} - ${maxStars[2]}`,
+              ex: `${minStars[3]} - ${maxStars[3]}`,
+              total: `${totalMinStar} - ${totalMaxStar}`,
               targetDamage: '-',
               passRate: '-'
             },
@@ -214,10 +217,10 @@ function buildDataSource(result: ProcessedTurnResult[], isNpStarCalculated: bool
               key: `turn-${turnIndex + 1}-star-rate`,
               turn: null,
               headerRowSpan: 0,
-              first: `${minStarRates[0]}%～${maxStarRates[0]}%`,
-              second: `${minStarRates[1]}%～${maxStarRates[1]}%`,
-              third: `${minStarRates[2]}%～${maxStarRates[2]}%`,
-              ex: `${minStarRates[3]}%～${maxStarRates[3]}%`,
+              first: `${minStarRates[0]}% - ${maxStarRates[0]}%`,
+              second: `${minStarRates[1]}% - ${maxStarRates[1]}%`,
+              third: `${minStarRates[2]}% - ${maxStarRates[2]}%`,
+              ex: `${minStarRates[3]}% - ${maxStarRates[3]}%`,
               total: '-',
               targetDamage: '-',
               passRate: '-'
@@ -234,15 +237,24 @@ function ResultTable() {
   const isNpStarCalculated = useAtomValue(isNpStarCalculatedAtom);
   const dataSource = useMemo(() => buildDataSource(result, isNpStarCalculated), [result, isNpStarCalculated]);
   const columns = useMemo(() => defineColumns(isColored, npColor), [isColored, npColor]);
+  const tableRef = useRef<HTMLDivElement>(null);
+
   return (
-    <Table
-      columns={columns}
-      dataSource={dataSource}
-      pagination={false}
-      rowHoverable={false}
-      bordered
-      footer={() => null}
-    />
+    <Flex vertical>
+      <div ref={tableRef}>
+        <Table
+          columns={columns}
+          dataSource={dataSource}
+          pagination={false}
+          rowHoverable={false}
+          bordered
+          footer={() => null}
+        />
+      </div>
+      <div style={{ textAlign: 'right', marginRight: 4, marginTop: 4 }}>
+        <SaveResultAsImageButton targetRef={tableRef} />
+      </div>
+    </Flex>
   );
 }
 

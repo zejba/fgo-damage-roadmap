@@ -4,6 +4,18 @@ import { useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 import { damageCalcResultAtom } from '../../store/damageCalcResult';
 import type { ProcessedTurnResult } from '../../utils/calcDamage';
+import styled from 'styled-components';
+
+const StyledTable = styled(Table)`
+  .buff-type-cell {
+    width: 160px;
+  }
+  @media (max-width: 780px) {
+    .buff-type-cell {
+      width: 84px;
+    }
+  }
+` as typeof Table;
 
 type RecordType = {
   key: string;
@@ -24,19 +36,24 @@ const localizedBuffType = {
 
 const columns: ColumnsType<RecordType> = [
   {
-    title: '',
+    title: 'T',
     dataIndex: 'turn',
     key: 'turn',
     onCell: (record) => ({
       rowSpan: record.turn ? 4 : 0,
-      style: { textAlign: 'center' }
+      style: {
+        width: 0
+      }
     })
   },
   {
     title: '',
     dataIndex: 'buffType',
     key: 'buffType',
-    render: (_, record) => (record.buffType ? localizedBuffType[record.buffType] : '')
+    render: (_, record) => (record.buffType ? localizedBuffType[record.buffType] : ''),
+    onCell: () => ({
+      className: 'buff-type-cell'
+    })
   },
   {
     title: '1st',
@@ -66,7 +83,7 @@ function buildDataSource(result: ProcessedTurnResult[]): RecordType[] {
     return [
       {
         key: `turn-${turnIndex + 1}-atkBuff`,
-        turn: `${turnIndex + 1}T`,
+        turn: `${turnIndex + 1}`,
         headerRowSpan: 4,
         buffType: 'atkBuff',
         first: `${atkBuffs[0] ?? 0}%`,
@@ -109,7 +126,7 @@ function AppliedBuffsTable() {
   const result = useAtomValue(damageCalcResultAtom);
   const dataSource = useMemo(() => buildDataSource(result), [result]);
   return (
-    <Table
+    <StyledTable
       columns={columns}
       dataSource={dataSource}
       pagination={false}

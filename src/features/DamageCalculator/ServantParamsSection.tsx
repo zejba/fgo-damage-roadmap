@@ -33,12 +33,17 @@ function TitleClassAttributeRow() {
   const [servantClass, setServantClass] = useAtom(servantClassAtom);
   const [servantAttribute, setServantAttribute] = useAtom(servantAttributeAtom);
   return (
-    <Compact>
-      <Input placeholder="タイトル" style={{ width: 300 }} value={title} onChange={(e) => setTitle(e.target.value)} />
-      <Select options={servantClasses} style={{ width: 60 }} value={servantClass} onValueChange={setServantClass} />
+    <Compact style={{ width: '100%' }}>
+      <Input
+        placeholder="タイトル"
+        style={{ flex: 1, maxWidth: '300px' }}
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <Select options={servantClasses} style={{ width: 52 }} value={servantClass} onValueChange={setServantClass} />
       <Select
         options={servantAttributes}
-        style={{ width: 60 }}
+        style={{ width: 52 }}
         value={servantAttribute}
         onValueChange={setServantAttribute}
       />

@@ -1,4 +1,3 @@
-import { ArrowUpOutlined, CloseOutlined } from '@ant-design/icons';
 import { type PrimitiveAtom, useAtom } from 'jotai';
 import { memo } from 'react';
 import { CompactItemText } from '../../components/CompactItemText';
@@ -9,6 +8,31 @@ import { Input } from '../../components/Input';
 import { InputNumber } from '../../components/InputNumber';
 import { Compact } from '../../components/Compact';
 import { PrimaryOutlinedButton } from '../../components/Button.tsx/PrimaryOutlinedButton';
+import styled from 'styled-components';
+
+const StyledButton = styled(PrimaryOutlinedButton)`
+  padding: 8px;
+`;
+
+const TitleInput = styled(Input)`
+  @media (max-width: 600px) {
+    width: 80px;
+  }
+`;
+
+const AmountInput = styled(InputNumber)`
+  width: 80px;
+  @media (max-width: 600px) {
+    width: 32px;
+  }
+`;
+
+const StyledSelect = styled(Select)`
+  width: 100px;
+  @media (max-width: 600px) {
+    width: 76px;
+  }
+` as typeof Select;
 
 interface BuffFormProps {
   buffAtom: PrimitiveAtom<Buff>;
@@ -21,57 +45,41 @@ export function BuffForm(props: BuffFormProps) {
   const { buffAtom, beforeAtom, remove, move } = props;
   const [buff, setBuff] = useAtom(buffAtom);
   return (
-    <Compact style={{ width: '528px' }}>
-      <Input
+    <Compact style={{ width: '100%' }}>
+      <TitleInput
         value={buff.name}
         onChange={(e) => setBuff({ ...buff, name: e.target.value })}
-        placeholder="スキル・バフ名"
+        placeholder="スキル/バフ名"
       />
-      <Select
+      <StyledSelect
         value={buff.type}
         onValueChange={(value) => setBuff({ ...buff, type: value })}
         options={skillTypes}
-        style={{ width: 140 }}
       />
-      <InputNumber
+      <AmountInput
         value={buff.amount}
         onValueChange={(value) => setBuff({ ...buff, amount: value })}
-        placeholder="効果量"
-        style={{ width: 80 }}
+        placeholder="量"
       />
-      <CompactItemText style={{ width: 28 }}>%</CompactItemText>
+      <CompactItemText>%</CompactItemText>
       <Select
         value={buff.turn.toString()}
         onValueChange={(value) => setBuff({ ...buff, turn: parseFloat(value) })}
         options={turnOptions}
-        style={{ width: 52 }}
       />
-      <CompactItemText style={{ width: 24 }}>T</CompactItemText>
+      <CompactItemText>T</CompactItemText>
       <Select
         value={buff.count.toString()}
         onValueChange={(value) => setBuff({ ...buff, count: parseFloat(value) })}
         options={turnOptions}
-        style={{ width: 52 }}
       />
-      <CompactItemText style={{ width: 32 }}>回</CompactItemText>
-      <PrimaryOutlinedButton
-        style={{ borderRadius: '0', borderLeft: 'none', paddingLeft: 8, paddingRight: 6, paddingTop: 2 }}
-        onClick={() => remove(buffAtom)}
-        startIcon={<CloseOutlined />}
-      />
-      <PrimaryOutlinedButton
-        style={{
-          borderRadius: 0,
-          borderLeft: 'none',
-          borderTopRightRadius: 4,
-          borderBottomRightRadius: 4,
-          paddingLeft: 8,
-          paddingRight: 8,
-          paddingTop: 1
-        }}
-        startIcon={<ArrowUpOutlined />}
-        onClick={() => beforeAtom && move(buffAtom, beforeAtom)}
-      />
+      <CompactItemText>回</CompactItemText>
+      {/* <StyledButton onClick={() => remove(buffAtom)}> */}
+      {/* <MoreOutlined /> */}
+      {/* </StyledButton> */}
+
+      <StyledButton onClick={() => remove(buffAtom)}>X</StyledButton>
+      <StyledButton onClick={() => beforeAtom && move(buffAtom, beforeAtom)}>↑</StyledButton>
     </Compact>
   );
 }

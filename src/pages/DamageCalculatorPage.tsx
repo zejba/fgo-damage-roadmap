@@ -11,7 +11,6 @@ const Container = styled.div`
   column-gap: 36px;
   row-gap: 8px;
   flex-direction: column;
-
   @media (min-width: 1480px) {
     flex-direction: row;
     height: calc(100vh - 120px); /* ヘッダーとタイトル分を差し引いた高さ */
@@ -20,8 +19,7 @@ const Container = styled.div`
 
 const InputSection = styled.div`
   @media (min-width: 1480px) {
-    flex: 0 0 auto;
-    max-height: 100%;
+    min-width: 580px;
     overflow-y: auto;
     padding-right: 8px; /* スクロールバーとの間隔 */
   }
@@ -29,7 +27,6 @@ const InputSection = styled.div`
 
 const ResultSection = styled.div`
   flex: 1;
-
   @media (min-width: 1480px) {
     max-height: 100%;
     overflow-y: auto;
@@ -53,28 +50,39 @@ const CalcButtonWrapper = styled.div`
 const ResultTablesWrapper = styled.div`
   order: 2; /* 縦並び時は下部に表示 */
 
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-
   @media (min-width: 1480px) {
     flex: 1;
     overflow-y: auto;
     order: 1; /* 横並び時は上部に表示 */
   }
 
+  overflow-x: auto;
+  margin-bottom: 16px;
+`;
+
+const TableWrapper = styled.div`
+  min-width: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: fit-content;
+
   @media (max-width: 780px) {
+    gap: 12px;
     .ant-table-cell {
-      font-size: 0.8rem !important;
-      padding: 20px 8px !important;
+      font-size: 0.55rem !important;
+      font-weight: bold;
+      padding: 8px 4px !important;
+    }
+    .ant-table-footer {
+      padding: 8px !important;
     }
   }
 `;
-
 function DamageCalculatorPage() {
   return (
     <>
-      <Typography.Title level={3} style={{ marginTop: 4 }}>
+      <Typography.Title level={3} style={{ marginTop: 4, marginLeft: 8 }}>
         ダメージ計算
       </Typography.Title>
       <Container>
@@ -86,8 +94,10 @@ function DamageCalculatorPage() {
             <CalcButtonSection />
           </CalcButtonWrapper>
           <ResultTablesWrapper>
-            <ResultTable />
-            <AppliedBuffsTable />
+            <TableWrapper>
+              <ResultTable />
+              <AppliedBuffsTable />
+            </TableWrapper>
           </ResultTablesWrapper>
         </ResultSection>
       </Container>

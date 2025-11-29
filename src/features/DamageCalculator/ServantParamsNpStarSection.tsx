@@ -17,6 +17,7 @@ import { FormContainer } from '../../components/FormContainer';
 import { Compact } from '../../components/Compact';
 import { CompactItemText } from '../../components/CompactItemText';
 import { InputNumber } from '../../components/InputNumber';
+import styled from 'styled-components';
 
 function NpGainRow() {
   const [npGain, setNpGain] = useAtom(npGainAtom);
@@ -50,18 +51,27 @@ function HitCountRow() {
     <Compact>
       <CompactItemText>Hit数</CompactItemText>
       <CompactItemText>N</CompactItemText>
-      <InputNumber value={hitCountN} onValueChange={setHitCountN} style={{ width: 60 }} />
+      <InputNumber value={hitCountN} onValueChange={setHitCountN} style={{ width: 40 }} />
       <CompactItemText>B</CompactItemText>
-      <InputNumber value={hitCountB} onValueChange={setHitCountB} style={{ width: 60 }} />
+      <InputNumber value={hitCountB} onValueChange={setHitCountB} style={{ width: 40 }} />
       <CompactItemText>A</CompactItemText>
-      <InputNumber value={hitCountA} onValueChange={setHitCountA} style={{ width: 60 }} />
+      <InputNumber value={hitCountA} onValueChange={setHitCountA} style={{ width: 40 }} />
       <CompactItemText>Q</CompactItemText>
-      <InputNumber value={hitCountQ} onValueChange={setHitCountQ} style={{ width: 60 }} />
+      <InputNumber value={hitCountQ} onValueChange={setHitCountQ} style={{ width: 40 }} />
       <CompactItemText>EX</CompactItemText>
-      <InputNumber value={hitCountEX} onValueChange={setHitCountEX} style={{ width: 60 }} />
+      <InputNumber value={hitCountEX} onValueChange={setHitCountEX} style={{ width: 40 }} />
     </Compact>
   );
 }
+
+const ToggleWrapper = styled(Space)`
+  margin-left: 8px;
+  margin-top: 8px;
+  @media (max-width: 600px) {
+    margin-top: 4px;
+    font-size: 0.8em;
+  }
+`;
 
 function ServantParamsNpStarSection() {
   const [isRequiredNpStarCalc, setIsRequiredNpStarCalc] = useAtom(isRequiredNpStarCalcAtom);
@@ -70,10 +80,10 @@ function ServantParamsNpStarSection() {
   }, [setIsRequiredNpStarCalc]);
   return (
     <div>
-      <Space>
+      <ToggleWrapper>
         NP・スター計算
         <Switch value={isRequiredNpStarCalc} onChange={toggleIsRequiredNpStarCalc} />
-      </Space>
+      </ToggleWrapper>
       <CollapseWithOutHeader isActive={isRequiredNpStarCalc}>
         <FormContainer style={{ marginTop: 8 }}>
           <NpGainRow />

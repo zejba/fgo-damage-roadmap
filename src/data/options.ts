@@ -63,9 +63,9 @@ export const skillTypes: { value: BuffType; label: string }[] = [
   { value: 'artsCriticalBuff', label: 'Aクリバフ' },
   { value: 'quickCriticalBuff', label: 'Qクリバフ' },
   { value: 'spBuff', label: '特攻バフ' },
-  { value: 'cardCriticalBuff', label: 'クリ時色バフ' },
+  { value: 'cardCriticalBuff', label: 'クリ色バフ' },
   { value: 'npSuperEffectiveCorrection', label: '特攻宝具' },
-  { value: 'npValueUp', label: '宝具倍率増加' },
+  { value: 'npValueUp', label: '宝具倍率増' },
   { value: 'spDef', label: '特殊耐性' },
   { value: 'damagePlus', label: 'ダメージ＋' },
   { value: 'npGetBuff', label: 'NP獲得バフ' },
@@ -106,24 +106,17 @@ export const damageJudgementOptions: {
   label: string;
 }[] = [
   { value: 'default', label: 'default' },
-  { value: 'noDamage', label: '0(回数消費有)' },
-  { value: 'nothing', label: '0(回数消費無)' }
+  { value: 'noDamage', label: '0(消費有)' },
+  { value: 'nothing', label: '0(消費無)' }
 ];
 
 export const cardColorStyles = {
-  buster: '#ff635bff',
-  arts: '#5c85ffff',
-  quick: '#71e468ff',
-  B: '#ff635bff',
-  A: '#5c85ffff',
-  Q: '#71e468ff',
-  extra: undefined
-} as const;
-
-export const cardColorStylesThin = {
-  buster: '#ffd2c5ff',
-  arts: '#a8d8ff',
-  quick: '#d1ffd1',
+  buster: 'tomato',
+  arts: 'cornflowerblue',
+  quick: 'lightgreen',
+  B: 'tomato',
+  A: 'cornflowerblue',
+  Q: 'lightgreen',
   extra: undefined
 } as const;
 

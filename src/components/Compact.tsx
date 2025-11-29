@@ -3,9 +3,7 @@ import styled from 'styled-components';
 export const Compact = styled.div`
   display: flex;
   height: 32px;
-  align-items: stretch;
   > * {
-    min-width: 0;
     border: 1px solid black;
     &:first-child:not(:last-child) {
       border-top-left-radius: 6px;
@@ -26,6 +24,20 @@ export const Compact = styled.div`
     }
     &:focus {
       z-index: 1;
+    }
+  }
+  @media (max-width: 600px) {
+    height: 28px;
+    button {
+      height: 28px;
+    }
+    * {
+      font-size: 0.8em;
+    }
+  }
+  @media (max-width: 380px) {
+    * {
+      font-size: 0.7em;
     }
   }
 `;

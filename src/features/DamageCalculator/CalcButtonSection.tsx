@@ -18,6 +18,14 @@ import {
 import { currentFormDataAtom } from '../../store/formData';
 import { validateDamageCalcFormValue } from '../../zod-schema/damageCalcFormSchema';
 import { PrimaryButton } from '../../components/Button.tsx/PrimaryButton';
+import { styled } from 'styled-components';
+
+const ToggleWrapper = styled(Space)`
+  margin-left: 8px;
+  @media (max-width: 600px) {
+    font-size: 0.8em;
+  }
+`;
 
 function CalcButtonSection() {
   const [isColored, setIsColored] = useAtom(isColoredAtom);
@@ -56,13 +64,13 @@ function CalcButtonSection() {
   );
   return (
     <Space style={{ marginBottom: 12 }}>
-      <PrimaryButton style={{ height: 36 }} onClick={handleCalculate} startIcon={<CalculatorFilled />}>
+      <PrimaryButton onClick={handleCalculate} startIcon={<CalculatorFilled />}>
         計算
       </PrimaryButton>
-      <Space>
+      <ToggleWrapper>
         カード選択に色をつける
         <Switch value={isColored} onChange={setIsColored} />
-      </Space>
+      </ToggleWrapper>
     </Space>
   );
 }

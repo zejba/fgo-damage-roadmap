@@ -51,7 +51,7 @@ export function StartingBuffsSection() {
   }, [addBuff]);
   return (
     <Card title="パッシブ・開始時効果" style={{ width: '100%' }}>
-      <FormContainer style={{ gap: 4 }}>
+      <FormContainer style={{ gap: 2, width: '100%' }}>
         <Space>
           <AddBuffButton onClick={handleAddBuff} />
           <AddClassScoresButton />

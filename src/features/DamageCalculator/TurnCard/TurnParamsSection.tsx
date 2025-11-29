@@ -33,27 +33,27 @@ export function TurnParamsSection(props: TurnParamsSectionProps) {
           options={enemyAttrOptions}
           style={{ width: 60 }}
         />
-        <CompactItemText>目標ダメージ</CompactItemText>
         <InputNumber
+          placeholder="目標ダメージ"
           value={turnParams.targetDamage}
           onValueChange={(value) => setTurnParams((prev) => ({ ...prev, targetDamage: value }))}
-          style={{ width: 100 }}
+          style={{ width: 120 }}
         />
       </Compact>
       <CollapseWithOutHeader isActive={isRequiredNpStarCalc}>
         <Compact>
-          <CompactItemText>DTDR（敵NP補正）</CompactItemText>
+          <CompactItemText>DTDR</CompactItemText>
           <InputNumber
             value={turnParams.dtdr}
             onValueChange={(value) => setTurnParams((prev) => ({ ...prev, enemyNpCharge: value }))}
-            style={{ width: 80 }}
+            style={{ width: 56 }}
           />
           <CompactItemText>%</CompactItemText>
-          <CompactItemText>DSR（敵スター補正）</CompactItemText>
+          <CompactItemText>DSR</CompactItemText>
           <InputNumber
             value={turnParams.dsr}
             onValueChange={(value) => setTurnParams((prev) => ({ ...prev, dsr: value }))}
-            style={{ width: 80 }}
+            style={{ width: 56 }}
           />
           <CompactItemText>%</CompactItemText>
         </Compact>

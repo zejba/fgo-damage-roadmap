@@ -1,14 +1,25 @@
 import { Layout as AntdLayout, Typography } from 'antd';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 const { Header, Content } = AntdLayout;
 
 interface Props {
   children: React.ReactNode;
 }
 
+const StyledContent = styled(Content)`
+  background-color: white;
+  padding: 12px;
+  margin: 0;
+  min-height: 280px;
+  @media (max-width: 600px) {
+    padding: 8px 0.5px;
+  }
+`;
+
 function Layout({ children }: Props) {
   return (
-    <AntdLayout style={{ minWidth: 'fit-content' }}>
+    <AntdLayout>
       <Header
         style={{
           display: 'flex',
@@ -32,16 +43,7 @@ function Layout({ children }: Props) {
         </Link>
       </Header>
       <AntdLayout>
-        <Content
-          style={{
-            backgroundColor: 'white',
-            padding: 12,
-            margin: 0,
-            minHeight: 280
-          }}
-        >
-          {children}
-        </Content>
+        <StyledContent>{children}</StyledContent>
       </AntdLayout>
     </AntdLayout>
   );

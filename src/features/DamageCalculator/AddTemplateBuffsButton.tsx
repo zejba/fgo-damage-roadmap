@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 import { appendSkills, craftEssences } from '../../data/templateBuffs';
 import { addBuffsAtom } from '../../store/startingBuffs';
 import { Select } from '../../components/Select';
+import { styled } from 'styled-components';
 
 const templateBuffs = [...appendSkills, ...craftEssences];
 
@@ -12,6 +13,16 @@ const items = [
     value: skill.name
   }))
 ];
+
+const StyledSelect = styled(Select)`
+  height: 32px;
+  border-radius: 6px;
+  padding-left: 6px;
+  padding-right: 6px;
+  @media (max-width: 600px) {
+    font-size: 0.8em;
+  }
+` as typeof Select;
 
 function AddTemplateBuffsButton() {
   const addEffect = useSetAtom(addBuffsAtom);
@@ -25,11 +36,11 @@ function AddTemplateBuffsButton() {
     [addEffect]
   );
   return (
-    <Select<string | null>
+    <StyledSelect<string | null>
       options={items}
       value={selectedBuff}
       onValueChange={handleChange}
-      style={{ height: 32, borderRadius: 6, paddingLeft: 6, paddingRight: 6, color: 'black' }}
+      style={{ color: 'black' }}
       placeholder="テンプレ追加"
     />
   );

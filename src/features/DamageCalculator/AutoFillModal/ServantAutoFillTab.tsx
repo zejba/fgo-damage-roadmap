@@ -1,4 +1,4 @@
-import { Checkbox, message, Select, Space, Typography } from 'antd';
+import { Checkbox, message, Select, Typography } from 'antd';
 import { useAtom } from 'jotai';
 import { useAtomCallback } from 'jotai/utils';
 import { useCallback } from 'react';
@@ -112,22 +112,19 @@ export function ServantAutoFillTab() {
         onChange={setServantIndex}
         style={{ width: 480, maxWidth: '100%' }}
       />
-      <Space>
-        <PrimaryOutlinedButton onClick={handlePerfection}>完全体</PrimaryOutlinedButton>(
-        <Checkbox checked={isLv120} onChange={(e) => setIsLv120(e.target.checked)}>
-          Lv.120
-        </Checkbox>
-        <Checkbox checked={hasGoldFou} onChange={(e) => setHasGoldFou(e.target.checked)}>
-          金フォウ
-        </Checkbox>
-        <Checkbox checked={hasFootprint} onChange={(e) => setHasFootprint(e.target.checked)}>
-          足跡
-        </Checkbox>
-        <Checkbox checked={isGrandServant} onChange={(e) => setIsGrandServant(e.target.checked)}>
-          グランド
-        </Checkbox>
-        )
-      </Space>
+      <Checkbox checked={isLv120} onChange={(e) => setIsLv120(e.target.checked)}>
+        Lv.120
+      </Checkbox>
+      <Checkbox checked={hasGoldFou} onChange={(e) => setHasGoldFou(e.target.checked)}>
+        金フォウ
+      </Checkbox>
+      <Checkbox checked={hasFootprint} onChange={(e) => setHasFootprint(e.target.checked)}>
+        足跡
+      </Checkbox>
+      <Checkbox checked={isGrandServant} onChange={(e) => setIsGrandServant(e.target.checked)}>
+        グランド
+      </Checkbox>
+      <PrimaryOutlinedButton onClick={handlePerfection}>すべて選択</PrimaryOutlinedButton>
       <Typography.Text>※ ATK銀フォウ込みで入力されます</Typography.Text>
       <PrimaryOutlinedButton onClick={handleSubmit} disabled={servantIndex === null}>
         入力

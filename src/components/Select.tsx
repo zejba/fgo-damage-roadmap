@@ -8,7 +8,7 @@ const StyledSelect = styled.select`
   color: black;
 `;
 
-export interface SelectProps<T extends string | number | null>
+export interface SelectProps<T extends string | null>
   extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'value' | 'children'> {
   onValueChange?: (value: T) => void;
   value: T;

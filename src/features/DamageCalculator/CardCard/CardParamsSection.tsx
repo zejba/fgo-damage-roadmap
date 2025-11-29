@@ -24,7 +24,7 @@ export function CardParamsSection(props: CardParamsSectionProps) {
       ) : (
         <Select
           options={cardTypeOptions}
-          style={{ width: 60 }}
+          style={{ width: 48 }}
           value={cardParams.type}
           onValueChange={(value) => setCardParams((prev) => ({ ...prev, type: value }))}
         />
@@ -62,7 +62,7 @@ export function CardParamsSection(props: CardParamsSectionProps) {
                 overKillCount: value
               }))
             }
-            style={{ width: 140 }}
+            style={{ width: 52 }}
           />
         </>
       )}
