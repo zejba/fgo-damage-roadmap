@@ -16,7 +16,7 @@ const StyledButton = styled(PrimaryOutlinedButton)`
   display: flex;
   align-items: center;
   @media (max-width: 560px) {
-    padding: 0 2px;
+    padding: 0;
     .MuiSvgIcon-root {
       height: 0.8em;
     }
@@ -31,14 +31,14 @@ const TitleInput = styled(Input)`
 const AmountInput = styled(InputNumber)`
   width: 60px;
   @media (max-width: 560px) {
-    min-width: 0;
+    width: 40px;
   }
 `;
 
 const StyledSelect = styled(Select)`
   width: 100px;
   @media (max-width: 560px) {
-    width: 76px;
+    width: 92px;
   }
 ` as typeof Select;
 
@@ -67,9 +67,8 @@ export function BuffForm(props: BuffFormProps) {
       <AmountInput
         value={buff.amount}
         onValueChange={(value) => setBuff({ ...buff, amount: value })}
-        placeholder="量"
+        placeholder="効果量"
       />
-      <CompactItemText>%</CompactItemText>
       <Select
         value={buff.turn.toString()}
         onValueChange={(value) => setBuff({ ...buff, turn: parseFloat(value) })}
@@ -82,10 +81,6 @@ export function BuffForm(props: BuffFormProps) {
         options={turnOptions}
       />
       <CompactItemText>回</CompactItemText>
-      {/* <StyledButton onClick={() => remove(buffAtom)}> */}
-      {/* <MoreOutlined /> */}
-      {/* </StyledButton> */}
-
       <StyledButton onClick={() => remove(buffAtom)}>
         <Close fontSize="small" />
       </StyledButton>
