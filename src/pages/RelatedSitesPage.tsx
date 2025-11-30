@@ -1,9 +1,5 @@
 import styled from 'styled-components';
-
-const Title = styled.h2`
-  margin-top: 4px;
-  margin-left: 8px;
-`;
+import { PageTitle } from '../components/PageTitle';
 
 const SiteList = styled.ul``;
 
@@ -23,7 +19,7 @@ const SiteLink = styled.a`
 function RelatedSitesPage() {
   return (
     <>
-      <Title>関連サイト</Title>
+      <PageTitle>関連サイト</PageTitle>
       <SiteList>
         <SiteItem>
           <SiteLink href="https://x.com/yukimisnowy" target="_blank" rel="noopener noreferrer">

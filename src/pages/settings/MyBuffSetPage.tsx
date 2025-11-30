@@ -5,6 +5,7 @@ import AddBuffButton from '../../components/AddBuffButton';
 import { FormContainer } from '../../components/FormContainer';
 import { PrimaryButton } from '../../components/Button.tsx/PrimaryButton';
 import { PrimaryOutlinedButton } from '../../components/Button.tsx/PrimaryOutlinedButton';
+import { PageTitle } from '../../components/PageTitle';
 import type { Buff } from '../../data/types';
 import {
   addTmpPresetBuffsAtom,
@@ -15,11 +16,6 @@ import {
 import { MemoizedBuffForm } from '../../features/DamageCalculator/BuffForm';
 import { useSnackbar } from '../../hooks/useSnackbarContext';
 import { defaultBuff } from '../../store/startingBuffs';
-
-const Title = styled.h2`
-  margin-top: 4px;
-  margin-left: 8px;
-`;
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -78,7 +74,7 @@ function MyPresetBuffPage() {
 
   return (
     <>
-      <Title>プリセットバフ設定</Title>
+      <PageTitle>プリセットバフ設定</PageTitle>
       <div style={{ marginBottom: '8px' }}>
         ブラウザのローカルストレージにプリセットバフを保存します。ダメージ計算画面で呼び出せます。
       </div>

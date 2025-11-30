@@ -3,6 +3,7 @@ import { DamageCalcInputSection } from '../features/DamageCalculator/DamageCalcI
 import ResultTable from '../features/DamageCalculator/ResultTable';
 import CalcButtonSection from '../features/DamageCalculator/CalcButtonSection';
 import AppliedBuffsTable from '../features/DamageCalculator/AppliedBuffsTable';
+import { PageTitle } from '../components/PageTitle';
 
 const Container = styled.div`
   display: flex;
@@ -71,15 +72,10 @@ const TableWrapper = styled.div`
   }
 `;
 
-const Title = styled.h2`
-  margin-top: 4px;
-  margin-left: 8px;
-`;
-
 function DamageCalculatorPage() {
   return (
     <>
-      <Title>ダメージ計算</Title>
+      <PageTitle>ダメージ計算</PageTitle>
       <Container>
         <InputSection>
           <DamageCalcInputSection />
