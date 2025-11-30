@@ -7,6 +7,12 @@ export interface Buff {
   count: number;
 }
 
+export interface BuffSet {
+  id: string;
+  name: string;
+  buffs: Buff[];
+}
+
 export interface CardParams {
   type: CardType;
   isCritical: boolean;

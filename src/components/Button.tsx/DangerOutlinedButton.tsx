@@ -10,13 +10,15 @@ export const DangerOutlinedButton = styled(BaseButton)`
       border-color 0.2s ease,
       color 0.2s ease,
       outline 0.1s ease;
-    &:hover {
-      border-color: #ff8b8bff;
-      color: #ff8b8bff;
-    }
     &:active {
-      outline: 1px solid #ff8b8bff;
-      color: #ec4840ff;
+      border-color: #ef5350;
+      color: #ef5350;
+    }
+    @media (hover: hover) {
+      &:hover {
+        border-color: #ef5350;
+        color: #ef5350;
+      }
     }
   }
   &:disabled {

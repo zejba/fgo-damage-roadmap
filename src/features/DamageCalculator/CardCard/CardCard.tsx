@@ -45,7 +45,7 @@ function CardCardInner(props: CardCardInnerProps) {
 
   return (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start' }}>
-      <div style={{ display: 'flex', gap: 8, width: '100%' }}>
+      <div style={{ display: 'flex', gap: 4, width: '100%' }}>
         <div style={{ fontSize: '1.2em', alignSelf: 'center' }}>{title}</div>
         <CardParamsSection cardParamsAtom={cardParamsAtom} />
       </div>

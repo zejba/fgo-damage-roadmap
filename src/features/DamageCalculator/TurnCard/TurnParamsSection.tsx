@@ -37,7 +37,7 @@ export function TurnParamsSection(props: TurnParamsSectionProps) {
           placeholder="目標ダメージ"
           value={turnParams.targetDamage}
           onValueChange={(value) => setTurnParams((prev) => ({ ...prev, targetDamage: value }))}
-          style={{ width: 120 }}
+          style={{ width: 100 }}
         />
       </Compact>
       <Collapse in={isRequiredNpStarCalc}>

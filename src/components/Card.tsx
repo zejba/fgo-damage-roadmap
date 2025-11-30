@@ -3,6 +3,7 @@ import styled from 'styled-components';
 const CardContainer = styled.div`
   border: 1px solid #303030;
   border-radius: 8px;
+  box-sizing: border-box;
 `;
 
 const CardHeader = styled.div`
@@ -19,7 +20,7 @@ const CardBody = styled.div`
 `;
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  header: React.ReactNode;
+  header?: React.ReactNode;
 }
 
 export function Card(props: CardProps) {

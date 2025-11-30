@@ -2,44 +2,51 @@ import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { splitAtom } from 'jotai/utils';
 import { v4 } from 'uuid';
-import type { Buff } from '../data/types';
+import type { BuffSet } from '../data/types';
 
-// 保存済みのプリセットバフ (LocalStorage)
-export const savedPresetBuffsAtom = atomWithStorage<Buff[]>('myPresetBuffs', []);
+// 保存済みのバフセット (LocalStorage)
+export const savedPresetBuffSetsAtom = atomWithStorage<BuffSet[]>('myBuffSets', []);
 
-// 編集中の一時的なプリセットバフ (内部状態を持つ)
-const tmpPresetBuffsBaseAtom = atom<Buff[]>([]);
+// 編集中の一時的なバフセット (内部状態を持つ)
+const tmpPresetBuffSetsBaseAtom = atom<BuffSet[]>([]);
 
-export const tmpPresetBuffsAtom = atom(
-  (get) => get(tmpPresetBuffsBaseAtom),
-  (_get, set, newValue: Buff[]) => {
-    set(tmpPresetBuffsBaseAtom, newValue);
+export const tmpPresetBuffSetsAtom = atom(
+  (get) => get(tmpPresetBuffSetsBaseAtom),
+  (_get, set, newValue: BuffSet[]) => {
+    set(tmpPresetBuffSetsBaseAtom, newValue);
   }
 );
 
-export const tmpPresetBuffAtomsAtom = splitAtom(tmpPresetBuffsAtom, (buff) => buff.id);
+export const tmpPresetBuffSetAtomsAtom = splitAtom(tmpPresetBuffSetsAtom, (buffSet) => buffSet.id);
 
-export const addTmpPresetBuffsAtom = atom(null, (get, set, buffs: Omit<Buff, 'id'>[]) => {
-  set(tmpPresetBuffsAtom, [...get(tmpPresetBuffsAtom), ...buffs.map((buff) => ({ ...buff, id: v4() }))]);
+export const addTmpPresetBuffSetAtom = atom(null, (get, set, buffSets: Omit<BuffSet, 'id'>[]) => {
+  set(tmpPresetBuffSetsAtom, [
+    ...get(tmpPresetBuffSetsAtom),
+    ...buffSets.map((buffSet) => ({
+      ...buffSet,
+      id: v4(),
+      buffs: buffSet.buffs.map((buff) => ({ ...buff, id: v4() }))
+    }))
+  ]);
 });
 
 // 保存処理: tmpから保存済みにコピー
-export const savePresetBuffsAtom = atom(null, (get, set) => {
-  const tmpBuffs = get(tmpPresetBuffsAtom);
-  set(savedPresetBuffsAtom, tmpBuffs);
+export const savePresetBuffSetsAtom = atom(null, (get, set) => {
+  const tmpBuffSets = get(tmpPresetBuffSetsAtom);
+  set(savedPresetBuffSetsAtom, tmpBuffSets);
 });
 
 // リセット処理: 保存済みからtmpに復元
-export const resetPresetBuffsAtom = atom(null, (get, set) => {
-  const savedBuffs = get(savedPresetBuffsAtom);
-  set(tmpPresetBuffsBaseAtom, savedBuffs);
+export const resetPresetBuffSetsAtom = atom(null, (get, set) => {
+  const savedBuffSets = get(savedPresetBuffSetsAtom);
+  set(tmpPresetBuffSetsBaseAtom, savedBuffSets);
 });
 
-// プリセットバフのオプションを取得する派生atom
-export const presetBuffOptionsAtom = atom((get) => {
-  const savedBuffs = get(savedPresetBuffsAtom);
-  return savedBuffs.map((buff) => ({
-    label: buff.name || '(名前なし)',
-    value: buff.id
+// バフセットのオプションを取得する派生atom
+export const presetBuffSetOptionsAtom = atom((get) => {
+  const savedBuffSets = get(savedPresetBuffSetsAtom);
+  return savedBuffSets.map((buffSet) => ({
+    label: buffSet.name || '(名前なし)',
+    value: buffSet.id
   }));
 });

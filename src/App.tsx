@@ -4,7 +4,7 @@ import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import { ConvertFromOldServicePage } from './pages/ConvertFromOldServicePage';
 import NewsPage from './pages/NewsPage';
 import RelatedSitesPage from './pages/RelatedSitesPage';
-import MyPresetBuffPage from './pages/settings/MyBuffSetPage';
+import MyPresetBuffPage from './pages/settings/MyPresetBuffPage';
 import { SnackbarProvider } from './hooks/useSnackbar';
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
             <Route path="/news" element={<NewsPage />} />
             <Route path="/related-sites" element={<RelatedSitesPage />} />
             <Route path="/convert-from-old-service" element={<ConvertFromOldServicePage />} />
-            <Route path="/settings/my-preset-buff" element={<MyPresetBuffPage />} />
+            <Route path="/settings/my-buff-set" element={<MyPresetBuffPage />} />
             <Route path="*" element={<div>Not Found</div>} />
           </Routes>
         </Layout>

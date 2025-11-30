@@ -80,7 +80,7 @@ function ServantParamsNpStarSection() {
     setIsRequiredNpStarCalc((prev) => !prev);
   }, [setIsRequiredNpStarCalc]);
   return (
-    <div>
+    <>
       <ToggleWrapper>
         NP・スター計算
         <Switch checked={isRequiredNpStarCalc} onChange={toggleIsRequiredNpStarCalc} />
@@ -92,7 +92,7 @@ function ServantParamsNpStarSection() {
           <HitCountRow />
         </FormContainer>
       </Collapse>
-    </div>
+    </>
   );
 }
 

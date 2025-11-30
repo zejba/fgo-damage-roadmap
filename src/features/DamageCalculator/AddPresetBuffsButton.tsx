@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai';
 import { useCallback } from 'react';
 import { SelectMenu } from '../../components/SelectMenu';
-import { presetBuffOptionsAtom, savedPresetBuffsAtom } from '../../store/myPresetBuffs';
+import { presetBuffSetOptionsAtom, savedPresetBuffSetsAtom } from '../../store/myPresetBuffs';
 import type { Buff } from '../../data/types';
 import { styled } from 'styled-components';
 
@@ -14,28 +14,32 @@ interface AddPresetBuffsButtonProps {
 }
 
 function AddPresetBuffsButton({ addEffect }: AddPresetBuffsButtonProps) {
-  const options = useAtomValue(presetBuffOptionsAtom);
-  const savedBuffs = useAtomValue(savedPresetBuffsAtom);
+  const options = useAtomValue(presetBuffSetOptionsAtom);
+  const savedBuffSets = useAtomValue(savedPresetBuffSetsAtom);
 
   const handleSelect = useCallback(
     (value: string) => {
-      const buff = savedBuffs.find((buff) => buff.id === value);
-      if (buff) {
-        // idを除いて追加 (addEffectが新しいidを生成する)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { id: _, ...buffWithoutId } = buff;
-        addEffect([buffWithoutId]);
+      const buffSet = savedBuffSets.find((set) => set.id === value);
+      if (buffSet) {
+        // セット内の全バフをidを除いて追加 (addEffectが新しいidを生成する)
+        const buffsWithoutId = buffSet.buffs.map((buff) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { id: _, ...buffWithoutId } = buff;
+          return buffWithoutId;
+        });
+        addEffect(buffsWithoutId);
       }
     },
-    [addEffect, savedBuffs]
+    [addEffect, savedBuffSets]
   );
+  console.log('hoge');
 
   return (
     <StyledSelectMenu
       options={options}
-      placeholder="プリセット"
+      placeholder="バフセット"
       onSelect={handleSelect}
-      emptyOptionLabel="設定からプリセットバフを追加できます"
+      emptyOptionLabel="設定からバフセットを追加できます"
     />
   );
 }

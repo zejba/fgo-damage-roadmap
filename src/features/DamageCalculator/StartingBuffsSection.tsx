@@ -16,7 +16,7 @@ function AddClassScoresButton() {
   const addClassScores = useCallback(() => {
     addEffect(classScores);
   }, [addEffect]);
-  return <PrimaryOutlinedButton onClick={addClassScores}>スコア追加</PrimaryOutlinedButton>;
+  return <PrimaryOutlinedButton onClick={addClassScores}>スコア</PrimaryOutlinedButton>;
 }
 
 function BuffFormsSection() {

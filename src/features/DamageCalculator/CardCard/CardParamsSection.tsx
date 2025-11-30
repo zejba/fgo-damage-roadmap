@@ -6,10 +6,18 @@ import { Select } from '../../../components/Select';
 import { Compact } from '../../../components/Compact';
 import { CompactItemText } from '../../../components/CompactItemText';
 import { InputNumber } from '../../../components/InputNumber';
+import { styled } from 'styled-components';
 
 interface CardParamsSectionProps {
   cardParamsAtom: PrimitiveAtom<CardParams>;
 }
+
+const OverKillInput = styled(InputNumber)`
+  width: 60px;
+  @media (max-width: 560px) {
+    width: 28px;
+  }
+`;
 
 export function CardParamsSection(props: CardParamsSectionProps) {
   const { cardParamsAtom } = props;
@@ -60,7 +68,7 @@ export function CardParamsSection(props: CardParamsSectionProps) {
       {isRequiredNpStarCalc && (
         <>
           <CompactItemText>OverKill</CompactItemText>
-          <InputNumber
+          <OverKillInput
             value={cardParams.overKillCount}
             onValueChange={(value) =>
               setCardParams((prev) => ({
@@ -68,7 +76,6 @@ export function CardParamsSection(props: CardParamsSectionProps) {
                 overKillCount: value
               }))
             }
-            style={{ width: 52 }}
           />
         </>
       )}

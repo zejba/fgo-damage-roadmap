@@ -86,13 +86,8 @@ function Sidebar() {
           <Collapse in={settingsOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <ListItem disablePadding>
-                <StyledListItemButton
-                  component={Link}
-                  to="/settings/my-preset-buff"
-                  onClick={handleClose}
-                  sx={{ pl: 4 }}
-                >
-                  <ListItemText primary="プリセットバフ設定" />
+                <StyledListItemButton component={Link} to="/settings/my-buff-set" onClick={handleClose} sx={{ pl: 4 }}>
+                  <ListItemText primary="バフセット設定" />
                 </StyledListItemButton>
               </ListItem>
             </List>
