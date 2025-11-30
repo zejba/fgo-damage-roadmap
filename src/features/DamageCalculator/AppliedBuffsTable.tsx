@@ -84,7 +84,7 @@ function buildTableData(result: ProcessedTurnResult[]): TableRow[] {
         first: `${npOrCrBuffs[0] ?? 0}%`,
         second: `${npOrCrBuffs[1] ?? 0}%`,
         third: `${npOrCrBuffs[2] ?? 0}%`,
-        ex: `${npOrCrBuffs[3] ?? 0}%`
+        ex: '-%'
       },
       {
         turn: null,

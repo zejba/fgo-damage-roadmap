@@ -1,6 +1,7 @@
 import { useAtomValue } from 'jotai';
 import { useMemo, useRef } from 'react';
 import styled from 'styled-components';
+import { Tooltip, TooltipProps } from '@mui/material';
 import {
   damageCalcResultAtom,
   damageCalcResultNpColorAtom,
@@ -43,16 +44,21 @@ type TableRow = {
   turnRowSpan: number;
   first: string;
   firstBgColor?: string;
+  firstBuffs?: { atkBuff: number; cardBuff: number; npOrCrBuff: number; spBuff: number };
   second: string;
   secondBgColor?: string;
+  secondBuffs?: { atkBuff: number; cardBuff: number; npOrCrBuff: number; spBuff: number };
   third: string;
   thirdBgColor?: string;
+  thirdBuffs?: { atkBuff: number; cardBuff: number; npOrCrBuff: number; spBuff: number };
   ex: string;
+  exBuffs?: { atkBuff: number; cardBuff: number; spBuff: number };
   total: string;
   targetDamage: string | null;
   targetDamageRowSpan: number;
   passRate: string | null;
   passRateRowSpan: number;
+  showTooltip?: boolean;
 };
 
 function buildTableData(
@@ -93,6 +99,8 @@ function buildTableData(
     const secondCardInitial = cardInitial[selectedCards[1]];
     const thirdCardInitial = cardInitial[selectedCards[2]];
 
+    const { atkBuffs, cardBuffs, npOrCrBuffs, spBuffs } = turnResult;
+
     const rows: TableRow[] = [
       {
         turn: `${turnIndex + 1}`,
@@ -108,46 +116,107 @@ function buildTableData(
         targetDamage: '-',
         targetDamageRowSpan: 1,
         passRate: '-',
-        passRateRowSpan: 1
+        passRateRowSpan: 1,
+        showTooltip: false
       },
       {
         turn: null,
         turnRowSpan: 0,
         first: damage90[0].toLocaleString(),
+        firstBuffs: {
+          atkBuff: atkBuffs[0] ?? 0,
+          cardBuff: cardBuffs[0] ?? 0,
+          npOrCrBuff: npOrCrBuffs[0] ?? 0,
+          spBuff: spBuffs[0] ?? 0
+        },
         second: damage90[1].toLocaleString(),
+        secondBuffs: {
+          atkBuff: atkBuffs[1] ?? 0,
+          cardBuff: cardBuffs[1] ?? 0,
+          npOrCrBuff: npOrCrBuffs[1] ?? 0,
+          spBuff: spBuffs[1] ?? 0
+        },
         third: damage90[2].toLocaleString(),
+        thirdBuffs: {
+          atkBuff: atkBuffs[2] ?? 0,
+          cardBuff: cardBuffs[2] ?? 0,
+          npOrCrBuff: npOrCrBuffs[2] ?? 0,
+          spBuff: spBuffs[2] ?? 0
+        },
         ex: damage90[3].toLocaleString(),
+        exBuffs: { atkBuff: atkBuffs[3] ?? 0, cardBuff: cardBuffs[3] ?? 0, spBuff: spBuffs[3] ?? 0 },
         total: damage90Sum.toLocaleString(),
         targetDamage: targetDamage.toLocaleString(),
         targetDamageRowSpan: 3,
         passRate: `${passRate}%`,
-        passRateRowSpan: 3
+        passRateRowSpan: 3,
+        showTooltip: true
       },
       {
         turn: null,
         turnRowSpan: 0,
         first: damage100[0].toLocaleString(),
+        firstBuffs: {
+          atkBuff: atkBuffs[0] ?? 0,
+          cardBuff: cardBuffs[0] ?? 0,
+          npOrCrBuff: npOrCrBuffs[0] ?? 0,
+          spBuff: spBuffs[0] ?? 0
+        },
         second: damage100[1].toLocaleString(),
+        secondBuffs: {
+          atkBuff: atkBuffs[1] ?? 0,
+          cardBuff: cardBuffs[1] ?? 0,
+          npOrCrBuff: npOrCrBuffs[1] ?? 0,
+          spBuff: spBuffs[1] ?? 0
+        },
         third: damage100[2].toLocaleString(),
+        thirdBuffs: {
+          atkBuff: atkBuffs[2] ?? 0,
+          cardBuff: cardBuffs[2] ?? 0,
+          npOrCrBuff: npOrCrBuffs[2] ?? 0,
+          spBuff: spBuffs[2] ?? 0
+        },
         ex: damage100[3].toLocaleString(),
+        exBuffs: { atkBuff: atkBuffs[3] ?? 0, cardBuff: cardBuffs[3] ?? 0, spBuff: spBuffs[3] ?? 0 },
         total: damage100Sum.toLocaleString(),
         targetDamage: null,
         targetDamageRowSpan: 0,
         passRate: null,
-        passRateRowSpan: 0
+        passRateRowSpan: 0,
+        showTooltip: true
       },
       {
         turn: null,
         turnRowSpan: 0,
         first: damage110[0].toLocaleString(),
+        firstBuffs: {
+          atkBuff: atkBuffs[0] ?? 0,
+          cardBuff: cardBuffs[0] ?? 0,
+          npOrCrBuff: npOrCrBuffs[0] ?? 0,
+          spBuff: spBuffs[0] ?? 0
+        },
         second: damage110[1].toLocaleString(),
+        secondBuffs: {
+          atkBuff: atkBuffs[1] ?? 0,
+          cardBuff: cardBuffs[1] ?? 0,
+          npOrCrBuff: npOrCrBuffs[1] ?? 0,
+          spBuff: spBuffs[1] ?? 0
+        },
         third: damage110[2].toLocaleString(),
+        thirdBuffs: {
+          atkBuff: atkBuffs[2] ?? 0,
+          cardBuff: cardBuffs[2] ?? 0,
+          npOrCrBuff: npOrCrBuffs[2] ?? 0,
+          spBuff: spBuffs[2] ?? 0
+        },
         ex: damage110[3].toLocaleString(),
+        exBuffs: { atkBuff: atkBuffs[3] ?? 0, cardBuff: cardBuffs[3] ?? 0, spBuff: spBuffs[3] ?? 0 },
         total: damage110Sum.toLocaleString(),
         targetDamage: null,
         targetDamageRowSpan: 0,
         passRate: null,
-        passRateRowSpan: 0
+        passRateRowSpan: 0,
+        showTooltip: true
       }
     ];
 
@@ -199,6 +268,38 @@ function buildTableData(
   });
 }
 
+const TooltipContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.875rem;
+`;
+
+function createTooltipContent(buffs: { atkBuff: number; cardBuff: number; npOrCrBuff: number; spBuff: number }) {
+  return (
+    <TooltipContent>
+      <div>攻撃力バフ: {buffs.atkBuff}%</div>
+      <div>カードバフ: {buffs.cardBuff}%</div>
+      <div>宝具/クリバフ: {buffs.npOrCrBuff}%</div>
+      <div>特攻バフ: {buffs.spBuff}%</div>
+    </TooltipContent>
+  );
+}
+
+function createExTooltipContent(buffs: { atkBuff: number; cardBuff: number; spBuff: number }) {
+  return (
+    <TooltipContent>
+      <div>攻撃力バフ: {buffs.atkBuff}%</div>
+      <div>カードバフ: {buffs.cardBuff}%</div>
+      <div>特攻バフ: {buffs.spBuff}%</div>
+    </TooltipContent>
+  );
+}
+
+function BuffTooltip(props: TooltipProps) {
+  return <Tooltip arrow placement="top-start" enterTouchDelay={0} {...props} />;
+}
+
 function ResultTable() {
   const result = useAtomValue(damageCalcResultAtom);
   const isColored = useAtomValue(isColoredAtom);
@@ -234,10 +335,34 @@ function ResultTable() {
                     {row.turn}
                   </td>
                 )}
-                <td style={{ backgroundColor: row.firstBgColor }}>{row.first}</td>
-                <td style={{ backgroundColor: row.secondBgColor }}>{row.second}</td>
-                <td style={{ backgroundColor: row.thirdBgColor }}>{row.third}</td>
-                <td>{row.ex}</td>
+                {row.showTooltip && row.firstBuffs ? (
+                  <BuffTooltip title={createTooltipContent(row.firstBuffs)}>
+                    <td style={{ backgroundColor: row.firstBgColor }}>{row.first}</td>
+                  </BuffTooltip>
+                ) : (
+                  <td style={{ backgroundColor: row.firstBgColor }}>{row.first}</td>
+                )}
+                {row.showTooltip && row.secondBuffs ? (
+                  <BuffTooltip title={createTooltipContent(row.secondBuffs)}>
+                    <td style={{ backgroundColor: row.secondBgColor }}>{row.second}</td>
+                  </BuffTooltip>
+                ) : (
+                  <td style={{ backgroundColor: row.secondBgColor }}>{row.second}</td>
+                )}
+                {row.showTooltip && row.thirdBuffs ? (
+                  <BuffTooltip title={createTooltipContent(row.thirdBuffs)}>
+                    <td style={{ backgroundColor: row.thirdBgColor }}>{row.third}</td>
+                  </BuffTooltip>
+                ) : (
+                  <td style={{ backgroundColor: row.thirdBgColor }}>{row.third}</td>
+                )}
+                {row.showTooltip && row.exBuffs ? (
+                  <BuffTooltip title={createExTooltipContent(row.exBuffs)}>
+                    <td>{row.ex}</td>
+                  </BuffTooltip>
+                ) : (
+                  <td>{row.ex}</td>
+                )}
                 <td>{row.total}</td>
                 {row.targetDamageRowSpan > 0 && <td rowSpan={row.targetDamageRowSpan}>{row.targetDamage}</td>}
                 {row.passRateRowSpan > 0 && <td rowSpan={row.passRateRowSpan}>{row.passRate}</td>}
