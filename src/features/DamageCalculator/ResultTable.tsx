@@ -1,7 +1,6 @@
-import { Flex, Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
 import { useAtomValue } from 'jotai';
 import { useMemo, useRef } from 'react';
+import styled from 'styled-components';
 import {
   damageCalcResultAtom,
   damageCalcResultNpColorAtom,
@@ -13,110 +12,57 @@ import { CardColor } from '../../data/types';
 import { isColoredAtom } from '../../store/jotai';
 import SaveResultAsImageButton from './SaveResultAsImageButton';
 
-type RecordType = {
-  key: string;
+const StyledTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid black;
+
+  th,
+  td {
+    border: 1px solid black;
+    text-align: center;
+    padding: 16px 12px;
+  }
+
+  th {
+    background-color: #fafafa;
+    font-weight: bold;
+  }
+
+  @media (max-width: 560px) {
+    th,
+    td {
+      font-size: 0.55rem !important;
+      padding: 8px 4px !important;
+    }
+  }
+`;
+
+type TableRow = {
   turn: string | null;
-  headerRowSpan: number;
+  turnRowSpan: number;
   first: string;
+  firstBgColor?: string;
   second: string;
+  secondBgColor?: string;
   third: string;
+  thirdBgColor?: string;
   ex: string;
   total: string;
   targetDamage: string | null;
+  targetDamageRowSpan: number;
   passRate: string | null;
+  passRateRowSpan: number;
 };
 
-function defineColumns(isColored: boolean, npColor: CardColor | undefined): ColumnsType<RecordType> {
+function buildTableData(
+  result: ProcessedTurnResult[],
+  isNpStarCalculated: boolean,
+  isColored: boolean,
+  npColor: CardColor | undefined
+): TableRow[] {
   const npColorStyle = npColor ? cardColorStyles[npColor] : undefined;
-  const columns: ColumnsType<RecordType> = [
-    {
-      title: 'T',
-      dataIndex: 'turn',
-      key: 'turn',
-      onCell: (record) => ({
-        rowSpan: record.headerRowSpan,
-        style: {
-          width: 0
-        }
-      })
-    },
-    {
-      title: '1st',
-      dataIndex: 'first',
-      key: 'first',
-      onCell: (record) => {
-        const backgroundColor = record.first === 'N' ? npColorStyle : cardColorStyles[record.first as CardColor];
-        return record.turn && isColored
-          ? {
-              style: {
-                backgroundColor
-              }
-            }
-          : {};
-      }
-    },
-    {
-      title: '2nd',
-      dataIndex: 'second',
-      key: 'second',
-      onCell: (record) => {
-        const backgroundColor = record.second === 'N' ? npColorStyle : cardColorStyles[record.second as CardColor];
-        return record.turn && isColored
-          ? {
-              style: {
-                backgroundColor
-              }
-            }
-          : {};
-      }
-    },
-    {
-      title: '3rd',
-      dataIndex: 'third',
-      key: 'third',
-      onCell: (record) => {
-        const backgroundColor = record.third === 'N' ? npColorStyle : cardColorStyles[record.third as CardColor];
-        return record.turn && isColored
-          ? {
-              style: {
-                backgroundColor
-              }
-            }
-          : {};
-      }
-    },
-    {
-      title: 'EX',
-      dataIndex: 'ex',
-      key: 'ex'
-    },
-    {
-      title: 'total',
-      dataIndex: 'total',
-      key: 'total'
-    },
-    {
-      title: '目標ダメ',
-      dataIndex: 'targetDamage',
-      key: 'targetDamage',
-      onCell: (record) => ({
-        rowSpan: record.targetDamage === '-' ? 1 : record.targetDamage ? 3 : 0
-      })
-    },
-    {
-      title: '撃破率',
-      dataIndex: 'passRate',
-      key: 'passRate',
-      onCell: (record) => {
-        return {
-          rowSpan: record.passRate === '-' ? 1 : record.passRate ? 3 : 0
-        };
-      }
-    }
-  ];
-  return columns;
-}
-function buildDataSource(result: ProcessedTurnResult[], isNpStarCalculated: boolean): RecordType[] {
+
   return result.flatMap((turnResult, turnIndex) => {
     const {
       selectedCards,
@@ -137,96 +83,119 @@ function buildDataSource(result: ProcessedTurnResult[], isNpStarCalculated: bool
     const totalNp = Math.round(nps.reduce((a, b) => a + b * 100, 0)) / 100;
     const totalMinStar = minStars.reduce((a, b) => a + b, 0);
     const totalMaxStar = maxStars.reduce((a, b) => a + b, 0);
-    return [
+
+    const getCardBgColor = (cardInitialValue: string) => {
+      if (!isColored) return undefined;
+      return cardInitialValue === 'N' ? npColorStyle : cardColorStyles[cardInitialValue as CardColor];
+    };
+
+    const firstCardInitial = cardInitial[selectedCards[0]];
+    const secondCardInitial = cardInitial[selectedCards[1]];
+    const thirdCardInitial = cardInitial[selectedCards[2]];
+
+    const rows: TableRow[] = [
       {
-        key: `turn-${turnIndex + 1}-header`,
         turn: `${turnIndex + 1}`,
-        headerRowSpan: 4,
-        first: cardInitial[selectedCards[0]],
-        second: cardInitial[selectedCards[1]],
-        third: cardInitial[selectedCards[2]],
+        turnRowSpan: 4,
+        first: firstCardInitial,
+        firstBgColor: getCardBgColor(firstCardInitial),
+        second: secondCardInitial,
+        secondBgColor: getCardBgColor(secondCardInitial),
+        third: thirdCardInitial,
+        thirdBgColor: getCardBgColor(thirdCardInitial),
         ex: '-',
         total: '-',
         targetDamage: '-',
-        passRate: '-'
+        targetDamageRowSpan: 1,
+        passRate: '-',
+        passRateRowSpan: 1
       },
       {
-        key: `turn-${turnIndex + 1}-90`,
         turn: null,
-        headerRowSpan: 0,
+        turnRowSpan: 0,
         first: damage90[0].toLocaleString(),
         second: damage90[1].toLocaleString(),
         third: damage90[2].toLocaleString(),
         ex: damage90[3].toLocaleString(),
         total: damage90Sum.toLocaleString(),
         targetDamage: targetDamage.toLocaleString(),
-        passRate: `${passRate}%`
+        targetDamageRowSpan: 3,
+        passRate: `${passRate}%`,
+        passRateRowSpan: 3
       },
       {
-        key: `turn-${turnIndex + 1}-100`,
         turn: null,
-        headerRowSpan: 0,
+        turnRowSpan: 0,
         first: damage100[0].toLocaleString(),
         second: damage100[1].toLocaleString(),
         third: damage100[2].toLocaleString(),
         ex: damage100[3].toLocaleString(),
         total: damage100Sum.toLocaleString(),
         targetDamage: null,
-        passRate: null
+        targetDamageRowSpan: 0,
+        passRate: null,
+        passRateRowSpan: 0
       },
       {
-        key: `turn-${turnIndex + 1}-110`,
         turn: null,
-        headerRowSpan: 0,
+        turnRowSpan: 0,
         first: damage110[0].toLocaleString(),
         second: damage110[1].toLocaleString(),
         third: damage110[2].toLocaleString(),
         ex: damage110[3].toLocaleString(),
         total: damage110Sum.toLocaleString(),
         targetDamage: null,
-        passRate: null
-      },
-      ...(!isNpStarCalculated
-        ? []
-        : [
-            {
-              key: `turn-${turnIndex + 1}-np`,
-              turn: 'NP',
-              headerRowSpan: 1,
-              first: `${nps[0]}%`,
-              second: `${nps[1]}%`,
-              third: `${nps[2]}%`,
-              ex: `${nps[3]}%`,
-              total: `${totalNp}%`,
-              targetDamage: '-',
-              passRate: '-'
-            },
-            {
-              key: `turn-${turnIndex + 1}-star`,
-              turn: '星',
-              headerRowSpan: 2,
-              first: `${minStars[0]} - ${maxStars[0]}`,
-              second: `${minStars[1]} - ${maxStars[1]}`,
-              third: `${minStars[2]} - ${maxStars[2]}`,
-              ex: `${minStars[3]} - ${maxStars[3]}`,
-              total: `${totalMinStar} - ${totalMaxStar}`,
-              targetDamage: '-',
-              passRate: '-'
-            },
-            {
-              key: `turn-${turnIndex + 1}-star-rate`,
-              turn: null,
-              headerRowSpan: 0,
-              first: `${minStarRates[0]}% - ${maxStarRates[0]}%`,
-              second: `${minStarRates[1]}% - ${maxStarRates[1]}%`,
-              third: `${minStarRates[2]}% - ${maxStarRates[2]}%`,
-              ex: `${minStarRates[3]}% - ${maxStarRates[3]}%`,
-              total: '-',
-              targetDamage: '-',
-              passRate: '-'
-            }
-          ])
+        targetDamageRowSpan: 0,
+        passRate: null,
+        passRateRowSpan: 0
+      }
     ];
+
+    if (isNpStarCalculated) {
+      rows.push(
+        {
+          turn: 'NP',
+          turnRowSpan: 1,
+          first: `${nps[0]}%`,
+          second: `${nps[1]}%`,
+          third: `${nps[2]}%`,
+          ex: `${nps[3]}%`,
+          total: `${totalNp}%`,
+          targetDamage: '-',
+          targetDamageRowSpan: 1,
+          passRate: '-',
+          passRateRowSpan: 1
+        },
+        {
+          turn: '星',
+          turnRowSpan: 2,
+          first: `${minStars[0]} - ${maxStars[0]}`,
+          second: `${minStars[1]} - ${maxStars[1]}`,
+          third: `${minStars[2]} - ${maxStars[2]}`,
+          ex: `${minStars[3]} - ${maxStars[3]}`,
+          total: `${totalMinStar} - ${totalMaxStar}`,
+          targetDamage: '-',
+          targetDamageRowSpan: 1,
+          passRate: '-',
+          passRateRowSpan: 1
+        },
+        {
+          turn: null,
+          turnRowSpan: 0,
+          first: `${minStarRates[0]}% - ${maxStarRates[0]}%`,
+          second: `${minStarRates[1]}% - ${maxStarRates[1]}%`,
+          third: `${minStarRates[2]}% - ${maxStarRates[2]}%`,
+          ex: `${minStarRates[3]}% - ${maxStarRates[3]}%`,
+          total: '-',
+          targetDamage: '-',
+          targetDamageRowSpan: 1,
+          passRate: '-',
+          passRateRowSpan: 1
+        }
+      );
+    }
+
+    return rows;
   });
 }
 
@@ -235,26 +204,52 @@ function ResultTable() {
   const isColored = useAtomValue(isColoredAtom);
   const npColor = useAtomValue(damageCalcResultNpColorAtom);
   const isNpStarCalculated = useAtomValue(isNpStarCalculatedAtom);
-  const dataSource = useMemo(() => buildDataSource(result, isNpStarCalculated), [result, isNpStarCalculated]);
-  const columns = useMemo(() => defineColumns(isColored, npColor), [isColored, npColor]);
+  const tableData = useMemo(
+    () => buildTableData(result, isNpStarCalculated, isColored, npColor),
+    [result, isNpStarCalculated, isColored, npColor]
+  );
   const tableRef = useRef<HTMLDivElement>(null);
 
   return (
-    <Flex vertical>
+    <div>
       <div ref={tableRef}>
-        <Table
-          columns={columns}
-          dataSource={dataSource}
-          pagination={false}
-          rowHoverable={false}
-          bordered
-          footer={() => null}
-        />
+        <StyledTable>
+          <thead>
+            <tr>
+              <th>T</th>
+              <th>1st</th>
+              <th>2nd</th>
+              <th>3rd</th>
+              <th>EX</th>
+              <th>total</th>
+              <th>目標ダメ</th>
+              <th>撃破率</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tableData.map((row, index) => (
+              <tr key={index}>
+                {row.turnRowSpan > 0 && (
+                  <td rowSpan={row.turnRowSpan} style={{ width: 0 }}>
+                    {row.turn}
+                  </td>
+                )}
+                <td style={{ backgroundColor: row.firstBgColor }}>{row.first}</td>
+                <td style={{ backgroundColor: row.secondBgColor }}>{row.second}</td>
+                <td style={{ backgroundColor: row.thirdBgColor }}>{row.third}</td>
+                <td>{row.ex}</td>
+                <td>{row.total}</td>
+                {row.targetDamageRowSpan > 0 && <td rowSpan={row.targetDamageRowSpan}>{row.targetDamage}</td>}
+                {row.passRateRowSpan > 0 && <td rowSpan={row.passRateRowSpan}>{row.passRate}</td>}
+              </tr>
+            ))}
+          </tbody>
+        </StyledTable>
       </div>
       <div style={{ textAlign: 'right', marginRight: 4, marginTop: 4 }}>
         <SaveResultAsImageButton targetRef={tableRef} />
       </div>
-    </Flex>
+    </div>
   );
 }
 

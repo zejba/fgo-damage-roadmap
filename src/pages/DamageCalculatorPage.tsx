@@ -64,18 +64,9 @@ const TableWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  min-width: fit-content;
 
   @media (max-width: 780px) {
     gap: 12px;
-    .ant-table-cell {
-      font-size: 0.55rem !important;
-      font-weight: bold;
-      padding: 8px 4px !important;
-    }
-    .ant-table-footer {
-      padding: 8px !important;
-    }
   }
 `;
 

@@ -1,26 +1,47 @@
-import { Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
 import { useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 import { damageCalcResultAtom } from '../../store/damageCalcResult';
 import type { ProcessedTurnResult } from '../../utils/calcDamage';
 import styled from 'styled-components';
 
-const StyledTable = styled(Table)`
+const StyledTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid black;
+
+  th,
+  td {
+    border: 1px solid black;
+    text-align: center;
+    padding: 16px 12px;
+  }
+
+  th {
+    background-color: #fafafa;
+    font-weight: bold;
+  }
+
   .buff-type-cell {
     width: 160px;
   }
+
   @media (max-width: 780px) {
     .buff-type-cell {
       width: 84px;
     }
-  }
-` as typeof Table;
 
-type RecordType = {
-  key: string;
+    th,
+    td {
+      font-size: 0.55rem !important;
+      padding: 8px 4px !important;
+    }
+  }
+`;
+
+type TableRow = {
   turn: string | null;
-  buffType: 'atkBuff' | 'cardBuff' | 'npOrCrBuff' | 'spBuff' | null;
+  turnRowSpan: number;
+  buffType: 'atkBuff' | 'cardBuff' | 'npOrCrBuff' | 'spBuff';
   first: string;
   second: string;
   third: string;
@@ -34,85 +55,41 @@ const localizedBuffType = {
   spBuff: '特攻バフ'
 } as const;
 
-const columns: ColumnsType<RecordType> = [
-  {
-    title: 'T',
-    dataIndex: 'turn',
-    key: 'turn',
-    onCell: (record) => ({
-      rowSpan: record.turn ? 4 : 0,
-      style: {
-        width: 0
-      }
-    })
-  },
-  {
-    title: '',
-    dataIndex: 'buffType',
-    key: 'buffType',
-    render: (_, record) => (record.buffType ? localizedBuffType[record.buffType] : ''),
-    onCell: () => ({
-      className: 'buff-type-cell'
-    })
-  },
-  {
-    title: '1st',
-    dataIndex: 'first',
-    key: 'first'
-  },
-  {
-    title: '2nd',
-    dataIndex: 'second',
-    key: 'second'
-  },
-  {
-    title: '3rd',
-    dataIndex: 'third',
-    key: 'third'
-  },
-  {
-    title: 'EX',
-    dataIndex: 'ex',
-    key: 'ex'
-  }
-];
-
-function buildDataSource(result: ProcessedTurnResult[]): RecordType[] {
+function buildTableData(result: ProcessedTurnResult[]): TableRow[] {
   return result.flatMap((turnResult, turnIndex) => {
     const { atkBuffs, cardBuffs, npOrCrBuffs, spBuffs } = turnResult;
     return [
       {
-        key: `turn-${turnIndex + 1}-atkBuff`,
         turn: `${turnIndex + 1}`,
-        headerRowSpan: 4,
-        buffType: 'atkBuff',
+        turnRowSpan: 4,
+        buffType: 'atkBuff' as const,
         first: `${atkBuffs[0] ?? 0}%`,
         second: `${atkBuffs[1] ?? 0}%`,
         third: `${atkBuffs[2] ?? 0}%`,
         ex: `${atkBuffs[3] ?? 0}%`
       },
       {
-        key: `turn-${turnIndex + 1}-cardBuff`,
         turn: null,
-        buffType: 'cardBuff',
+        turnRowSpan: 0,
+        buffType: 'cardBuff' as const,
         first: `${cardBuffs[0] ?? 0}%`,
         second: `${cardBuffs[1] ?? 0}%`,
         third: `${cardBuffs[2] ?? 0}%`,
         ex: `${cardBuffs[3] ?? 0}%`
       },
       {
-        key: `turn-${turnIndex + 1}-npOrCrBuff`,
         turn: null,
-        buffType: 'npOrCrBuff',
+        turnRowSpan: 0,
+        buffType: 'npOrCrBuff' as const,
         first: `${npOrCrBuffs[0] ?? 0}%`,
         second: `${npOrCrBuffs[1] ?? 0}%`,
         third: `${npOrCrBuffs[2] ?? 0}%`,
         ex: `${npOrCrBuffs[3] ?? 0}%`
       },
       {
-        key: `turn-${turnIndex + 1}-spBuff`,
         turn: null,
-        buffType: 'spBuff',
+        turnRowSpan: 0,
+        buffType: 'spBuff' as const,
         first: `${spBuffs[0] ?? 0}%`,
         second: `${spBuffs[1] ?? 0}%`,
         third: `${spBuffs[2] ?? 0}%`,
@@ -124,16 +101,37 @@ function buildDataSource(result: ProcessedTurnResult[]): RecordType[] {
 
 function AppliedBuffsTable() {
   const result = useAtomValue(damageCalcResultAtom);
-  const dataSource = useMemo(() => buildDataSource(result), [result]);
+  const tableData = useMemo(() => buildTableData(result), [result]);
+
   return (
-    <StyledTable
-      columns={columns}
-      dataSource={dataSource}
-      pagination={false}
-      rowHoverable={false}
-      bordered
-      footer={() => null}
-    />
+    <StyledTable>
+      <thead>
+        <tr>
+          <th>T</th>
+          <th className="buff-type-cell"></th>
+          <th>1st</th>
+          <th>2nd</th>
+          <th>3rd</th>
+          <th>EX</th>
+        </tr>
+      </thead>
+      <tbody>
+        {tableData.map((row, index) => (
+          <tr key={index}>
+            {row.turnRowSpan > 0 && (
+              <td rowSpan={row.turnRowSpan} style={{ width: 0 }}>
+                {row.turn}
+              </td>
+            )}
+            <td className="buff-type-cell">{localizedBuffType[row.buffType]}</td>
+            <td>{row.first}</td>
+            <td>{row.second}</td>
+            <td>{row.third}</td>
+            <td>{row.ex}</td>
+          </tr>
+        ))}
+      </tbody>
+    </StyledTable>
   );
 }
 
