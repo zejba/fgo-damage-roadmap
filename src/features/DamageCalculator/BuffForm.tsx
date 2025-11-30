@@ -16,9 +16,9 @@ const StyledButton = styled(PrimaryOutlinedButton)`
   display: flex;
   align-items: center;
   @media (max-width: 560px) {
-    padding: 0;
+    padding: 0 2px;
     .MuiSvgIcon-root {
-      height: 0.8em;
+      height: 0.75em;
     }
   }
 `;
@@ -31,7 +31,7 @@ const TitleInput = styled(Input)`
 const AmountInput = styled(InputNumber)`
   width: 60px;
   @media (max-width: 560px) {
-    width: 40px;
+    width: 36px;
   }
 `;
 

@@ -70,7 +70,7 @@ const ToggleWrapper = styled.label`
   align-items: center;
   margin-left: 8px;
   @media (max-width: 560px) {
-    font-size: 0.8em;
+    font-size: 0.75em;
   }
 `;
 

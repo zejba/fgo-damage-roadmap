@@ -32,7 +32,6 @@ function AddPresetBuffsButton({ addEffect }: AddPresetBuffsButtonProps) {
     },
     [addEffect, savedBuffSets]
   );
-  console.log('hoge');
 
   return (
     <StyledSelectMenu

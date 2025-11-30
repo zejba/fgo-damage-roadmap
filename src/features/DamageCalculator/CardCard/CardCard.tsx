@@ -50,7 +50,7 @@ function CardCardInner(props: CardCardInnerProps) {
         <CardParamsSection cardParamsAtom={cardParamsAtom} />
       </div>
       <FormContainer style={{ gap: 2, width: '100%' }}>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: 'flex', gap: 4 }}>
           <AddBuffButton onClick={addBuff} />
           <AddPresetBuffsButton addEffect={addBuffFromPreset} />
         </div>

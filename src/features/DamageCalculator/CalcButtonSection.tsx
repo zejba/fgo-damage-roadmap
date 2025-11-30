@@ -26,7 +26,7 @@ const ToggleWrapper = styled.label`
   display: flex;
   align-items: center;
   @media (max-width: 560px) {
-    font-size: 0.8em;
+    font-size: 0.75em;
   }
 `;
 

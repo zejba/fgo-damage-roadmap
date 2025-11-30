@@ -32,12 +32,7 @@ export const Compact = styled.div`
       height: 28px;
     }
     * {
-      font-size: 0.8em;
-    }
-  }
-  @media (max-width: 380px) {
-    * {
-      font-size: 0.7em;
+      font-size: 0.75em;
     }
   }
 `;

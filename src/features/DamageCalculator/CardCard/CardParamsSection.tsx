@@ -23,6 +23,7 @@ export function CardParamsSection(props: CardParamsSectionProps) {
   const { cardParamsAtom } = props;
   const [cardParams, setCardParams] = useAtom(cardParamsAtom);
   const isEx = cardParams.type === 'extra';
+  const isN = cardParams.type === 'noblePhantasm';
   const isRequiredNpStarCalc = useAtomValue(isRequiredNpStarCalcAtom);
   return (
     <Compact>
@@ -36,7 +37,7 @@ export function CardParamsSection(props: CardParamsSectionProps) {
           onValueChange={(value) => setCardParams((prev) => ({ ...prev, type: value }))}
         />
       )}
-      {!isEx && (
+      {!isEx && !isN && (
         <label
           style={{
             display: 'flex',
