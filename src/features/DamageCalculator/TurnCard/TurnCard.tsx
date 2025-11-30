@@ -4,6 +4,7 @@ import { splitAtom, useAtomCallback } from 'jotai/utils';
 import { memo, useCallback, useMemo } from 'react';
 import { v4 } from 'uuid';
 import AddBuffButton from '../../../components/AddBuffButton';
+import AddPresetBuffsButton from '../AddPresetBuffsButton';
 import type { TurnFormValue } from '../../../data/types';
 import { defaultBuff } from '../../../store/startingBuffs';
 import { CardCard } from '../CardCard/CardCard';
@@ -38,11 +39,24 @@ const TurnCardInner = memo((props: TurnCardInnerProps) => {
       [turnBuffsAtom]
     )
   );
+
+  const addTurnBuffFromPreset = useAtomCallback(
+    useCallback(
+      (get, set, buffs: Omit<typeof defaultBuff, 'id'>[]) => {
+        set(turnBuffsAtom, [...get(turnBuffsAtom), ...buffs.map((buff) => ({ ...buff, id: v4() }))]);
+      },
+      [turnBuffsAtom]
+    )
+  );
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start', width: '100%' }}>
       <TurnParamsSection turnParamsAtom={turnParamsAtom} />
       <FormContainer style={{ gap: 2, width: '100%' }}>
-        <AddBuffButton onClick={addTurnBuff} />
+        <div style={{ display: 'flex', gap: 8 }}>
+          <AddBuffButton onClick={addTurnBuff} />
+          <AddPresetBuffsButton addEffect={addTurnBuffFromPreset} />
+        </div>
         <TurnStartingBuffForms turnBuffAtomsAtom={turnBuffAtomsAtom} />
       </FormContainer>
       <CardCard title="1st" cardAtom={card1Atom} />

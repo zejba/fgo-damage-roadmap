@@ -5,6 +5,7 @@ import { classScores } from '../../data/templateBuffs';
 import type { Buff } from '../../data/types';
 import { addBuffsAtom, defaultBuff, startingBuffAtomsAtom } from '../../store/startingBuffs';
 import AddTemplateBuffsButton from './AddTemplateBuffsButton';
+import AddPresetBuffsButton from './AddPresetBuffsButton';
 import { MemoizedBuffForm } from './BuffForm';
 import { Card } from '../../components/Card';
 import { FormContainer } from '../../components/FormContainer';
@@ -55,6 +56,7 @@ export function StartingBuffsSection() {
           <AddBuffButton onClick={handleAddBuff} />
           <AddClassScoresButton />
           <AddTemplateBuffsButton />
+          <AddPresetBuffsButton addEffect={addBuff} />
         </div>
         <BuffFormsSection />
       </FormContainer>

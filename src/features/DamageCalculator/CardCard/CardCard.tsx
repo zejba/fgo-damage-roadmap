@@ -4,6 +4,7 @@ import { splitAtom, useAtomCallback } from 'jotai/utils';
 import { type SetStateAction, memo, useCallback, useMemo } from 'react';
 import { v4 } from 'uuid';
 import AddBuffButton from '../../../components/AddBuffButton';
+import AddPresetBuffsButton from '../AddPresetBuffsButton';
 import type { Buff, CardFormValue, CardParams } from '../../../data/types';
 import { isColoredAtom } from '../../../store/jotai';
 import { npColorAtom } from '../../../store/servantParams';
@@ -32,6 +33,16 @@ function CardCardInner(props: CardCardInnerProps) {
       [cardBuffsAtom]
     )
   );
+
+  const addBuffFromPreset = useAtomCallback(
+    useCallback(
+      (get, set, buffs: Omit<typeof defaultBuff, 'id'>[]) => {
+        set(cardBuffsAtom, [...get(cardBuffsAtom), ...buffs.map((buff) => ({ ...buff, id: v4() }))]);
+      },
+      [cardBuffsAtom]
+    )
+  );
+
   return (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start' }}>
       <div style={{ display: 'flex', gap: 8, width: '100%' }}>
@@ -39,7 +50,10 @@ function CardCardInner(props: CardCardInnerProps) {
         <CardParamsSection cardParamsAtom={cardParamsAtom} />
       </div>
       <FormContainer style={{ gap: 2, width: '100%' }}>
-        <AddBuffButton onClick={addBuff} />
+        <div style={{ display: 'flex', gap: 8 }}>
+          <AddBuffButton onClick={addBuff} />
+          <AddPresetBuffsButton addEffect={addBuffFromPreset} />
+        </div>
         <CardBuffForms cardBuffAtomsAtom={cardBuffAtomsAtom} />
       </FormContainer>
     </div>

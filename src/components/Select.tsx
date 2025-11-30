@@ -15,10 +15,11 @@ export interface SelectProps<T extends string | null>
   value: T;
   options: { value: NonNullable<T>; label: string }[];
   placeholder?: string;
+  emptyOptionLabel?: string;
 }
 
 export function Select<T extends string | null>(props: SelectProps<T>) {
-  const { onValueChange, onChange, value, options, placeholder, style, ...rest } = props;
+  const { onValueChange, onChange, value, options, placeholder, emptyOptionLabel, style, ...rest } = props;
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value === '' ? null : e.target.value;
     onValueChange?.(value as T);
@@ -38,7 +39,7 @@ export function Select<T extends string | null>(props: SelectProps<T>) {
       )}
       {options.length === 0 && (
         <option value="NO_OPTIONS" disabled>
-          No options
+          {emptyOptionLabel ?? 'No options'}
         </option>
       )}
       {options?.map((option) => {
