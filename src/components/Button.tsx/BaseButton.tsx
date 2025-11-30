@@ -28,9 +28,9 @@ export function BaseButton(props: BaseButtonProps) {
   const { startIcon, endIcon, children, ...rest } = props;
   return (
     <StyledButton {...rest}>
-      {startIcon && <span style={{ marginRight: 6 }}>{startIcon}</span>}
+      {startIcon && <span style={{ marginRight: 4 }}>{startIcon}</span>}
       {children}
-      {endIcon && <span style={{ marginLeft: 6 }}>{endIcon}</span>}
+      {endIcon && <span style={{ marginLeft: 4 }}>{endIcon}</span>}
     </StyledButton>
   );
 }

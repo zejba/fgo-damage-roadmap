@@ -70,7 +70,7 @@ export function CardCard(props: CardCardProps) {
     return cardColorStyles[cardType];
   }, [isColored, cardType, npColor]);
   return (
-    <Card title={null} style={{ width: '100%', backgroundColor: bgColor, transition: 'background-color 0.2s' }}>
+    <Card header={null} style={{ width: '100%', backgroundColor: bgColor, transition: 'background-color 0.2s' }}>
       <MemoizedCardCardInner title={title} cardParamsAtom={cardParamsAtom} cardBuffsAtom={cardBuffsAtom} />
     </Card>
   );

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { message } from 'antd';
 import { FileAddOutlined } from '@ant-design/icons';
+import { useSnackbar } from '../../hooks/useSnackbarContext';
 import { validateDamageCalcFormValue } from '../../zod-schema/damageCalcFormSchema';
 import { setFormDataAtom } from '../../store/formData';
 import { useSetAtom } from 'jotai';
@@ -13,10 +13,11 @@ interface ImportFormValuesButtonProps {
 
 export function ImportFormValuesButton({ file, disabled }: ImportFormValuesButtonProps) {
   const setFormData = useSetAtom(setFormDataAtom);
+  const snackbar = useSnackbar();
 
   const handleClick = useCallback(() => {
     if (!file) {
-      message.error('ファイルが選択されていません');
+      snackbar.error('ファイルが選択されていません');
       return;
     }
     const reader = new FileReader();
@@ -27,18 +28,18 @@ export function ImportFormValuesButton({ file, disabled }: ImportFormValuesButto
         }
         const data = validateDamageCalcFormValue(JSON.parse(e.target.result));
         setFormData(data);
-        message.success('ファイルの内容を反映しました');
+        snackbar.success('ファイルの内容を反映しました');
       } catch (error) {
         console.error(error);
-        message.error('ファイルの読み込みに失敗しました');
+        snackbar.error('ファイルの読み込みに失敗しました');
       }
     };
     reader.onerror = (error) => {
       console.error(error);
-      message.error('ファイルの読み込みに失敗しました');
+      snackbar.error('ファイルの読み込みに失敗しました');
     };
     reader.readAsText(file);
-  }, [file, setFormData]);
+  }, [file, setFormData, snackbar]);
 
   return (
     <PrimaryOutlinedButton onClick={handleClick} disabled={disabled || !file} startIcon={<FileAddOutlined />}>

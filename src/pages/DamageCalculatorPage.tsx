@@ -1,4 +1,3 @@
-import { Typography } from 'antd';
 import styled from 'styled-components';
 import { DamageCalcInputSection } from '../features/DamageCalculator/DamageCalcInputSection';
 import ResultTable from '../features/DamageCalculator/ResultTable';
@@ -79,12 +78,16 @@ const TableWrapper = styled.div`
     }
   }
 `;
+
+const Title = styled.h2`
+  margin-top: 4px;
+  margin-left: 8px;
+`;
+
 function DamageCalculatorPage() {
   return (
     <>
-      <Typography.Title level={3} style={{ marginTop: 4, marginLeft: 8 }}>
-        ダメージ計算
-      </Typography.Title>
+      <Title>ダメージ計算</Title>
       <Container>
         <InputSection>
           <DamageCalcInputSection />

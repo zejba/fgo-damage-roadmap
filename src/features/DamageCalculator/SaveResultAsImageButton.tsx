@@ -1,6 +1,6 @@
 import { CameraOutlined } from '@ant-design/icons';
-import { message } from 'antd';
 import html2canvas from 'html2canvas';
+import { useSnackbar } from '../../hooks/useSnackbarContext';
 import type { RefObject } from 'react';
 import { PrimaryButton } from '../../components/Button.tsx/PrimaryButton';
 
@@ -9,13 +9,14 @@ type SaveResultAsImageButtonProps = {
 };
 
 function SaveResultAsImageButton({ targetRef }: SaveResultAsImageButtonProps) {
+  const snackbar = useSnackbar();
   const handleSaveAsImage = async () => {
     if (!targetRef.current) {
-      message.error('対象の要素が見つかりません');
+      snackbar.error('対象の要素が見つかりません');
       return;
     }
 
-    const hideLoading = message.loading('画像を生成中...', 0);
+    const hideLoading = snackbar.loading('画像を生成中...', 0);
     try {
       const canvas = await html2canvas(targetRef.current, {
         backgroundColor: '#ffffff',
@@ -28,11 +29,11 @@ function SaveResultAsImageButton({ targetRef }: SaveResultAsImageButtonProps) {
       link.click();
 
       hideLoading();
-      message.success('画像を保存しました');
+      snackbar.success('画像を保存しました');
     } catch (error) {
       hideLoading();
       console.error(error);
-      message.error('画像の保存に失敗しました');
+      snackbar.error('画像の保存に失敗しました');
     }
   };
 

@@ -1,5 +1,5 @@
-import { message, Select as AntdSelect, Typography } from 'antd';
 import { useAtomCallback } from 'jotai/utils';
+import { useSnackbar } from '../../../hooks/useSnackbarContext';
 import { useCallback, useState } from 'react';
 import { FormContainer } from '../../../components/FormContainer';
 import { defaultTurn, turnsAtom } from '../../../store/turns';
@@ -10,6 +10,7 @@ import { Compact } from '../../../components/Compact';
 import { CompactItemText } from '../../../components/CompactItemText';
 import { Select } from '../../../components/Select';
 import { PrimaryOutlinedButton } from '../../../components/Button.tsx/PrimaryOutlinedButton';
+import { Autocomplete, TextField } from '@mui/material';
 
 const questOptions = questData.map((quest) => ({
   value: quest.id,
@@ -20,6 +21,7 @@ export function QuestAutoFillTab() {
   const [selectedQuestId, setSelectedQuestId] = useState<string | null>(null);
   const [classAffinity, setClassAffinity] = useState<number>(1.0);
   const [attributeAffinity, setAttributeAffinity] = useState<number>(1.0);
+  const snackbar = useSnackbar();
 
   const handleSubmit = useAtomCallback(
     useCallback(
@@ -41,24 +43,23 @@ export function QuestAutoFillTab() {
         }));
 
         set(turnsAtom, turns);
-        message.success(`${quest.name}の情報を入力しました`);
+        snackbar.success(`${quest.name}の情報を入力しました`);
       },
-      [selectedQuestId, classAffinity, attributeAffinity]
+      [selectedQuestId, classAffinity, attributeAffinity, snackbar]
     )
   );
 
   return (
     <FormContainer>
-      <AntdSelect
-        placeholder="クエスト名"
+      <Autocomplete
         options={questOptions}
-        showSearch
-        optionFilterProp="label"
-        value={selectedQuestId}
-        onChange={setSelectedQuestId}
-        style={{ width: 480, maxWidth: '100%' }}
+        getOptionLabel={(option) => option.label}
+        renderInput={(params) => <TextField {...params} size="small" style={{ width: 300 }} label="クエスト選択" />}
+        value={selectedQuestId ? questOptions.find((option) => option.value === selectedQuestId) || null : null}
+        onChange={(_event, newValue) => {
+          setSelectedQuestId(newValue ? newValue.value : null);
+        }}
       />
-
       <Compact>
         <CompactItemText>クラス相性</CompactItemText>
         <Select
@@ -75,8 +76,7 @@ export function QuestAutoFillTab() {
           style={{ width: 60 }}
         />
       </Compact>
-      <Typography.Text>※ 入力済みのターン情報は上書きされます</Typography.Text>
-
+      ※ 入力済みのターン情報は上書きされます
       <PrimaryOutlinedButton onClick={handleSubmit} disabled={selectedQuestId === null}>
         入力
       </PrimaryOutlinedButton>

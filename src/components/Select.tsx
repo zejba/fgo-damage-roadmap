@@ -6,6 +6,7 @@ const StyledSelect = styled.select`
   border: 1px solid black;
   background-color: white;
   color: black;
+  cursor: pointer;
 `;
 
 export interface SelectProps<T extends string | null>

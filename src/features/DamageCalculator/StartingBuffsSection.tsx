@@ -1,4 +1,3 @@
-import { Space } from 'antd';
 import { type PrimitiveAtom, useAtom, useSetAtom } from 'jotai';
 import { useCallback } from 'react';
 import AddBuffButton from '../../components/AddBuffButton';
@@ -55,13 +54,13 @@ export function StartingBuffsSection() {
     addBuff([{ ...defaultBuff, turn: -1 }]);
   }, [addBuff]);
   return (
-    <Card title="パッシブ・開始時効果" style={{ width: '100%' }}>
+    <Card header="パッシブ・開始時効果" style={{ width: '100%' }}>
       <FormContainer style={{ gap: 2, width: '100%' }}>
-        <Space>
+        <div style={{ display: 'flex', gap: 8 }}>
           <AddBuffButton onClick={handleAddBuff} />
           <AddClassScoresButton />
           <AddTemplateBuffsButton />
-        </Space>
+        </div>
         <BuffFormsSection />
       </FormContainer>
     </Card>

@@ -1,7 +1,5 @@
-import { Space, Switch } from 'antd';
 import { useAtom } from 'jotai';
 import { useCallback } from 'react';
-import CollapseWithOutHeader from '../../components/CollapseWithOutHeader';
 
 import { isRequiredNpStarCalcAtom } from '../../store/jotai';
 import {
@@ -18,6 +16,7 @@ import { Compact } from '../../components/Compact';
 import { CompactItemText } from '../../components/CompactItemText';
 import { InputNumber } from '../../components/InputNumber';
 import styled from 'styled-components';
+import { Collapse, Switch } from '@mui/material';
 
 function NpGainRow() {
   const [npGain, setNpGain] = useAtom(npGainAtom);
@@ -64,11 +63,13 @@ function HitCountRow() {
   );
 }
 
-const ToggleWrapper = styled(Space)`
+const ToggleWrapper = styled.label`
+  width: fit-content;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
   margin-left: 8px;
-  margin-top: 8px;
   @media (max-width: 560px) {
-    margin-top: 4px;
     font-size: 0.8em;
   }
 `;
@@ -82,15 +83,15 @@ function ServantParamsNpStarSection() {
     <div>
       <ToggleWrapper>
         NP・スター計算
-        <Switch value={isRequiredNpStarCalc} onChange={toggleIsRequiredNpStarCalc} />
+        <Switch checked={isRequiredNpStarCalc} onChange={toggleIsRequiredNpStarCalc} />
       </ToggleWrapper>
-      <CollapseWithOutHeader isActive={isRequiredNpStarCalc}>
+      <Collapse in={isRequiredNpStarCalc}>
         <FormContainer style={{ marginTop: 8 }}>
           <NpGainRow />
           <StarRateRow />
           <HitCountRow />
         </FormContainer>
-      </CollapseWithOutHeader>
+      </Collapse>
     </div>
   );
 }

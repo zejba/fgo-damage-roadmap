@@ -1,6 +1,5 @@
 import { useAtomCallback } from 'jotai/utils';
 import { useCallback } from 'react';
-import { Space } from 'antd';
 import { format } from 'date-fns';
 import { DownloadOutlined } from '@ant-design/icons';
 import { currentFormDataAtom } from '../../store/formData';
@@ -27,10 +26,10 @@ export function ExportFormValuesButton() {
   );
 
   return (
-    <Space>
+    <div>
       <PrimaryButton startIcon={<DownloadOutlined />} onClick={handleExport} style={{ height: 36 }}>
         エクスポート
       </PrimaryButton>
-    </Space>
+    </div>
   );
 }

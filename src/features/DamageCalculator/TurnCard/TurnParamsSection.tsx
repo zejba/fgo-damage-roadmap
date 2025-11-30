@@ -1,5 +1,4 @@
 import { type PrimitiveAtom, useAtom, useAtomValue } from 'jotai';
-import CollapseWithOutHeader from '../../../components/CollapseWithOutHeader';
 import { enemyAttrOptions, enemyClassOptions } from '../../../data/options';
 import type { TurnParams } from '../../../data/types';
 import { isRequiredNpStarCalcAtom } from '../../../store/jotai';
@@ -7,6 +6,7 @@ import { Select } from '../../../components/Select';
 import { Compact } from '../../../components/Compact';
 import { InputNumber } from '../../../components/InputNumber';
 import { CompactItemText } from '../../../components/CompactItemText';
+import { Collapse } from '@mui/material';
 
 interface TurnParamsSectionProps {
   turnParamsAtom: PrimitiveAtom<TurnParams>;
@@ -40,7 +40,7 @@ export function TurnParamsSection(props: TurnParamsSectionProps) {
           style={{ width: 120 }}
         />
       </Compact>
-      <CollapseWithOutHeader isActive={isRequiredNpStarCalc}>
+      <Collapse in={isRequiredNpStarCalc}>
         <Compact>
           <CompactItemText>DTDR</CompactItemText>
           <InputNumber
@@ -57,7 +57,7 @@ export function TurnParamsSection(props: TurnParamsSectionProps) {
           />
           <CompactItemText>%</CompactItemText>
         </Compact>
-      </CollapseWithOutHeader>
+      </Collapse>
     </div>
   );
 }

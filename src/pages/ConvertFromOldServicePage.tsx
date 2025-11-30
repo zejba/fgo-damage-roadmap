@@ -1,16 +1,19 @@
-import { Typography } from 'antd';
 import { FileUploader } from '../components/FileUploader';
 import { useState } from 'react';
 import { DownloadConvertedFileButton } from '../features/ConvertFromOldService/DownloadConvertedFileButton';
+import { styled } from 'styled-components';
+
+const Title = styled.h2`
+  margin-top: 4px;
+  margin-left: 8px;
+`;
 
 export function ConvertFromOldServicePage() {
   const [file, setFile] = useState<File | null>(null);
 
   return (
     <>
-      <Typography.Title level={3} style={{ marginTop: 4 }}>
-        旧サービスからのデータ移行
-      </Typography.Title>
+      <Title>旧サービスからのデータ移行</Title>
       <FileUploader accept=".csv" onFileLoaded={setFile} />
       <DownloadConvertedFileButton file={file} />
     </>

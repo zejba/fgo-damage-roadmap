@@ -1,5 +1,3 @@
-import { CloseOutlined } from '@ant-design/icons';
-import { Button, Popconfirm } from 'antd';
 import type { PrimitiveAtom } from 'jotai';
 import { focusAtom } from 'jotai-optics';
 import { splitAtom, useAtomCallback } from 'jotai/utils';
@@ -13,6 +11,10 @@ import { TurnParamsSection } from './TurnParamsSection';
 import { TurnStartingBuffForms } from './TurnStartingBuffForms';
 import { Card } from '../../../components/Card';
 import { FormContainer } from '../../../components/FormContainer';
+import { IconButton } from '@mui/material';
+import { Close } from '@mui/icons-material';
+import { DeleteConfirmDialog } from '../../../components/DeleteConfirmDialog';
+import { useBoolean } from '../../../hooks/useBoolean';
 
 interface TurnCardInnerProps {
   turnAtom: PrimitiveAtom<TurnFormValue>;
@@ -59,23 +61,36 @@ interface TurnCardProps {
 
 export const TurnCard = memo((props: TurnCardProps) => {
   const { turnAtom, turnNumber, remove } = props;
+  const [openDeleteDialog, handleOpenDeleteDialog, handleCloseDeleteDialog] = useBoolean(false);
 
-  const closeButton = useMemo(() => {
+  const handleConfirmDelete = useCallback(() => {
+    remove(turnAtom);
+  }, [remove, turnAtom]);
+
+  const CardHeader = useMemo(() => {
     return (
-      <Popconfirm
-        title={`ターン${turnNumber}を削除しますか？`}
-        onConfirm={() => remove(turnAtom)}
-        cancelText="キャンセル"
-        okText="削除"
-        okType="danger"
-      >
-        <Button type="text" icon={<CloseOutlined />} />
-      </Popconfirm>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+        {`${turnNumber}T目`}
+
+        <IconButton size="small" onClick={handleOpenDeleteDialog}>
+          {<Close />}
+        </IconButton>
+      </div>
     );
-  }, [remove, turnAtom, turnNumber]);
+  }, [turnNumber, handleOpenDeleteDialog]);
+
   return (
-    <Card title={`${turnNumber}T目`} extra={closeButton} style={{ width: '100%' }}>
-      <TurnCardInner turnAtom={turnAtom} />
-    </Card>
+    <>
+      <Card header={CardHeader} style={{ width: '100%' }}>
+        <TurnCardInner turnAtom={turnAtom} />
+      </Card>
+      <DeleteConfirmDialog
+        open={openDeleteDialog}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        title="ターンを削除"
+        description={`${turnNumber}T目を削除しますか？`}
+      />
+    </>
   );
 });

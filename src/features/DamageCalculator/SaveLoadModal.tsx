@@ -1,4 +1,4 @@
-import { ModalProps, Typography, Tabs } from 'antd';
+import { Tabs, Tab, DialogTitle } from '@mui/material';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ExportFormValuesButton } from './ExportFormValuesButton';
@@ -6,57 +6,75 @@ import { FileUploader } from '../../components/FileUploader';
 import { ImportFormValuesButton } from './ImportFormValuesButton';
 import { LocalStorageSaveSection } from './LocalStorageSaveSection';
 import { LocalStorageSelectSection } from './LocalStorageSelectSection';
-import { Modal } from '../../components/Modal';
+import { Dialog } from '../../components/Dialog';
+import { DialogContent } from '../../components/DialogContent';
+import { styled } from 'styled-components';
 
-interface Props extends ModalProps {
+interface Props {
+  open: boolean;
   closeModal: () => void;
+}
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+const TabPanelWrapper = styled.div`
+  padding: 16px;
+  min-height: 200px;
+`;
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div role="tabpanel" hidden={value !== index} id={`tabpanel-${index}`} aria-labelledby={`tab-${index}`} {...other}>
+      {value === index && <TabPanelWrapper>{children}</TabPanelWrapper>}
+    </div>
+  );
 }
 
 export function SaveLoadModal(props: Props) {
   const { closeModal, open } = props;
+  const [value, setValue] = useState(0);
 
-  const tabItems = [
-    {
-      key: 'localStorage',
-      label: 'ローカルストレージ',
-      children: <LocalStorageSection />
-    },
-    {
-      key: 'file',
-      label: 'ファイル',
-      children: <FileSection />
-    },
-    {
-      key: 'migration',
-      label: 'データ移行',
-      children: <MigrationSection />
-    }
-  ];
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
 
   return (
-    <Modal title="入力データ管理" open={open} onCancel={closeModal} width={600} footer={null} {...props}>
-      <Tabs items={tabItems} />
-    </Modal>
+    <Dialog open={open} onClose={closeModal} fullWidth>
+      <DialogTitle>入力データ管理</DialogTitle>
+      <DialogContent>
+        <Tabs value={value} onChange={handleChange}>
+          <Tab label="ローカルストレージ" />
+          <Tab label="ファイル" />
+          <Tab label="データ移行" />
+        </Tabs>
+        <TabPanel value={value} index={0}>
+          <LocalStorageSection />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <FileSection />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <MigrationSection />
+        </TabPanel>
+      </DialogContent>
+    </Dialog>
   );
 }
 
 function LocalStorageSection() {
   return (
     <>
-      <Typography.Text type="secondary" style={{ display: 'block', marginBottom: 16 }}>
-        ブラウザのローカルストレージに保存されます
-      </Typography.Text>
+      <div style={{ marginBottom: 16 }}>ブラウザのローカルストレージに保存</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <LocalStorageSaveSection />
         <div>
-          <Typography.Title level={5} style={{ margin: '0 0 8px 0', fontSize: '14px' }}>
-            保存
-          </Typography.Title>
-          <LocalStorageSaveSection />
-        </div>
-        <div>
-          <Typography.Title level={5} style={{ margin: '0 0 8px 0', fontSize: '14px' }}>
-            読み込み
-          </Typography.Title>
+          <div style={{ marginBottom: 4, marginLeft: 4 }}>読み込み</div>
           <LocalStorageSelectSection />
         </div>
       </div>
@@ -68,20 +86,11 @@ function FileSection() {
   const [file, setFile] = useState<File | null>(null);
   return (
     <>
-      <Typography.Text type="secondary" style={{ display: 'block', marginBottom: 16 }}>
-        JSON形式で保存・読み込みます
-      </Typography.Text>
+      <div style={{ marginBottom: 16 }}>JSONファイルで保存</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <ExportFormValuesButton />
         <div>
-          <Typography.Title level={5} style={{ margin: '0 0 8px 0', fontSize: '14px' }}>
-            保存
-          </Typography.Title>
-          <ExportFormValuesButton />
-        </div>
-        <div>
-          <Typography.Title level={5} style={{ margin: '0 0 8px 0', fontSize: '14px' }}>
-            読み込み
-          </Typography.Title>
+          <div style={{ marginBottom: 4, marginLeft: 4 }}>読み込み</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-start' }}>
             <FileUploader onFileLoaded={setFile} accept=".json" />
             <ImportFormValuesButton file={file} />
@@ -95,9 +104,7 @@ function FileSection() {
 function MigrationSection() {
   return (
     <>
-      <Typography.Text type="secondary" style={{ display: 'block', marginBottom: 16 }}>
-        旧版のダメージ計算ツールからデータを移行できます
-      </Typography.Text>
+      <div style={{ marginBottom: 16 }}>旧版のダメージ計算ツールからデータを移行できます</div>
       <Link to="/convert-from-old-service" style={{ fontSize: '16px' }}>
         データ移行ページへ →
       </Link>

@@ -1,5 +1,4 @@
 import { DatabaseOutlined } from '@ant-design/icons';
-import { Space } from 'antd';
 import { useAtom } from 'jotai';
 import { cardColors, servantAttributes, servantClasses } from '../../data/options';
 import { useBoolean } from '../../hooks/useBoolean';
@@ -131,12 +130,12 @@ function AutoFillServantParamsModalSection() {
 
 export function ServantParamsSection() {
   return (
-    <Card title="基本情報" style={{ width: '100%' }}>
+    <Card header="基本情報" style={{ width: '100%' }}>
       <FormContainer>
-        <Space>
+        <div style={{ display: 'flex', gap: 8 }}>
           <AutoFillServantParamsModalSection />
           <SaveLoadButtonSection />
-        </Space>
+        </div>
         <TitleClassAttributeRow />
         <ServantAtkRow />
         <CraftEssenceAtkRow />

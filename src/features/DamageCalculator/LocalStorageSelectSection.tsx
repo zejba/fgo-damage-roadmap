@@ -1,7 +1,6 @@
-import { Space, Popconfirm } from 'antd';
 import { useState, useCallback, useMemo } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { message } from 'antd';
+import { useSnackbar } from '../../hooks/useSnackbarContext';
 import { DeleteOutlined, FileAddOutlined } from '@ant-design/icons';
 import { savedFormsArrayAtom, deleteFormDataAtom, getFormDataByIdAtom } from '../../store/localStorage';
 import { setFormDataAtom } from '../../store/formData';
@@ -10,6 +9,8 @@ import { Select } from '../../components/Select';
 import { Compact } from '../../components/Compact';
 import { PrimaryOutlinedButton } from '../../components/Button.tsx/PrimaryOutlinedButton';
 import { DangerOutlinedButton } from '../../components/Button.tsx/DangerOutlinedButton';
+import { DeleteConfirmDialog } from '../../components/DeleteConfirmDialog';
+import { useBoolean } from '../../hooks/useBoolean';
 
 export function LocalStorageSelectSection() {
   const [selectedSaveId, setSelectedSaveId] = useState<string | null>(null);
@@ -17,6 +18,8 @@ export function LocalStorageSelectSection() {
   const deleteFormData = useSetAtom(deleteFormDataAtom);
   const getFormDataById = useAtomValue(getFormDataByIdAtom);
   const setFormData = useSetAtom(setFormDataAtom);
+  const snackbar = useSnackbar();
+  const [openDeleteDialog, handleOpenDeleteDialog, handleCloseDeleteDialog] = useBoolean(false);
 
   // データを読み込み
   const loadData = useCallback(
@@ -24,20 +27,20 @@ export function LocalStorageSelectSection() {
       try {
         const savedData = getFormDataById(id);
         if (!savedData) {
-          message.error('データが見つかりません');
+          snackbar.error('データが見つかりません');
           return false;
         }
         const data = validateDamageCalcFormValue(savedData.data);
         setFormData(data);
-        message.success(`${savedData.name} を反映しました`);
+        snackbar.success(`${savedData.name} を反映しました`);
         return true;
       } catch (error) {
         console.error('Load failed:', error);
-        message.error('読み込みに失敗しました');
+        snackbar.error('読み込みに失敗しました');
         return false;
       }
     },
-    [getFormDataById, setFormData]
+    [getFormDataById, setFormData, snackbar]
   );
 
   const handleLoad = useCallback(() => {
@@ -50,16 +53,16 @@ export function LocalStorageSelectSection() {
     try {
       const deletedData = deleteFormData(selectedSaveId);
       if (deletedData) {
-        message.success(`${deletedData.name} を削除しました`);
+        snackbar.success(`${deletedData.name} を削除しました`);
         setSelectedSaveId(null);
       } else {
-        message.error('データが見つかりません');
+        snackbar.error('データが見つかりません');
       }
     } catch (error) {
       console.error('Delete failed:', error);
-      message.error('削除に失敗しました');
+      snackbar.error('削除に失敗しました');
     }
-  }, [deleteFormData, selectedSaveId]);
+  }, [deleteFormData, selectedSaveId, snackbar]);
 
   const selectOptions = useMemo(
     () =>
@@ -71,35 +74,35 @@ export function LocalStorageSelectSection() {
   );
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8 }}>
-      <Space direction="vertical" style={{ width: '100%' }}>
-        <Compact>
-          <Select
-            style={{ width: '100%', paddingLeft: 4 }}
-            value={selectedSaveId}
-            onValueChange={setSelectedSaveId}
-            options={selectOptions}
-            placeholder="選択してください"
-          />
-        </Compact>
-        <Space>
-          <PrimaryOutlinedButton startIcon={<FileAddOutlined />} onClick={handleLoad} disabled={!selectedSaveId}>
-            適用
-          </PrimaryOutlinedButton>
-          <Popconfirm
-            title="削除の確認"
-            description="選択したデータを削除しますか？"
-            onConfirm={handleDelete}
-            okText="削除"
-            cancelText="キャンセル"
-            okType="danger"
-          >
-            <DangerOutlinedButton startIcon={<DeleteOutlined />} disabled={!selectedSaveId}>
-              削除
-            </DangerOutlinedButton>
-          </Popconfirm>
-        </Space>
-      </Space>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, width: '100%' }}>
+      <Compact style={{ width: '100%' }}>
+        <Select
+          style={{ width: '100%', paddingLeft: 4 }}
+          value={selectedSaveId}
+          onValueChange={setSelectedSaveId}
+          options={selectOptions}
+          placeholder="選択してください"
+        />
+      </Compact>
+      <div style={{ display: 'flex', gap: 8 }}>
+        <PrimaryOutlinedButton startIcon={<FileAddOutlined />} onClick={handleLoad} disabled={!selectedSaveId}>
+          適用
+        </PrimaryOutlinedButton>
+        <DangerOutlinedButton
+          startIcon={<DeleteOutlined />}
+          disabled={!selectedSaveId}
+          onClick={handleOpenDeleteDialog}
+        >
+          削除
+        </DangerOutlinedButton>
+        <DeleteConfirmDialog
+          open={openDeleteDialog}
+          onClose={handleCloseDeleteDialog}
+          onConfirm={handleDelete}
+          title="削除の確認"
+          description="選択したデータを削除しますか？"
+        />
+      </div>
     </div>
   );
 }

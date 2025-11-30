@@ -1,5 +1,5 @@
-import { Button, message } from 'antd';
 import { format } from 'date-fns';
+import { useSnackbar } from '../../hooks/useSnackbarContext';
 import { useCallback } from 'react';
 import { DamageCalcFormValue, Buff, TurnFormValue, CardFormValue, BuffType, DamageJudgement } from '../../data/types';
 import {
@@ -11,6 +11,7 @@ import {
   validateDamageCalcFormValue
 } from '../../zod-schema/damageCalcFormSchema';
 import { v4 } from 'uuid';
+import { Button } from '@mui/material';
 
 interface Props {
   file?: File | null;
@@ -240,6 +241,7 @@ function convertData(lines: string[][]): DamageCalcFormValue {
 
 export function DownloadConvertedFileButton(props: Props) {
   const { file } = props;
+  const snackbar = useSnackbar();
 
   const handleDownload = useCallback(() => {
     if (!file) return;
@@ -266,18 +268,18 @@ export function DownloadConvertedFileButton(props: Props) {
         a.remove();
       } catch (error) {
         console.error(error);
-        message.error('ファイルの読み込みに失敗しました');
+        snackbar.error('ファイルの読み込みに失敗しました');
       }
     };
     reader.onerror = (error) => {
       console.error(error);
-      message.error('ファイルの読み込みに失敗しました');
+      snackbar.error('ファイルの読み込みに失敗しました');
     };
     reader.readAsText(file);
-  }, [file]);
+  }, [file, snackbar]);
 
   return (
-    <Button onClick={handleDownload} disabled={!file}>
+    <Button onClick={handleDownload} disabled={!file} variant="contained" color="primary">
       変換してダウンロード
     </Button>
   );

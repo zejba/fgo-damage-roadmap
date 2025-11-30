@@ -1,4 +1,3 @@
-import { Checkbox } from 'antd';
 import { type PrimitiveAtom, useAtom, useAtomValue } from 'jotai';
 import { cardTypeOptions, damageJudgementOptions } from '../../../data/options';
 import type { CardParams } from '../../../data/types';
@@ -30,22 +29,28 @@ export function CardParamsSection(props: CardParamsSectionProps) {
         />
       )}
       {!isEx && (
-        <Checkbox
-          checked={cardParams.isCritical}
-          onChange={(e) =>
-            setCardParams((prev) => ({
-              ...prev,
-              isCritical: e.target.checked
-            }))
-          }
+        <label
           style={{
-            padding: '0 4px',
+            display: 'flex',
+            alignItems: 'center',
+            paddingRight: 4,
             backgroundColor: 'white',
-            alignItems: 'center'
+            cursor: 'pointer'
           }}
         >
+          <input
+            type="checkbox"
+            checked={cardParams.isCritical}
+            style={{ cursor: 'pointer' }}
+            onChange={(e) =>
+              setCardParams((prev) => ({
+                ...prev,
+                isCritical: e.target.checked
+              }))
+            }
+          />
           クリティカル
-        </Checkbox>
+        </label>
       )}
       <Select
         value={cardParams.damageJudgement}
