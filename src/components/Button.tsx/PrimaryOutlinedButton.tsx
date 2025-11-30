@@ -10,9 +10,15 @@ export const PrimaryOutlinedButton = styled(BaseButton)`
       border-color 0.2s ease,
       color 0.2s ease,
       outline 0.1s ease;
-    &:hover {
+    &:active {
       border-color: #2c8bff;
       color: #2c8bff;
+    }
+    @media (hover: hover) {
+      &:hover {
+        border-color: #2c8bff;
+        color: #2c8bff;
+      }
     }
   }
   &:disabled {

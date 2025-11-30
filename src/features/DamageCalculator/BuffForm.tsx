@@ -9,9 +9,18 @@ import { InputNumber } from '../../components/InputNumber';
 import { Compact } from '../../components/Compact';
 import { PrimaryOutlinedButton } from '../../components/Button.tsx/PrimaryOutlinedButton';
 import styled from 'styled-components';
+import { ArrowUpward, Close } from '@mui/icons-material';
 
 const StyledButton = styled(PrimaryOutlinedButton)`
-  padding: 0 8px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  @media (max-width: 560px) {
+    padding: 0 2px;
+    .MuiSvgIcon-root {
+      height: 0.8em;
+    }
+  }
 `;
 
 const TitleInput = styled(Input)`
@@ -77,8 +86,12 @@ export function BuffForm(props: BuffFormProps) {
       {/* <MoreOutlined /> */}
       {/* </StyledButton> */}
 
-      <StyledButton onClick={() => remove(buffAtom)}>X</StyledButton>
-      <StyledButton onClick={() => beforeAtom && move(buffAtom, beforeAtom)}>↑</StyledButton>
+      <StyledButton onClick={() => remove(buffAtom)}>
+        <Close fontSize="small" />
+      </StyledButton>
+      <StyledButton onClick={() => beforeAtom && move(buffAtom, beforeAtom)}>
+        <ArrowUpward fontSize="small" />
+      </StyledButton>
     </Compact>
   );
 }

@@ -15,7 +15,6 @@ const items = [
 ];
 
 const StyledSelect = styled(Select)`
-  background-color: #ececec;
   height: 32px;
   border-radius: 6px;
   padding-left: 6px;
