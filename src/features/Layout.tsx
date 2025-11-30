@@ -1,51 +1,41 @@
-import { Layout as AntdLayout, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-const { Header, Content } = AntdLayout;
 
 interface Props {
   children: React.ReactNode;
 }
 
-const StyledContent = styled(Content)`
-  background-color: white;
+const Header = styled.header`
+  display: flex;
+  align-items: center;
   padding: 12px;
-  margin: 0;
-  min-height: 280px;
+  background: linear-gradient(90deg, #003c79, #0e78e1, #003c79);
+`;
+
+const HeaderTitle = styled.div`
+  color: white;
+  font-size: 1.5em;
+  font-weight: bold;
+  font-family: '游明朝', 'Yu Mincho', serif;
+`;
+
+const MainContent = styled.main`
+  padding: 12px;
   @media (max-width: 560px) {
-    padding: 8px 0.5px;
+    padding: 8px 2px;
   }
 `;
 
 function Layout({ children }: Props) {
   return (
-    <AntdLayout>
-      <Header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          paddingLeft: 24,
-          height: 48,
-          background: 'linear-gradient(90deg, #003c79, #0e78e1, #003c79)'
-        }}
-      >
+    <>
+      <Header>
         <Link to="/" style={{ textDecoration: 'none' }}>
-          <Typography.Title
-            level={3}
-            style={{
-              color: 'white',
-              margin: 0,
-              fontFamily: '游明朝, Yu Mincho, serif'
-            }}
-          >
-            FGO Damage Roadmap
-          </Typography.Title>
+          <HeaderTitle>FGO Damage Roadmap</HeaderTitle>
         </Link>
       </Header>
-      <AntdLayout>
-        <StyledContent>{children}</StyledContent>
-      </AntdLayout>
-    </AntdLayout>
+      <MainContent>{children}</MainContent>
+    </>
   );
 }
 

@@ -12,7 +12,7 @@ const Container = styled.div`
   flex-direction: column;
   @media (min-width: 1480px) {
     flex-direction: row;
-    height: calc(100vh - 120px); /* ヘッダーとタイトル分を差し引いた高さ */
+    height: calc(100vh - 148px);
   }
 `;
 
@@ -20,6 +20,7 @@ const InputSection = styled.div`
   @media (min-width: 1480px) {
     min-width: 580px;
     overflow-y: auto;
+    padding-left: 1px;
     padding-right: 8px; /* スクロールバーとの間隔 */
   }
 `;
