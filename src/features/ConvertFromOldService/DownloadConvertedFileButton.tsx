@@ -11,7 +11,7 @@ import {
   validateDamageCalcFormValue
 } from '../../zod-schema/damageCalcFormSchema';
 import { v4 } from 'uuid';
-import { Button } from '@mui/material';
+import { PrimaryButton } from '../../components/Button.tsx/PrimaryButton';
 
 interface Props {
   file?: File | null;
@@ -279,8 +279,8 @@ export function DownloadConvertedFileButton(props: Props) {
   }, [file, snackbar]);
 
   return (
-    <Button onClick={handleDownload} disabled={!file} variant="contained" color="primary">
+    <PrimaryButton onClick={handleDownload} disabled={!file} style={{ marginTop: 16 }}>
       変換してダウンロード
-    </Button>
+    </PrimaryButton>
   );
 }

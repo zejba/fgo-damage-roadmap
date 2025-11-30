@@ -1,23 +1,10 @@
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
 
 interface Props {
   children: React.ReactNode;
 }
-
-const Header = styled.header`
-  display: flex;
-  align-items: center;
-  padding: 12px;
-  background: linear-gradient(90deg, #003c79, #0e78e1, #003c79);
-`;
-
-const HeaderTitle = styled.div`
-  color: white;
-  font-size: 1.5em;
-  font-weight: bold;
-  font-family: '游明朝', 'Yu Mincho', serif;
-`;
 
 const MainContent = styled.main`
   padding: 12px;
@@ -29,11 +16,8 @@ const MainContent = styled.main`
 function Layout({ children }: Props) {
   return (
     <>
-      <Header>
-        <Link to="/" style={{ textDecoration: 'none' }}>
-          <HeaderTitle>FGO Damage Roadmap</HeaderTitle>
-        </Link>
-      </Header>
+      <Header />
+      <Sidebar />
       <MainContent>{children}</MainContent>
     </>
   );
