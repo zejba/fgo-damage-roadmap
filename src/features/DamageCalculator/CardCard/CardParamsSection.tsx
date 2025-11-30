@@ -39,8 +39,9 @@ export function CardParamsSection(props: CardParamsSectionProps) {
             }))
           }
           style={{
-            padding: '4px 8px',
-            backgroundColor: 'white'
+            padding: '0 4px',
+            backgroundColor: 'white',
+            alignItems: 'center'
           }}
         >
           クリティカル

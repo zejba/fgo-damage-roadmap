@@ -43,6 +43,7 @@ export function FileUploader({ onFileLoaded, style, accept }: FileUploaderProps)
         <PrimaryOutlinedButton startIcon={<UploadOutlined />}>ファイルを選択</PrimaryOutlinedButton>
         <p
           style={{
+            flex: 1,
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',

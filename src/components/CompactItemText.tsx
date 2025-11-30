@@ -7,7 +7,7 @@ export const CompactItemText = styled.div`
   padding: 0 8px;
   display: flex;
   align-items: center;
-  @media (max-width: 600px) {
+  @media (max-width: 560px) {
     padding: 0 4px;
   }
 `;

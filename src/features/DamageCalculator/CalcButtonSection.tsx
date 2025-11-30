@@ -22,7 +22,7 @@ import { styled } from 'styled-components';
 
 const ToggleWrapper = styled(Space)`
   margin-left: 8px;
-  @media (max-width: 600px) {
+  @media (max-width: 560px) {
     font-size: 0.8em;
   }
 `;

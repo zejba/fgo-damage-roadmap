@@ -26,7 +26,7 @@ export const Compact = styled.div`
       z-index: 1;
     }
   }
-  @media (max-width: 600px) {
+  @media (max-width: 560px) {
     height: 28px;
     button {
       height: 28px;

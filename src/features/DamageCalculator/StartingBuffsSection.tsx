@@ -10,13 +10,18 @@ import { MemoizedBuffForm } from './BuffForm';
 import { Card } from '../../components/Card';
 import { FormContainer } from '../../components/FormContainer';
 import { PrimaryOutlinedButton } from '../../components/Button.tsx/PrimaryOutlinedButton';
+import { styled } from 'styled-components';
+
+const StyledButton = styled(PrimaryOutlinedButton)`
+  background-color: #ececec;
+`;
 
 function AddClassScoresButton() {
   const addEffect = useSetAtom(addBuffsAtom);
   const addClassScores = useCallback(() => {
     addEffect(classScores);
   }, [addEffect]);
-  return <PrimaryOutlinedButton onClick={addClassScores}>スコア追加</PrimaryOutlinedButton>;
+  return <StyledButton onClick={addClassScores}>スコア追加</StyledButton>;
 }
 
 function BuffFormsSection() {

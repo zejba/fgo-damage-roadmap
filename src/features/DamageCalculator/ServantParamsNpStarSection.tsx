@@ -67,7 +67,7 @@ function HitCountRow() {
 const ToggleWrapper = styled(Space)`
   margin-left: 8px;
   margin-top: 8px;
-  @media (max-width: 600px) {
+  @media (max-width: 560px) {
     margin-top: 4px;
     font-size: 0.8em;
   }

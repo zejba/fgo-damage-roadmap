@@ -15,12 +15,14 @@ const items = [
 ];
 
 const StyledSelect = styled(Select)`
+  background-color: #ececec;
   height: 32px;
   border-radius: 6px;
   padding-left: 6px;
   padding-right: 6px;
-  @media (max-width: 600px) {
+  @media (max-width: 560px) {
     font-size: 0.8em;
+    height: 28px;
   }
 ` as typeof Select;
 

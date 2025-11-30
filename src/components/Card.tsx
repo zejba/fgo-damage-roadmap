@@ -10,7 +10,7 @@ const StyledCard = styled(AntCard)`
   .ant-card-body {
     padding: 12px;
   }
-  @media (max-width: 600px) {
+  @media (max-width: 560px) {
     .ant-card-head,
     .ant-card-head-wrapper {
       font-size: 1em;

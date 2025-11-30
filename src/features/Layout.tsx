@@ -12,7 +12,7 @@ const StyledContent = styled(Content)`
   padding: 12px;
   margin: 0;
   min-height: 280px;
-  @media (max-width: 600px) {
+  @media (max-width: 560px) {
     padding: 8px 0.5px;
   }
 `;

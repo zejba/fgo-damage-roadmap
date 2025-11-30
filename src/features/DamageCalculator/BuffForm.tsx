@@ -11,25 +11,24 @@ import { PrimaryOutlinedButton } from '../../components/Button.tsx/PrimaryOutlin
 import styled from 'styled-components';
 
 const StyledButton = styled(PrimaryOutlinedButton)`
-  padding: 8px;
+  padding: 0 8px;
 `;
 
 const TitleInput = styled(Input)`
-  @media (max-width: 600px) {
-    width: 80px;
-  }
+  min-width: 0;
+  max-width: 164px;
 `;
 
 const AmountInput = styled(InputNumber)`
-  width: 80px;
-  @media (max-width: 600px) {
-    width: 32px;
+  width: 60px;
+  @media (max-width: 560px) {
+    min-width: 0;
   }
 `;
 
 const StyledSelect = styled(Select)`
   width: 100px;
-  @media (max-width: 600px) {
+  @media (max-width: 560px) {
     width: 76px;
   }
 ` as typeof Select;

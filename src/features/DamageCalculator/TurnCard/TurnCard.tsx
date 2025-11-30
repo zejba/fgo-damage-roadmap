@@ -37,9 +37,9 @@ const TurnCardInner = memo((props: TurnCardInnerProps) => {
     )
   );
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start', width: '100%' }}>
       <TurnParamsSection turnParamsAtom={turnParamsAtom} />
-      <FormContainer style={{ gap: 2 }}>
+      <FormContainer style={{ gap: 2, width: '100%' }}>
         <AddBuffButton onClick={addTurnBuff} />
         <TurnStartingBuffForms turnBuffAtomsAtom={turnBuffAtomsAtom} />
       </FormContainer>
