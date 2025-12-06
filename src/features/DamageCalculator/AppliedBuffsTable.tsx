@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { damageCalcResultAtom } from '../../store/damageCalcResult';
 import type { ProcessedTurnResult } from '../../utils/calcDamage';
 import styled from 'styled-components';
+import { BUFF_AMOUNT_LIMITS } from '../../data/constants';
 
 const StyledTable = styled.table`
   width: 100%;
@@ -42,10 +43,10 @@ type TableRow = {
   turn: string | null;
   turnRowSpan: number;
   buffType: 'atkBuff' | 'cardBuff' | 'npOrCrBuff' | 'spBuff';
-  first: string;
-  second: string;
-  third: string;
-  ex: string;
+  first: number;
+  second: number;
+  third: number;
+  ex: number;
 };
 
 const localizedBuffType = {
@@ -63,37 +64,37 @@ function buildTableData(result: ProcessedTurnResult[]): TableRow[] {
         turn: `${turnIndex + 1}`,
         turnRowSpan: 4,
         buffType: 'atkBuff' as const,
-        first: `${atkBuffs[0] ?? 0}%`,
-        second: `${atkBuffs[1] ?? 0}%`,
-        third: `${atkBuffs[2] ?? 0}%`,
-        ex: `${atkBuffs[3] ?? 0}%`
+        first: atkBuffs[0] ?? 0,
+        second: atkBuffs[1] ?? 0,
+        third: atkBuffs[2] ?? 0,
+        ex: atkBuffs[3] ?? 0
       },
       {
         turn: null,
         turnRowSpan: 0,
         buffType: 'cardBuff' as const,
-        first: `${cardBuffs[0] ?? 0}%`,
-        second: `${cardBuffs[1] ?? 0}%`,
-        third: `${cardBuffs[2] ?? 0}%`,
-        ex: `${cardBuffs[3] ?? 0}%`
+        first: cardBuffs[0] ?? 0,
+        second: cardBuffs[1] ?? 0,
+        third: cardBuffs[2] ?? 0,
+        ex: cardBuffs[3] ?? 0
       },
       {
         turn: null,
         turnRowSpan: 0,
         buffType: 'npOrCrBuff' as const,
-        first: `${npOrCrBuffs[0] ?? 0}%`,
-        second: `${npOrCrBuffs[1] ?? 0}%`,
-        third: `${npOrCrBuffs[2] ?? 0}%`,
-        ex: '-%'
+        first: npOrCrBuffs[0] ?? 0,
+        second: npOrCrBuffs[1] ?? 0,
+        third: npOrCrBuffs[2] ?? 0,
+        ex: 0
       },
       {
         turn: null,
         turnRowSpan: 0,
         buffType: 'spBuff' as const,
-        first: `${spBuffs[0] ?? 0}%`,
-        second: `${spBuffs[1] ?? 0}%`,
-        third: `${spBuffs[2] ?? 0}%`,
-        ex: `${spBuffs[3] ?? 0}%`
+        first: spBuffs[0] ?? 0,
+        second: spBuffs[1] ?? 0,
+        third: spBuffs[2] ?? 0,
+        ex: spBuffs[3] ?? 0
       }
     ];
   });
@@ -124,10 +125,16 @@ function AppliedBuffsTable() {
               </td>
             )}
             <td className="buff-type-cell">{localizedBuffType[row.buffType]}</td>
-            <td>{row.first}</td>
-            <td>{row.second}</td>
-            <td>{row.third}</td>
-            <td>{row.ex}</td>
+            <td style={row.first > BUFF_AMOUNT_LIMITS[row.buffType] ? { backgroundColor: '#FFFF7F' } : {}}>
+              {row.first}%
+            </td>
+            <td style={row.second > BUFF_AMOUNT_LIMITS[row.buffType] ? { backgroundColor: '#FFFF7F' } : {}}>
+              {row.second}%
+            </td>
+            <td style={row.third > BUFF_AMOUNT_LIMITS[row.buffType] ? { backgroundColor: '#FFFF7F' } : {}}>
+              {row.third}%
+            </td>
+            <td style={row.ex > BUFF_AMOUNT_LIMITS[row.buffType] ? { backgroundColor: '#FFFF7F' } : {}}>{row.ex}%</td>
           </tr>
         ))}
       </tbody>

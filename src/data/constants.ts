@@ -19,3 +19,12 @@ export const CARD_CORRECTION_VALUES = {
 export const SELECT_ORDER_COEFFICIENT = 0.2;
 
 export const DEFAULT_FORM_BORDER_COLOR = '#8b8b8b';
+
+export const BUFF_AMOUNT_LIMITS = {
+  atkBuff: 400,
+  cardBuff: 400,
+  npBuff: 500,
+  crBuff: 500,
+  npOrCrBuff: 500,
+  spBuff: 1000
+} as const;
