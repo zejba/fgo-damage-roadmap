@@ -8,7 +8,7 @@ import {
   damageCalcResultNpColorAtom,
   isNpStarCalculatedAtom
 } from '../../store/damageCalcResult';
-import { isColoredAtom, isRequiredNpStarCalcAtom } from '../../store/jotai';
+import { isColoredAtom, isDrawerModeAtom, isRequiredNpStarCalcAtom } from '../../store/jotai';
 import {
   type DamageCalculatorInputValue,
   calculateDamages,
@@ -19,7 +19,7 @@ import { currentFormDataAtom } from '../../store/formData';
 import { validateDamageCalcFormValue } from '../../zod-schema/damageCalcFormSchema';
 import { PrimaryButton } from '../../components/Button.tsx/PrimaryButton';
 import { styled } from 'styled-components';
-import { Switch } from '@mui/material';
+import { Switch, useMediaQuery } from '@mui/material';
 
 const ToggleWrapper = styled.label`
   cursor: pointer;
@@ -32,6 +32,8 @@ const ToggleWrapper = styled.label`
 
 function CalcButtonSection() {
   const [isColored, setIsColored] = useAtom(isColoredAtom);
+  const [isDrawerMode, setIsDrawerMode] = useAtom(isDrawerModeAtom);
+  const isWide = useMediaQuery('(min-width:1480px)');
   const snackbar = useSnackbar();
   const handleCalculate = useAtomCallback(
     useCallback(
@@ -70,14 +72,20 @@ function CalcButtonSection() {
     )
   );
   return (
-    <div style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: 12 }}>
+    <div style={{ paddingLeft: 4, display: 'flex', alignItems: 'center', gap: 12 }}>
       <PrimaryButton onClick={handleCalculate} startIcon={<CalculatorFilled />}>
         計算
       </PrimaryButton>
       <ToggleWrapper>
-        カード選択に色をつける
+        カード色
         <Switch checked={isColored} onChange={(e) => setIsColored(e.target.checked)} />
       </ToggleWrapper>
+      {!isWide && (
+        <ToggleWrapper>
+          結果を固定表示
+          <Switch checked={isDrawerMode} onChange={(e) => setIsDrawerMode(e.target.checked)} />
+        </ToggleWrapper>
+      )}
     </div>
   );
 }

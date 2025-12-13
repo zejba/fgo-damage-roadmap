@@ -11,6 +11,7 @@ const HeaderContainer = styled.header`
   justify-content: space-between;
   padding: 12px;
   background: linear-gradient(90deg, #003c79, #0e78e1, #003c79);
+  min-width: 360px;
 `;
 
 const HeaderTitle = styled.div`

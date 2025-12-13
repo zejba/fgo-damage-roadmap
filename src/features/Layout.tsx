@@ -8,6 +8,7 @@ interface Props {
 
 const MainContent = styled.main`
   padding: 12px;
+  min-width: 360px;
   @media (max-width: 560px) {
     padding: 8px 2px;
   }

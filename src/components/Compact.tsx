@@ -5,6 +5,7 @@ export const Compact = styled.div`
   height: 32px;
   > * {
     border: 1px solid black;
+    font-size: 0.825em;
     &:first-child:not(:last-child) {
       border-top-left-radius: 6px;
       border-bottom-left-radius: 6px;

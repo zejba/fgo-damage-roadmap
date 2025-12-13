@@ -26,7 +26,7 @@ const StyledTable = styled.table`
     width: 160px;
   }
 
-  @media (max-width: 780px) {
+  @media (max-width: 560px) {
     .buff-type-cell {
       width: 84px;
     }

@@ -50,15 +50,15 @@ function HitCountRow() {
     <Compact>
       <CompactItemText>Hit数</CompactItemText>
       <CompactItemText>N</CompactItemText>
-      <InputNumber value={hitCountN} onValueChange={setHitCountN} style={{ width: 40 }} />
+      <InputNumber value={hitCountN} onValueChange={setHitCountN} style={{ width: 36 }} />
       <CompactItemText>B</CompactItemText>
-      <InputNumber value={hitCountB} onValueChange={setHitCountB} style={{ width: 40 }} />
+      <InputNumber value={hitCountB} onValueChange={setHitCountB} style={{ width: 36 }} />
       <CompactItemText>A</CompactItemText>
-      <InputNumber value={hitCountA} onValueChange={setHitCountA} style={{ width: 40 }} />
+      <InputNumber value={hitCountA} onValueChange={setHitCountA} style={{ width: 36 }} />
       <CompactItemText>Q</CompactItemText>
-      <InputNumber value={hitCountQ} onValueChange={setHitCountQ} style={{ width: 40 }} />
+      <InputNumber value={hitCountQ} onValueChange={setHitCountQ} style={{ width: 36 }} />
       <CompactItemText>EX</CompactItemText>
-      <InputNumber value={hitCountEX} onValueChange={setHitCountEX} style={{ width: 40 }} />
+      <InputNumber value={hitCountEX} onValueChange={setHitCountEX} style={{ width: 36 }} />
     </Compact>
   );
 }
