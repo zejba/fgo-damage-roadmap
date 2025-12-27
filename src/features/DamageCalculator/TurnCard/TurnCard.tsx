@@ -83,9 +83,15 @@ export const TurnCard = memo((props: TurnCardProps) => {
 
   const CardHeader = useMemo(() => {
     return (
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%'
+        }}
+      >
         {`${turnNumber}T目`}
-
         <IconButton size="small" onClick={handleOpenDeleteDialog}>
           {<Close />}
         </IconButton>
