@@ -365,6 +365,9 @@ export default theme;`}function pS(e){return typeof e=="number"?`${(e*100).toFix
   font-size: 1em;
   padding: 8px 12px;
   border-bottom: 1px solid #303030;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background-color: #f3f3f3;
 `,Cz=Et.div`
   padding: 12px;
   @media (max-width: 560px) {
