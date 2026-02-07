@@ -45,7 +45,7 @@ export function TurnParamsSection(props: TurnParamsSectionProps) {
           <CompactItemText>DTDR</CompactItemText>
           <InputNumber
             value={turnParams.dtdr}
-            onValueChange={(value) => setTurnParams((prev) => ({ ...prev, enemyNpCharge: value }))}
+            onValueChange={(value) => setTurnParams((prev) => ({ ...prev, dtdr: value }))}
             style={{ width: 56 }}
           />
           <CompactItemText>%</CompactItemText>
